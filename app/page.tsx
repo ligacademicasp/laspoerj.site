@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 const diretoria = [
@@ -34,6 +37,7 @@ const diretoria = [
 ];
 
 export default function Home() {
+  const [menuAberto, setMenuAberto] = useState(false);
   return (
     <main>
       <header className="header">
@@ -45,14 +49,18 @@ export default function Home() {
           </div>
         </div>
 
-        <nav className="menu">
-          <a href="#sobre">Sobre</a>
-          <a href="#diretoria">Diretoria</a>
-          <a href="#eventos">Eventos</a>
-          <a href="#agenda">Agenda</a>
-          <a href="#jornal">Jornal</a>
-          <a href="#contato">Contato</a>
-        </nav>
+        <button className="menuMobileBtn" onClick={() => setMenuAberto(!menuAberto)}>
+  ☰
+</button>
+
+<nav className={menuAberto ? "menu menuAberto" : "menu"}>
+  <a href="#sobre" onClick={() => setMenuAberto(false)}>Sobre</a>
+  <a href="#diretoria" onClick={() => setMenuAberto(false)}>Diretoria</a>
+  <a href="#eventos" onClick={() => setMenuAberto(false)}>Eventos</a>
+  <a href="#agenda" onClick={() => setMenuAberto(false)}>Agenda</a>
+  <a href="#jornal" onClick={() => setMenuAberto(false)}>Jornal</a>
+  <a href="#contato" onClick={() => setMenuAberto(false)}>Contato</a>
+</nav>
       </header>
 
       <section className="hero">
