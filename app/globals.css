@@ -561,23 +561,6 @@ footer p {
   .eventItem {
     flex-direction: column;
   }
-}.diretoria {
-  width: 100%;
-  padding: 110px 70px;
-  background: #F6FBFF;
-  clear: both;
-}
-
-.diretoriaGrid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(220px, 1fr));
-  gap: 30px;
-  align-items: stretch;
-}
-
-.membroCard {
-  width: 100%;
 }/* NUMEROS */
 
 .numeros {
@@ -658,67 +641,62 @@ footer p {
 .destaqueEvento strong,
 .destaqueEvento span {
   color: white;
-}
-
-/* DIRETORIA */
-
-.diretoria {
-  padding: 110px 70px;
-  background: #f6fbff;
-}
-
-.diretoriaGrid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 25px;
-  margin-top: 40px;
-}
-
-.membroCard {
+}.membroCard {
+  min-width: 310px;
+  max-width: 310px;
   background: white;
-  border-radius: 28px;
-  padding: 20px;
+  border-radius: 32px;
+  padding: 30px;
   border: 1px solid #e3edf7;
-  box-shadow: 0 10px 25px rgba(0,0,0,.05);
+  box-shadow: 0 18px 40px rgba(7, 31, 92, 0.08);
+  scroll-snap-align: start;
+  transition: 0.3s ease;
+}
+
+.membroCard:hover {
+  transform: translateY(-8px);
 }
 
 .fotoMembro {
   width: 100%;
-  height: 320px;
+  height: 360px;
   object-fit: cover;
-  border-radius: 18px;
-  margin-bottom: 20px;
+  object-position: center;
+  border-radius: 24px;
+  margin-bottom: 22px;
 }
 
 .membroCard h3 {
-  font-size: 24px;
+  font-family: 'Playfair Display', serif;
+  font-size: 27px;
   color: var(--azul-marinho);
+  margin-bottom: 10px;
 }
 
 .membroCard span {
   display: block;
-  margin: 10px 0;
+  margin-bottom: 18px;
   color: var(--turquesa);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  font-size: 13px;
 }
 
 .membroCard p {
-  line-height: 1.7;
+  line-height: 1.85;
   color: var(--texto);
+  font-size: 15px;
 }
 
 /* RESPONSIVO */
 
 @media (max-width: 1200px) {
-  .diretoriaGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 
   .eventosGrid {
     grid-template-columns: repeat(2, 1fr);
   }
+
 }
 
 @media (max-width: 768px) {
@@ -987,30 +965,144 @@ section {
     font-size: 18px;
   }
 }
-/* ===== MOBILE ===== */
+/* ========================= */
+/* MOBILE */
+/* ========================= */
 
 @media (max-width: 768px) {
 
+  .header {
+    padding: 16px 20px;
+  }
+
+  .logoBox img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .logoBox strong {
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+
   .hero {
+    padding: 40px 20px;
     overflow-x: hidden;
-    padding: 40px 24px;
   }
 
   .hero h1 {
-    font-size: 3rem;
+    font-size: clamp(2rem, 10vw, 2.8rem);
     line-height: 1.1;
     max-width: 100%;
-    word-break: keep-all;
-    overflow-wrap: break-word;
   }
 
   .typewriter {
     display: block;
-    font-size: 2.6rem;
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+    white-space: normal;
+    border-right: none;
+    animation: none;
   }
 
   .descricao {
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.8;
+  }
+
+  .sobre,
+  .diretoria,
+  .agendaSection,
+  .contatoSection,
+  .orientadores,
+  .eventos {
+    padding: 70px 20px;
+  }
+
+  .numeros {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 30px 20px;
+  }
+
+  .numeros div {
+    padding: 25px 15px;
+  }
+
+  .diretoriaGrid {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 15px;
+  }
+
+  .membroCard {
+    min-width: 280px;
+    max-width: 280px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+
+  .fotoMembro {
+    height: 320px;
+  }
+
+  .eventosGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .orientadorCard {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .fotoOrientador {
+    height: 320px;
+  }
+
+  .contatoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .calendarCard {
+    padding: 20px;
+  }
+
+  .eventItem {
+    flex-direction: column;
+  }
+
+}html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+main {
+  overflow-x: hidden;
+  width: 100%;
+}/* CORREÇÃO FINAL DA DIRETORIA */
+
+.membroCard {
+  min-width: 310px !important;
+  max-width: 310px !important;
+  padding: 30px !important;
+  border-radius: 32px !important;
+}
+
+.fotoMembro {
+  height: 360px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+@media (max-width: 768px) {
+  .membroCard {
+    min-width: 280px !important;
+    max-width: 280px !important;
+  }
+
+  .fotoMembro {
+    height: 320px !important;
   }
 }
