@@ -1148,4 +1148,51 @@ main {
     font-size: 18px;
     font-weight: 700;
   }
+}/* MENU MOBILE - CORREÇÃO FINAL */
+
+@media (max-width: 768px) {
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+  }
+
+  .menuMobileBtn {
+    display: block !important;
+    position: relative;
+    z-index: 10001;
+    background: #b9e6f5;
+    border: none;
+    padding: 8px 10px;
+    font-size: 32px;
+    line-height: 1;
+    color: var(--azul-marinho);
+    cursor: pointer;
+  }
+
+  .menu {
+    display: flex !important;
+    position: fixed;
+    top: 96px;
+    right: -100%;
+    width: 280px;
+    height: calc(100vh - 96px);
+    background: #ffffff;
+    flex-direction: column;
+    gap: 22px;
+    padding: 32px 28px;
+    box-shadow: -10px 0 30px rgba(7, 31, 92, 0.15);
+    transition: right 0.3s ease;
+    z-index: 10000;
+  }
+
+  .menu.menuAberto {
+    right: 0 !important;
+  }
+
+  .menu a {
+    color: var(--azul-marinho);
+    font-size: 18px;
+    font-weight: 800;
+  }
 }
