@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 const diretoria = [
@@ -38,8 +38,21 @@ const diretoria = [
 
 export default function Home() {
   const [menuAberto, setMenuAberto] = useState(false);
+const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
+useEffect(() => {
+  const handleScroll = () => {
+    setMostrarBotaoTopo(window.scrollY > 350);
+    
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
   return (
-    <main>
+    <main id="topo">
       <header className="header">
         <div className="logoBox">
           <Image src="/logo.png" alt="LASPOERJ" width={95} height={95} />
@@ -49,17 +62,43 @@ export default function Home() {
           </div>
         </div>
 
-        <button className="menuMobileBtn" onClick={() => setMenuAberto(!menuAberto)}>
-  ☰
+        <button
+  className="menuMobileBtn"
+  onClick={() => setMenuAberto(!menuAberto)}
+>
+  {menuAberto ? "×" : "☰"}
 </button>
+{menuAberto && (
+  <div
+    className="menuOverlay"
+    onClick={() => setMenuAberto(false)}
+  />
+)}
 
 <nav className={menuAberto ? "menu menuAberto" : "menu"}>
-  <a href="#sobre" onClick={() => setMenuAberto(false)}>Sobre</a>
-  <a href="#diretoria" onClick={() => setMenuAberto(false)}>Diretoria</a>
-  <a href="#eventos" onClick={() => setMenuAberto(false)}>Eventos</a>
-  <a href="#agenda" onClick={() => setMenuAberto(false)}>Agenda</a>
-  <a href="#jornal" onClick={() => setMenuAberto(false)}>Jornal</a>
-  <a href="#contato" onClick={() => setMenuAberto(false)}>Contato</a>
+  <a href="#sobre" onClick={() => setMenuAberto(false)}>
+    Sobre
+  </a>
+
+  <a href="#diretoria" onClick={() => setMenuAberto(false)}>
+    Diretoria
+  </a>
+
+  <a href="#eventos" onClick={() => setMenuAberto(false)}>
+    Eventos
+  </a>
+
+  <a href="#agenda" onClick={() => setMenuAberto(false)}>
+    Agenda
+  </a>
+
+  <a href="#jornal" onClick={() => setMenuAberto(false)}>
+    Jornal
+  </a>
+
+  <a href="#contato" onClick={() => setMenuAberto(false)}>
+    Contato
+  </a>
 </nav>
       </header>
 
@@ -358,6 +397,21 @@ export default function Home() {
         <p>Liga Acadêmica de Saúde Pública Odontológica • Estácio RJ</p>
         <p>@laspoerj</p>
       </footer>
+
+      {mostrarBotaoTopo && (
+        <button
+          className="btnTopo"
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            })
+          }
+          aria-label="Voltar ao topo"
+        >
+          ↑
+        </button>
+      )}
     </main>
   );
 }
