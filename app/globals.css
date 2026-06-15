@@ -1581,23 +1581,11 @@ main {
   animation: blink 0.7s infinite;
 }
 
-  @keyframes typingLoopMobile {
-    0% {
-      width: 0;
-    }
-
-    45% {
-      width: 13ch;
-    }
-
-    75% {
-      width: 13ch;
-    }
-
-    100% {
-      width: 0;
-    }
+  @keyframes blink {
+  50% {
+    border-color: transparent;
   }
+}
 }/* CORREÇÃO DEFINITIVA DO BOTÃO HAMBÚRGUER */
 
 .menuMobileBtn {
@@ -1651,5 +1639,14 @@ main {
 
   .menuMobileBtn.ativo span:nth-child(3) {
     transform: translateY(-9px) rotate(-45deg);
+  }
+}@media (max-width: 768px) {
+  .typewriter {
+    display: inline-block !important;
+    min-width: 1ch !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    border-right: 3px solid var(--turquesa) !important;
+    animation: blink 0.7s infinite !important;
   }
 }
