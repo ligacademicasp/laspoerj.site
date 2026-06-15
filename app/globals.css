@@ -120,17 +120,19 @@ a {
 
 .typewriter {
   display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 4px solid var(--turquesa);
-  animation: typingLoop 5s steps(13, end) infinite, blink 0.7s infinite;
+  min-width: 1ch;
+  border-right: 3px solid var(--turquesa);
+  padding-right: 3px;
 }
 
-@keyframes typingLoop {
-  0% { width: 0; }
-  45% { width: 13ch; }
-  75% { width: 13ch; }
-  100% { width: 0; }
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.typewriter {
+  animation: blink 0.7s infinite;
 }
 
 @keyframes blink {
@@ -1571,14 +1573,13 @@ main {
 
 @media (max-width: 768px) {
   .typewriter {
-    display: inline-block !important;
-    width: 0;
-    max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap !important;
-    border-right: 3px solid var(--turquesa) !important;
-    animation: typingLoopMobile 5s steps(13, end) infinite, blink 0.7s infinite !important;
-  }
+  display: inline-block;
+  min-width: 1ch;
+  white-space: nowrap;
+  border-right: 3px solid var(--turquesa);
+  padding-right: 3px;
+  animation: blink 0.7s infinite;
+}
 
   @keyframes typingLoopMobile {
     0% {
@@ -1596,5 +1597,59 @@ main {
     100% {
       width: 0;
     }
+  }
+}/* CORREÇÃO DEFINITIVA DO BOTÃO HAMBÚRGUER */
+
+.menuMobileBtn {
+  font-size: 0 !important;
+}
+
+.menuMobileBtn::before,
+.menuMobileBtn::after {
+  content: none !important;
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .menuMobileBtn {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    width: 54px;
+    height: 54px;
+    padding: 0;
+
+    border: none;
+    border-radius: 18px;
+
+    background: rgba(26, 168, 165, 0.14);
+    box-shadow: 0 10px 25px rgba(7, 31, 92, 0.10);
+
+    cursor: pointer;
+    z-index: 10001;
+  }
+
+  .menuMobileBtn span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--azul-marinho);
+    transition: 0.3s ease;
+  }
+
+  .menuMobileBtn.ativo span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .menuMobileBtn.ativo span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menuMobileBtn.ativo span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
   }
 }

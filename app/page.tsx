@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 const diretoria = [
@@ -37,6 +37,38 @@ const diretoria = [
 ];
 
 export default function Home() {
+  const palavras = [
+  "COLETIVIDADE.",
+  "INTEGRALIDADE.",
+  "TRANSFORMAÇÃO.",
+];
+
+const [textoAnimado, setTextoAnimado] = useState("");
+const [indicePalavra, setIndicePalavra] = useState(0);
+const [apagando, setApagando] = useState(false);
+
+useEffect(() => {
+  const palavraAtual = palavras[indicePalavra];
+
+  const timeout = setTimeout(() => {
+    if (!apagando) {
+      setTextoAnimado(palavraAtual.substring(0, textoAnimado.length + 1));
+
+      if (textoAnimado === palavraAtual) {
+        setTimeout(() => setApagando(true), 1200);
+      }
+    } else {
+      setTextoAnimado(palavraAtual.substring(0, textoAnimado.length - 1));
+
+      if (textoAnimado === "") {
+        setApagando(false);
+        setIndicePalavra((prev) => (prev + 1) % palavras.length);
+      }
+    }
+  }, apagando ? 60 : 110);
+
+  return () => clearTimeout(timeout);
+}, [textoAnimado, apagando, indicePalavra]);
   const [menuAberto, setMenuAberto] = useState(false);
 const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
 useEffect(() => {
@@ -113,7 +145,9 @@ useEffect(() => {
           <br />
           ODONTOLOGIA.
           <br />
-          <span className="typewriter gradient-text">COLETIVIDADE.</span>
+          <span className="typewriter gradient-text">
+  {textoAnimado}
+</span>
         </h1>
 
         <p className="descricao">
