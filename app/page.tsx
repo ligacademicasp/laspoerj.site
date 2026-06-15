@@ -63,10 +63,13 @@ useEffect(() => {
         </div>
 
         <button
-  className="menuMobileBtn"
+  className={menuAberto ? "menuMobileBtn ativo" : "menuMobileBtn"}
   onClick={() => setMenuAberto(!menuAberto)}
+  aria-label="Abrir menu"
 >
-  {menuAberto ? "×" : "☰"}
+  <span></span>
+  <span></span>
+  <span></span>
 </button>
 {menuAberto && (
   <div
