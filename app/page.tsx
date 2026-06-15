@@ -111,29 +111,12 @@ useEffect(() => {
 )}
 
 <nav className={menuAberto ? "menu menuAberto" : "menu"}>
-  <a href="#sobre" onClick={() => setMenuAberto(false)}>
-    Sobre
-  </a>
-
-  <a href="#diretoria" onClick={() => setMenuAberto(false)}>
-    Diretoria
-  </a>
-
-  <a href="#eventos" onClick={() => setMenuAberto(false)}>
-    Eventos
-  </a>
-
-  <a href="#agenda" onClick={() => setMenuAberto(false)}>
-    Agenda
-  </a>
-
-  <a href="#jornal" onClick={() => setMenuAberto(false)}>
-    Jornal
-  </a>
-
-  <a href="#contato" onClick={() => setMenuAberto(false)}>
-    Contato
-  </a>
+  <a href="#sobreConteudo" onClick={() => setMenuAberto(false)}>Sobre</a>
+  <a href="#diretoriaConteudo" onClick={() => setMenuAberto(false)}>Diretoria</a>
+  <a href="#eventosConteudo" onClick={() => setMenuAberto(false)}>Eventos</a>
+  <a href="#agendaConteudo" onClick={() => setMenuAberto(false)}>Agenda</a>
+  <a href="#jornalConteudo" onClick={() => setMenuAberto(false)}>Jornal</a>
+  <a href="#contatoConteudo" onClick={() => setMenuAberto(false)}>Contato</a>
 </nav>
       </header>
 
@@ -218,10 +201,10 @@ useEffect(() => {
       </section>
 
       <section id="diretoria" className="diretoria">
-        <p className="subtitulo">NOSSA EQUIPE</p>
-        <h2>Diretoria LASPOERJ</h2>
+  <p className="subtitulo">NOSSA EQUIPE</p>
+  <h2>Diretoria LASPOERJ</h2>
 
-        <div className="diretoriaGrid">
+  <div id="diretoriaConteudo" className="diretoriaGrid">
           {diretoria.map((membro) => (
             <div className="membroCard" key={membro.nome}>
               <Image
@@ -290,7 +273,8 @@ useEffect(() => {
 </section>
 
       <section id="eventos" className="eventos">
-        <p className="subtitulo">PROGRAMAÇÃO</p>
+  <div id="eventosConteudo"></div>
+  <p className="subtitulo">PROGRAMAÇÃO</p> 
         <h2>Próximos Eventos</h2>
 
         <div className="eventosGrid">
@@ -327,7 +311,8 @@ useEffect(() => {
       </section>
 
       <section id="agenda" className="agendaSection">
-        <p className="subtitulo">CALENDÁRIO</p>
+  <div id="agendaConteudo"></div>
+  <p className="subtitulo">CALENDÁRIO</p>
         <h2>Agenda da Liga</h2>
 
         <div className="calendarCard">
@@ -389,7 +374,8 @@ useEffect(() => {
       </section>
 
       <section id="jornal" className="contatoSection">
-        <p className="subtitulo">FIQUE POR DENTRO</p>
+  <div id="jornalConteudo"></div>
+  <p className="subtitulo">FIQUE POR DENTRO</p>
         <h2>Jornal LASPOERJ</h2>
 
         <p className="contatoTexto">
@@ -399,7 +385,8 @@ useEffect(() => {
       </section>
 
       <section id="contato" className="contatoSection">
-        <p className="subtitulo">VAMOS CONVERSAR</p>
+  <div id="contatoConteudo"></div>
+  <p className="subtitulo">VAMOS CONVERSAR</p>
         <h2>Entre em contato</h2>
 
         <p className="contatoTexto">

@@ -1649,4 +1649,225 @@ main {
     border-right: 3px solid var(--turquesa) !important;
     animation: blink 0.7s infinite !important;
   }
+}#sobreConteudo,
+#diretoriaConteudo,
+#eventosConteudo,
+#agendaConteudo,
+#jornalConteudo,
+#contatoConteudo {
+  scroll-margin-top: 170px;
+}
+
+@media (max-width: 768px) {
+  #sobreConteudo,
+  #diretoriaConteudo,
+  #eventosConteudo,
+  #agendaConteudo,
+  #jornalConteudo,
+  #contatoConteudo {
+    scroll-margin-top: 125px;
+  }
+}/* ========================= */
+/* MOBILE REFINADO */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  /* HEADER */
+
+  .header {
+    padding: 12px 18px;
+    height: 82px;
+  }
+
+  .logoBox img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .logoBox strong {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+
+  .logoBox span {
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+
+  /* HERO */
+
+  .hero {
+    padding: 35px 22px;
+    min-height: auto;
+  }
+
+  .subtitulo {
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.9rem, 8vw, 2.6rem);
+    line-height: 1.05;
+  }
+
+  .typewriter {
+    font-size: inherit;
+  }
+
+  .descricao {
+    margin-top: 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  /* BOTÕES */
+
+  .botoes {
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .btn {
+    padding: 13px 22px;
+    font-size: 13px;
+    border-radius: 30px;
+  }
+
+  /* SEÇÕES */
+
+  .sobre,
+  .diretoria,
+  .eventos,
+  .agendaSection,
+  .orientadores,
+  .contatoSection {
+    padding: 55px 22px;
+  }
+
+  h2,
+  .sobreTexto h2,
+  .diretoria h2,
+  .agendaSection h2,
+  .contatoSection h2,
+  .orientadoresIntro h2 {
+    font-size: 2rem !important;
+    margin-bottom: 18px;
+  }
+
+  .sobreTexto p,
+  .contatoTexto,
+  .orientadorCard p,
+  .eventoCard p,
+  .membroCard p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* NÚMEROS */
+
+  .numeros {
+    padding: 24px 18px;
+    gap: 12px;
+  }
+
+  .numeros strong {
+    font-size: 32px;
+  }
+
+  .numeros span {
+    font-size: 13px;
+  }
+
+  /* DIRETORIA */
+
+  .diretoriaGrid {
+    gap: 16px;
+  }
+
+  .membroCard {
+    min-width: 250px;
+    max-width: 250px;
+    padding: 18px;
+  }
+
+  .fotoMembro {
+    height: 280px;
+  }
+
+  .membroCard h3 {
+    font-size: 20px;
+  }
+
+  /* ORIENTADORES */
+
+  .orientadorCard {
+    padding: 20px;
+    gap: 18px;
+  }
+
+  .fotoOrientador {
+    height: 260px;
+  }
+
+  .orientadorCard h3 {
+    font-size: 28px;
+  }
+
+  /* EVENTOS */
+
+  .eventoCard {
+    padding: 22px;
+  }
+
+  /* CALENDÁRIO */
+
+  .calendarCard {
+    padding: 20px;
+  }
+
+  .calendarHeader h3 {
+    font-size: 24px;
+  }
+
+  .daysGrid span {
+    min-height: 34px;
+    font-size: 15px;
+  }
+
+  .eventDay {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* CONTATO */
+
+  .contatoCard {
+    padding: 22px;
+  }
+
+  .contatoCard p {
+    font-size: 15px;
+  }
+
+  /* FOOTER */
+
+  footer {
+    padding: 55px 20px;
+  }
+
+  footer img {
+    width: 110px;
+  }
+
+  footer h2 {
+    font-size: 30px;
+    letter-spacing: 4px;
+  }
+
+  footer p {
+    font-size: 14px;
+  }
 }
