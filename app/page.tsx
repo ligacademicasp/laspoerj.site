@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 
 const diretoria = [
@@ -37,6 +38,47 @@ const diretoria = [
 ];
 
 export default function Home() {
+  const [nome, setNome] = useState("");
+const [tipo, setTipo] = useState("Aluno");
+const [whatsapp, setWhatsapp] = useState("");
+const [email, setEmail] = useState("");
+const [mensagem, setMensagem] = useState("");
+const [enviando, setEnviando] = useState(false);
+const enviarSugestao = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  try {
+    setEnviando(true);
+
+    const { error } = await supabase.from("sugestoes").insert([
+      {
+        nome,
+        categoria: tipo,
+        whatsapp,
+        email,
+        mensagem,
+      },
+    ]);
+
+    if (error) {
+      alert(error.message);
+      throw error;
+    }
+
+    alert("Sugestão enviada com sucesso!");
+
+    setNome("");
+    setTipo("");
+    setWhatsapp("");
+    setEmail("");
+    setMensagem("");
+  } catch (error) {
+    console.error("Erro Supabase:", error);
+    alert("Erro ao enviar sugestão. Verifique o Supabase.");
+  } finally {
+    setEnviando(false);
+  }
+};
   const palavras = [
   "COLETIVIDADE.",
   "INTEGRALIDADE.",
@@ -117,6 +159,7 @@ useEffect(() => {
   <a href="#agendaConteudo" onClick={() => setMenuAberto(false)}>Agenda</a>
   <a href="#jornalConteudo" onClick={() => setMenuAberto(false)}>Jornal</a>
   <a href="#contatoConteudo" onClick={() => setMenuAberto(false)}>Contato</a>
+  <a href="#sugestoes">Sugestões</a>
 </nav>
       </header>
 
@@ -384,43 +427,167 @@ useEffect(() => {
         </p>
       </section>
 
-      <section id="contato" className="contatoSection">
-  <div id="contatoConteudo"></div>
-  <p className="subtitulo">VAMOS CONVERSAR</p>
-        <h2>Entre em contato</h2>
+     <section id="contato" className="contatoSection">
+  <p className="subtitulo">FALE CONOSCO</p>
 
-        <p className="contatoTexto">
-          Estudante, professor ou parceiro: há sempre espaço para quem quer
-          transformar a saúde pública odontológica.
-        </p>
+  <h2>Contato</h2>
 
-        <div className="contatoGrid">
-          <a
-  href="https://instagram.com/laspoerj"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="contatoCard"
+  <p className="contatoTexto">
+    Estamos aqui para ouvir você. Entre em contato com a LASPOERJ pelos canais abaixo.
+  </p>
+
+  <div className="contatoGrid">
+    <a
+      className="contatoCard"
+      href="https://www.instagram.com/laspoerj"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div className="contatoIcone">◎</div>
+      <span>Instagram</span>
+      <p>@laspoerj</p>
+    </a>
+
+    <a className="contatoCard" href="ligacademicasp@gmail.com">
+      <div className="contatoIcone">✉</div>
+      <span>E-mail</span>
+      <p>ligacademicasp@gmail.com</p>
+    </a>
+
+    <a
+      className="contatoCard"
+      href="https://www.google.com/maps/search/?api=1&query=Avenida%20Alfredo%20Balthazar%20da%20Silveira%20580%20Recreio%20dos%20Bandeirantes%20Rio%20de%20Janeiro%20RJ%2022790-710"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div className="contatoIcone">⌖</div>
+      <span>Localização</span>
+      <p>
+        Avenida Alfredo Balthazar da Silveira, nº 580<br />
+        Recreio dos Bandeirantes, Rio de Janeiro - RJ<br />
+        22790-710
+      </p>
+    </a>
+  </div>
+</section>
+      <section id="sugestoes" className="sugestoesSection">
+  <div className="sugestoesIntro">
+    <p className="subtitulo">SUA VOZ NA LIGA</p>
+    <h2>Caixa de Sugestões</h2>
+    <p>
+      Envie ideias, dúvidas, propostas de ações, temas para encontros ou
+      sugestões para melhorar a LASPOERJ.
+    </p>
+  </div>
+
+  <form
+  className="sugestoesForm"
+  onSubmit={enviarSugestao}
 >
-  <strong>Instagram</strong>
-  <p>@laspoerj</p>
-</a>
+  <div className="linhaForm">
+    <label>
+      Nome *
+      <input
+        type="text"
+        placeholder="Seu nome"
+        value={nome}
+        onChange={(e) => setNome(e.target.value)}
+        required
+      />
+    </label>
 
-          <a
-  href="mailto:ligacademica@gmail.com"
-  className="contatoCard"
->
-  <strong>E-mail</strong>
-  <p>ligacademica@gmail.com</p>
-</a>
-        </div>
-      </section>
+    <label>
+      Você é... *
+      <select
+        value={tipo}
+        onChange={(e) => setTipo(e.target.value)}
+        required
+      >
+        <option value="">Selecione uma opção</option>
+        <option value="Aluno">Aluno</option>
+        <option value="Professor">Professor</option>
+        <option value="Ligante LASPOERJ">Ligante LASPOERJ</option>
+        <option value="Patrocinador">Patrocinador</option>
+      </select>
+    </label>
+  </div>
 
-      <footer>
-        <Image src="/logo-footer.png" alt="LASPOERJ" width={220} height={220} />
-        <h2>LASPOERJ</h2>
-        <p>Liga Acadêmica de Saúde Pública Odontológica • Estácio RJ</p>
-        <p>@laspoerj</p>
-      </footer>
+  <div className="linhaForm">
+    <label>
+      WhatsApp
+      <input
+        type="text"
+        placeholder="(21) 99999-0000"
+        value={whatsapp}
+        onChange={(e) => setWhatsapp(e.target.value)}
+      />
+    </label>
+
+    <label>
+      E-mail *
+      <input
+        type="email"
+        placeholder="seuemail@exemplo.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+    </label>
+  </div>
+
+  <label>
+    Mensagem *
+    <textarea
+      placeholder="Escreva sua mensagem ou sugestão aqui..."
+      value={mensagem}
+      onChange={(e) => setMensagem(e.target.value)}
+      required
+    />
+  </label>
+
+  <button type="submit" disabled={enviando}>
+    {enviando ? "ENVIANDO..." : "ENVIAR MENSAGEM →"}
+  </button>
+
+  <p className="avisoSugestao">
+    Suas informações serão usadas apenas para contato da Liga.
+  </p>
+</form>
+</section>
+<footer className="footerSite">
+  <div className="footerGrid">
+    <div className="footerMarca">
+      <Image src="/logo-footer.png" alt="LASPOERJ" width={95} height={95} />
+      <h2>LASPOERJ</h2>
+      <p>Liga Acadêmica de Saúde Pública Odontológica • Estácio RJ</p>
+    </div>
+
+    <div className="footerColuna">
+      <h4>Navegação</h4>
+      <a href="#sobre">Sobre</a>
+      <a href="#diretoria">Diretoria</a>
+      <a href="#eventos">Eventos</a>
+      <a href="#agenda">Agenda</a>
+      <a href="#jornal">Jornal</a>
+      <a href="#contato">Contato</a>
+      <a href="#sugestoes">Sugestões</a>
+    </div>
+
+    <div className="footerColuna">
+      <h4>Contato</h4>
+      <p>Instagram: @laspoerj</p>
+      <p>E-mail: ligacademicasp@gmail.com</p>
+      <p>
+        Av. Alfredo Balthazar da Silveira, nº 580<br />
+        Recreio dos Bandeirantes - RJ
+      </p>
+    </div>
+  </div>
+
+  <div className="footerBottom">
+    <p>© 2026 LASPOERJ. Todos os direitos reservados.</p>
+  </div>
+</footer>
 
       {mostrarBotaoTopo && (
         <button
