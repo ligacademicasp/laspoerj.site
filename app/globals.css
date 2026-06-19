@@ -2309,4 +2309,26 @@ main {
   font-weight: 900;
   letter-spacing: 2px;
   cursor: pointer;
+}/* BOTÃO LOGIN */
+
+.loginBtn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--azul-marinho), var(--turquesa));
+  color: white !important;
+  font-weight: 800;
+  box-shadow: 0 10px 25px rgba(7, 31, 92, 0.16);
+}
+
+.loginBtn:hover {
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .loginBtn {
+    text-align: center;
+    margin-top: 12px;
+    padding: 14px 22px;
+  }
 }

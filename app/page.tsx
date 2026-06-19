@@ -160,6 +160,13 @@ useEffect(() => {
   <a href="#jornalConteudo" onClick={() => setMenuAberto(false)}>Jornal</a>
   <a href="#contatoConteudo" onClick={() => setMenuAberto(false)}>Contato</a>
   <a href="#sugestoes">Sugestões</a>
+  <a
+  href="/login"
+  className="loginBtn"
+  onClick={() => setMenuAberto(false)}
+>
+  Login
+</a>
 </nav>
       </header>
 
@@ -188,7 +195,7 @@ useEffect(() => {
       </section>
 
       <section id="sobre" className="sobre">
-        <div className="sobreTexto">
+  <div id="sobreConteudo" className="sobreTexto">
           <p className="subtitulo">CONHEÇA A LIGA</p>
           <h2>Sobre a LASPOERJ</h2>
 
@@ -317,7 +324,7 @@ useEffect(() => {
 
       <section id="eventos" className="eventos">
   <div id="eventosConteudo"></div>
-  <p className="subtitulo">PROGRAMAÇÃO</p> 
+  <p className="subtitulo">PROGRAMAÇÃO</p>
         <h2>Próximos Eventos</h2>
 
         <div className="eventosGrid">
@@ -428,6 +435,7 @@ useEffect(() => {
       </section>
 
      <section id="contato" className="contatoSection">
+  <div id="contatoConteudo"></div>
   <p className="subtitulo">FALE CONOSCO</p>
 
   <h2>Contato</h2>
