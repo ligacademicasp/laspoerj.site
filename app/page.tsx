@@ -4,127 +4,495 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 
-const diretoria = [
-  {
-    nome: "Iasmim Lorena",
-    cargo: "Presidente",
-    foto: "/diretoria/iasmim.jpg",
-    bio: "Idealizadora da LASPOERJ, estudante de Odontologia e apaixonada por saúde coletiva, SUS, endodontia e transformação social.",
-  },
-  {
-    nome: "Riquelme Ferreira",
-    cargo: "Vice-presidente",
-    foto: "/diretoria/riquelme.jpg",
-    bio: "Atua no apoio à organização institucional, projetos e fortalecimento das ações acadêmicas e extensionistas da Liga.",
-  },
-  {
-    nome: "Patrick Klen",
-    cargo: "Secretário-Geral",
-    foto: "/diretoria/patrick.jpg",
-    bio: "Responsável pelo suporte administrativo, registros, atas e comunicação interna da LASPOERJ.",
-  },
-  {
-    nome: "Marcos Vinícius",
-    cargo: "Diretor de Fotografia e Comunicação",
-    foto: "/diretoria/marcos.jpg",
-    bio: "Atua na identidade visual, fotografia, divulgação e comunicação digital da Liga.",
-  },
-  {
-    nome: "Isabella Veloso",
-    cargo: "Diretora de Pesquisa",
-    foto: "/diretoria/isabella.jpg",
-    bio: "Atua no desenvolvimento científico da Liga, organização de estudos, pesquisas e produções acadêmicas.",
-  },
-];
-
-export default function Home() {
-  const [nome, setNome] = useState("");
-const [tipo, setTipo] = useState("Aluno");
-const [whatsapp, setWhatsapp] = useState("");
-const [email, setEmail] = useState("");
-const [mensagem, setMensagem] = useState("");
-const [enviando, setEnviando] = useState(false);
-const enviarSugestao = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-
-  try {
-    setEnviando(true);
-
-    const { error } = await supabase.from("sugestoes").insert([
-      {
-        nome,
-        categoria: tipo,
-        whatsapp,
-        email,
-        mensagem,
-      },
-    ]);
-
-    if (error) {
-      alert(error.message);
-      throw error;
-    }
-
-    alert("Sugestão enviada com sucesso!");
-
-    setNome("");
-    setTipo("");
-    setWhatsapp("");
-    setEmail("");
-    setMensagem("");
-  } catch (error) {
-    console.error("Erro Supabase:", error);
-    alert("Erro ao enviar sugestão. Verifique o Supabase.");
-  } finally {
-    setEnviando(false);
-  }
+type MembroEquipe = {
+  id: number;
+  nome: string;
+  cargo: string;
+  bio: string | null;
+  foto_url: string | null;
+  grupo: "diretoria" | "orientador";
+  ordem: number;
+  ativo: boolean;
 };
-  const palavras = [
-  "COLETIVIDADE.",
-  "INTEGRALIDADE.",
-  "TRANSFORMAÇÃO.",
-];
 
-const [textoAnimado, setTextoAnimado] = useState("");
-const [indicePalavra, setIndicePalavra] = useState(0);
-const [apagando, setApagando] = useState(false);
+type Evento = {
+  id: number;
+  titulo: string;
+  descricao: string | null;
+  data_evento: string;
+  horario: string | null;
+  local: string | null;
+  destaque: boolean;
+  publicado: boolean;
+};
+type Aviso = {
+  id: number;
+  titulo: string;
+  mensagem: string;
+  publico: string;
+  destaque: boolean;
+  publicado: boolean;
+  data_expiracao: string | null;
+};
+type Publicacao = {
+  id: number;
+  slug: string;
+  titulo: string;
+  resumo: string | null;
+  conteudo: string | null;
+  autor: string | null;
+  categoria: string | null;
+  imagem_url: string | null;
+  destaque: boolean;
+  publicado: boolean;
+  data_publicacao: string | null;
+};
 
-useEffect(() => {
-  const palavraAtual = palavras[indicePalavra];
+type ConfiguracoesSite = Record<string, string>;
+export default function Home() {
+  // =========================
+  // SUGESTÕES
+  // =========================
+  const [nome, setNome] = useState("");
+  const [tipo, setTipo] = useState("Aluno");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [email, setEmail] = useState("");
+  const [mensagem, setMensagem] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
-  const timeout = setTimeout(() => {
-    if (!apagando) {
-      setTextoAnimado(palavraAtual.substring(0, textoAnimado.length + 1));
-
-      if (textoAnimado === palavraAtual) {
-        setTimeout(() => setApagando(true), 1200);
-      }
-    } else {
-      setTextoAnimado(palavraAtual.substring(0, textoAnimado.length - 1));
-
-      if (textoAnimado === "") {
-        setApagando(false);
-        setIndicePalavra((prev) => (prev + 1) % palavras.length);
-      }
-    }
-  }, apagando ? 60 : 110);
-
-  return () => clearTimeout(timeout);
-}, [textoAnimado, apagando, indicePalavra]);
+  // =========================
+  // MENU
+  // =========================
   const [menuAberto, setMenuAberto] = useState(false);
-const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
-useEffect(() => {
-  const handleScroll = () => {
-    setMostrarBotaoTopo(window.scrollY > 350);
-    
+
+  // =========================
+  // EVENTOS DO SUPABASE
+  // =========================
+  const [eventosSite, setEventosSite] = useState<Evento[]>([]);
+  const [avisosSite, setAvisosSite] = useState<Aviso[]>([]);
+  const [publicacoesSite, setPublicacoesSite] = useState<Publicacao[]>([]);
+  const [configuracoesSite, setConfiguracoesSite] =
+    useState<ConfiguracoesSite>({});
+  const [equipeSite, setEquipeSite] =
+    useState<MembroEquipe[]>([]);
+  const [mesCalendario, setMesCalendario] = useState(() => {
+  const hoje = new Date();
+
+  return new Date(
+    hoje.getFullYear(),
+    hoje.getMonth(),
+    1
+  );
+});
+
+  // =========================
+  // BOTÃO VOLTAR AO TOPO
+  // =========================
+  const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
+
+  // =========================
+  // PALAVRAS DO HERO
+  // =========================
+  const palavras = [
+    "COLETIVIDADE.",
+    "INTEGRALIDADE.",
+    "TRANSFORMAÇÃO.",
+  ];
+
+  const [textoAnimado, setTextoAnimado] = useState("");
+  const [indicePalavra, setIndicePalavra] = useState(0);
+  const [apagando, setApagando] = useState(false);
+
+  // =========================
+  // ENVIAR SUGESTÃO
+  // =========================
+  const enviarSugestao = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setEnviando(true);
+
+      const { error } = await supabase.from("sugestoes").insert([
+        {
+          nome,
+          categoria: tipo,
+          whatsapp,
+          email,
+          mensagem,
+        },
+      ]);
+
+      if (error) {
+        console.error("Erro Supabase:", error);
+        alert(error.message);
+        return;
+      }
+
+      alert("Sugestão enviada com sucesso!");
+
+      setNome("");
+      setTipo("Aluno");
+      setWhatsapp("");
+      setEmail("");
+      setMensagem("");
+    } catch (error) {
+      console.error("Erro Supabase:", error);
+      alert("Erro ao enviar sugestão. Verifique o Supabase.");
+    } finally {
+      setEnviando(false);
+    }
   };
 
-  window.addEventListener("scroll", handleScroll);
+  // =========================
+  // ANIMAÇÃO DAS PALAVRAS
+  // =========================
+  useEffect(() => {
+    const palavraAtual = palavras[indicePalavra];
 
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-  };
-}, []);
+    let tempo = apagando ? 60 : 110;
+
+    if (!apagando && textoAnimado === palavraAtual) {
+      tempo = 1200;
+    }
+
+    const timeout = setTimeout(() => {
+      if (!apagando) {
+        if (textoAnimado === palavraAtual) {
+          setApagando(true);
+        } else {
+          setTextoAnimado(
+            palavraAtual.substring(0, textoAnimado.length + 1)
+          );
+        }
+      } else {
+        if (textoAnimado.length === 0) {
+          setApagando(false);
+          setIndicePalavra(
+            (indiceAtual) => (indiceAtual + 1) % palavras.length
+          );
+        } else {
+          setTextoAnimado(
+            palavraAtual.substring(0, textoAnimado.length - 1)
+          );
+        }
+      }
+    }, tempo);
+
+    return () => clearTimeout(timeout);
+  }, [textoAnimado, apagando, indicePalavra]);
+
+  // =========================
+  // CARREGAR EVENTOS DO SUPABASE
+  // =========================
+  useEffect(() => {
+    async function carregarEventosSite() {
+      const { data, error } = await supabase
+        .from("eventos")
+        .select(
+          "id, titulo, descricao, data_evento, horario, local, destaque, publicado"
+        )
+        .eq("publicado", true)
+        .order("data_evento", { ascending: true });
+
+      if (error) {
+        console.error("Erro ao carregar eventos:", error);
+        return;
+      }
+
+      setEventosSite(data ?? []);
+    }
+
+    carregarEventosSite();
+  }, []);
+
+  // =========================
+  // CARREGAR AVISOS DO SUPABASE
+  // =========================
+  useEffect(() => {
+    async function carregarAvisosSite() {
+      const hoje = new Date().toISOString().split("T")[0];
+
+      const { data, error } = await supabase
+        .from("avisos")
+        .select(
+          "id, titulo, mensagem, publico, destaque, publicado, data_expiracao"
+        )
+        .eq("publicado", true)
+        .eq("publico", "todos")
+        .order("id", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao carregar avisos:", error);
+        return;
+      }
+
+      const avisosValidos = (data ?? []).filter((aviso) => {
+        if (!aviso.data_expiracao) {
+          return true;
+        }
+
+        return aviso.data_expiracao >= hoje;
+      });
+
+      setAvisosSite(avisosValidos);
+    }
+
+    carregarAvisosSite();
+  }, []);
+
+  // =========================
+  // CARREGAR PUBLICAÇÕES DO SUPABASE
+  // =========================
+  useEffect(() => {
+    async function carregarPublicacoesSite() {
+      const { data, error } = await supabase
+        .from("publicacoes")
+        .select(
+          "id, slug, titulo, resumo, conteudo, autor, categoria, imagem_url, destaque, publicado, data_publicacao"
+        )
+        .eq("publicado", true)
+        .order("data_publicacao", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao carregar Jornal:", error);
+        return;
+      }
+
+      setPublicacoesSite(data ?? []);
+    }
+
+    carregarPublicacoesSite();
+  }, []);
+
+  // =========================
+  // CARREGAR EQUIPE DO SUPABASE
+  // =========================
+  useEffect(() => {
+    async function carregarEquipeSite() {
+      const { data, error } = await supabase
+        .from("equipe")
+        .select("id, nome, cargo, bio, foto_url, grupo, ordem, ativo")
+        .eq("ativo", true)
+        .order("ordem", { ascending: true });
+
+      if (error) {
+        console.error("Erro ao carregar equipe:", error);
+        return;
+      }
+
+      setEquipeSite((data ?? []) as MembroEquipe[]);
+    }
+
+    carregarEquipeSite();
+  }, []);
+
+  const diretoria = equipeSite.filter(
+    (membro) => membro.grupo === "diretoria"
+  );
+
+  const orientadores = equipeSite.filter(
+    (membro) => membro.grupo === "orientador"
+  );
+
+  // =========================
+  // CARREGAR CONFIGURAÇÕES DO SITE
+  // =========================
+  useEffect(() => {
+    async function carregarConfiguracoesSite() {
+      const { data, error } = await supabase
+        .from("configuracoes_site")
+        .select("chave, valor");
+
+      if (error) {
+        console.error(
+          "Erro ao carregar configurações do site:",
+          error
+        );
+        return;
+      }
+
+      const mapa: ConfiguracoesSite = {};
+
+      (data ?? []).forEach((item) => {
+        mapa[item.chave] = item.valor ?? "";
+      });
+
+      setConfiguracoesSite(mapa);
+    }
+
+    carregarConfiguracoesSite();
+  }, []);
+
+  function config(chave: string, fallback: string) {
+    const valor = configuracoesSite[chave];
+
+    return valor && valor.trim()
+      ? valor
+      : fallback;
+  }
+
+  function instagramUrl() {
+    const usuario = config("instagram", "@laspoerj")
+      .replace(/^@/, "")
+      .trim();
+
+    return `https://www.instagram.com/${usuario}`;
+  }
+
+  function enderecoMapsUrl() {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      config(
+        "endereco",
+        "Avenida Alfredo Balthazar da Silveira, nº 580 - Recreio dos Bandeirantes, Rio de Janeiro - RJ, 22790-710"
+      )
+    )}`;
+  }
+
+  // =========================
+  // BOTÃO VOLTAR AO TOPO
+  // =========================
+  useEffect(() => {
+    const handleScroll = () => {
+      setMostrarBotaoTopo(window.scrollY > 350);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  // =========================
+// CALENDÁRIO DINÂMICO
+// =========================
+
+const anoCalendario = mesCalendario.getFullYear();
+const numeroMesCalendario = mesCalendario.getMonth();
+
+const tituloCalendario = mesCalendario
+  .toLocaleDateString("pt-BR", {
+    month: "long",
+    year: "numeric",
+  })
+  .toUpperCase();
+
+function mudarMesCalendario(direcao: number) {
+  setMesCalendario((mesAtual) => {
+    return new Date(
+      mesAtual.getFullYear(),
+      mesAtual.getMonth() + direcao,
+      1
+    );
+  });
+}
+
+function criarDataISO(
+  ano: number,
+  mes: number,
+  dia: number
+) {
+  const data = new Date(ano, mes, dia);
+
+  const anoFormatado = data.getFullYear();
+
+  const mesFormatado = String(
+    data.getMonth() + 1
+  ).padStart(2, "0");
+
+  const diaFormatado = String(
+    data.getDate()
+  ).padStart(2, "0");
+
+  return `${anoFormatado}-${mesFormatado}-${diaFormatado}`;
+}
+
+const primeiroDiaSemana = new Date(
+  anoCalendario,
+  numeroMesCalendario,
+  1
+).getDay();
+
+const quantidadeDiasMes = new Date(
+  anoCalendario,
+  numeroMesCalendario + 1,
+  0
+).getDate();
+
+const quantidadeDiasMesAnterior = new Date(
+  anoCalendario,
+  numeroMesCalendario,
+  0
+).getDate();
+
+const diasCalendario = Array.from(
+  { length: 42 },
+  (_, indice) => {
+    let dia: number;
+    let mesRelativo = 0;
+    let muted = false;
+
+    if (indice < primeiroDiaSemana) {
+      dia =
+        quantidadeDiasMesAnterior -
+        primeiroDiaSemana +
+        indice +
+        1;
+
+      mesRelativo = -1;
+      muted = true;
+    } else if (
+      indice >=
+      primeiroDiaSemana + quantidadeDiasMes
+    ) {
+      dia =
+        indice -
+        primeiroDiaSemana -
+        quantidadeDiasMes +
+        1;
+
+      mesRelativo = 1;
+      muted = true;
+    } else {
+      dia =
+        indice -
+        primeiroDiaSemana +
+        1;
+    }
+
+    const dataISO = criarDataISO(
+      anoCalendario,
+      numeroMesCalendario + mesRelativo,
+      dia
+    );
+
+    return {
+      dia,
+      dataISO,
+      muted,
+    };
+  }
+);
+
+const datasComEventos = new Set(
+  eventosSite.map(
+    (evento) => evento.data_evento
+  )
+);
+
+const eventosDoMes = eventosSite.filter(
+  (evento) => {
+    const [ano, mes] =
+      evento.data_evento
+        .split("-")
+        .map(Number);
+
+    return (
+      ano === anoCalendario &&
+      mes === numeroMesCalendario + 1
+    );
+  }
+);
   return (
     <main id="topo">
       <header className="header">
@@ -155,8 +523,9 @@ useEffect(() => {
 <nav className={menuAberto ? "menu menuAberto" : "menu"}>
   <a href="#sobreConteudo" onClick={() => setMenuAberto(false)}>Sobre</a>
   <a href="#diretoriaConteudo" onClick={() => setMenuAberto(false)}>Diretoria</a>
-  <a href="#eventosConteudo" onClick={() => setMenuAberto(false)}>Eventos</a>
+  <a href="#eventos" onClick={() => setMenuAberto(false)}>Eventos</a>
   <a href="#agendaConteudo" onClick={() => setMenuAberto(false)}>Agenda</a>
+  <a href="#avisosConteudo" onClick={() => setMenuAberto(false)}>Avisos</a>
   <a href="#jornalConteudo" onClick={() => setMenuAberto(false)}>Jornal</a>
   <a href="#contatoConteudo" onClick={() => setMenuAberto(false)}>Contato</a>
   <a href="#sugestoes">Sugestões</a>
@@ -197,33 +566,41 @@ useEffect(() => {
       <section id="sobre" className="sobre">
   <div id="sobreConteudo" className="sobreTexto">
           <p className="subtitulo">CONHEÇA A LIGA</p>
-          <h2>Sobre a LASPOERJ</h2>
+          <h2>
+            {config("sobre_titulo", "Sobre a LASPOERJ")}
+          </h2>
 
           <p>
-            A LASPOERJ — Liga Acadêmica de Saúde Pública Odontológica da
-            Estácio RJ — nasce com o compromisso de aproximar a formação
-            acadêmica da realidade social da população.
+            {config(
+              "sobre_texto_1",
+              "A LASPOERJ — Liga Acadêmica de Saúde Pública Odontológica da Estácio RJ — nasce com o compromisso de aproximar a formação acadêmica da realidade social da população."
+            )}
           </p>
 
           <p>
-            Nosso propósito é fortalecer o olhar crítico, científico e humano
-            dos estudantes de Odontologia, valorizando os princípios do SUS,
-            a atenção primária, a integralidade do cuidado e a promoção da
-            saúde bucal coletiva.
+            {config(
+              "sobre_texto_2",
+              "Nosso propósito é fortalecer o olhar crítico, científico e humano dos estudantes de Odontologia, valorizando os princípios do SUS, a atenção primária, a integralidade do cuidado e a promoção da saúde bucal coletiva."
+            )}
           </p>
 
           <p>
-            Por meio de ações de ensino, pesquisa e extensão, buscamos construir
-            uma odontologia mais acessível, preventiva, territorializada e
-            comprometida com a transformação social.
+            {config(
+              "sobre_texto_3",
+              "Por meio de ações de ensino, pesquisa e extensão, buscamos construir uma odontologia mais acessível, preventiva, territorializada e comprometida com a transformação social."
+            )}
           </p>
         </div>
 
         <div className="sobreCard">
-          <h3>Nosso compromisso</h3>
+          <h3>
+            {config("compromisso_titulo", "Nosso compromisso")}
+          </h3>
           <p>
-            Formar estudantes conscientes do papel social da Odontologia e
-            preparados para atuar junto à comunidade.
+            {config(
+              "compromisso_texto",
+              "Formar estudantes conscientes do papel social da Odontologia e preparados para atuar junto à comunidade."
+            )}
           </p>
         </div>
       </section>
@@ -258,7 +635,7 @@ useEffect(() => {
           {diretoria.map((membro) => (
             <div className="membroCard" key={membro.nome}>
               <Image
-                src={membro.foto}
+                src={membro.foto_url || "/logo.png"}
                 alt={membro.nome}
                 width={400}
                 height={500}
@@ -282,157 +659,402 @@ useEffect(() => {
   </div>
 
   <div className="orientadoresGrid">
-    <div className="orientadorCard">
-      <Image
-        src="/orientadores/arkader.jpg"
-        alt="Prof. Rodrigo Arkader"
-        width={520}
-        height={620}
-        className="fotoOrientador"
-      />
+    {orientadores.map((orientador) => (
+      <div
+        className="orientadorCard"
+        key={orientador.id}
+      >
+        <Image
+          src={orientador.foto_url || "/logo.png"}
+          alt={orientador.nome}
+          width={520}
+          height={620}
+          className="fotoOrientador"
+        />
 
-      <div>
-        <span>Diretor Científico</span>
-        <h3>Prof. Rodrigo Arkader</h3>
-        <p>
-          Professor orientador da LASPOERJ, contribuindo para o desenvolvimento
-          científico, acadêmico e institucional da Liga.
-        </p>
+        <div>
+          <span>{orientador.cargo}</span>
+          <h3>{orientador.nome}</h3>
+          <p>
+            {orientador.bio ||
+              "Professor orientador da LASPOERJ."}
+          </p>
+        </div>
       </div>
-    </div>
-
-    <div className="orientadorCard">
-      <Image
-        src="/orientadores/luciane.jpg"
-        alt="Profª Luciane Monte Alto"
-        width={520}
-        height={620}
-        className="fotoOrientador"
-      />
-
-      <div>
-        <span>Diretora Científica</span>
-        <h3>Profª Luciane Monte Alto</h3>
-        <p>
-          Professora orientadora da LASPOERJ, com atuação voltada à extensão,
-          cuidado humanizado e integração entre universidade e comunidade.
-        </p>
-      </div>
-    </div>
+    ))}
   </div>
 </section>
 
       <section id="eventos" className="eventos">
-  <div id="eventosConteudo"></div>
   <p className="subtitulo">PROGRAMAÇÃO</p>
-        <h2>Próximos Eventos</h2>
+  <h2>Próximos Eventos</h2>
 
-        <div className="eventosGrid">
-          <div className="eventoCard destaqueEvento">
-            <span>JUNHO 2026</span>
-            <h3>Reunião Geral da LASPOERJ</h3>
+  {eventosSite.length === 0 ? (
+    <p className="eventosVazio">
+      Nenhum evento programado no momento.
+    </p>
+  ) : (
+    <div className="eventosGrid">
+      {eventosSite.map((evento) => {
+        const data = new Date(`${evento.data_evento}T00:00:00`);
+
+        const mesAno = data
+          .toLocaleDateString("pt-BR", {
+            month: "long",
+            year: "numeric",
+          })
+          .toUpperCase();
+
+        return (
+          <div
+            key={evento.id}
+            className={
+              evento.destaque
+                ? "eventoCard destaqueEvento"
+                : "eventoCard"
+            }
+          >
+            <span>{mesAno}</span>
+
+            <h3>{evento.titulo}</h3>
+
             <p>
-              Encontro de alinhamento com ligantes, diretoria e organização das
-              primeiras atividades do semestre.
+              {evento.descricao || "Mais informações em breve."}
             </p>
-            <strong>Biblioteca • 15h30</strong>
-          </div>
 
-          <div className="eventoCard">
-            <span>JULHO 2026</span>
-            <h3>Planejamento Semestral</h3>
-            <p>
-              Definição dos grupos de trabalho, calendário de ações e propostas
-              de extensão.
-            </p>
-            <strong>Estácio RJ</strong>
-          </div>
+            <strong>
+              {evento.local || "Local a definir"}
 
-          <div className="eventoCard">
-            <span>AGOSTO 2026</span>
-            <h3>Workshop Atenção Básica</h3>
-            <p>
-              Atividade voltada ao papel da Odontologia na Atenção Primária e
-              no SUS.
-            </p>
-            <strong>Em breve</strong>
+              {evento.horario &&
+                ` • ${evento.horario.slice(0, 5)}`}
+            </strong>
           </div>
-        </div>
-      </section>
+        );
+      })}
+    </div>
+  )}
+</section>
 
-      <section id="agenda" className="agendaSection">
+      <section
+  id="agenda"
+  className="agendaSection"
+>
   <div id="agendaConteudo"></div>
-  <p className="subtitulo">CALENDÁRIO</p>
-        <h2>Agenda da Liga</h2>
 
-        <div className="calendarCard">
-          <div className="calendarHeader">
-            <button>‹</button>
-            <h3>JUNHO 2026</h3>
-            <button>›</button>
-          </div>
+  <p className="subtitulo">
+    CALENDÁRIO
+  </p>
 
-          <div className="weekDays">
-            <span>DOM</span>
-            <span>SEG</span>
-            <span>TER</span>
-            <span>QUA</span>
-            <span>QUI</span>
-            <span>SEX</span>
-            <span>SÁB</span>
-          </div>
+  <h2>Agenda da Liga</h2>
 
-          <div className="daysGrid">
-            <span className="muted">31</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
-            <span>7</span><span>8</span><span className="eventDay">9</span><span>10</span><span>11</span><span>12</span><span>13</span>
-            <span>14</span><span className="eventDay">15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span>
-            <span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span>
-            <span>28</span><span>29</span><span>30</span><span className="muted">1</span><span className="muted">2</span><span className="muted">3</span><span className="muted">4</span>
-          </div>
+  <div className="calendarCard">
+    <div className="calendarHeader">
+      <button
+        type="button"
+        onClick={() =>
+          mudarMesCalendario(-1)
+        }
+        aria-label="Mês anterior"
+      >
+        ‹
+      </button>
+
+      <h3>
+        {tituloCalendario}
+      </h3>
+
+      <button
+        type="button"
+        onClick={() =>
+          mudarMesCalendario(1)
+        }
+        aria-label="Próximo mês"
+      >
+        ›
+      </button>
+    </div>
+
+    <div className="weekDays">
+      <span>DOM</span>
+      <span>SEG</span>
+      <span>TER</span>
+      <span>QUA</span>
+      <span>QUI</span>
+      <span>SEX</span>
+      <span>SÁB</span>
+    </div>
+
+    <div className="daysGrid">
+      {diasCalendario.map(
+        (item, indice) => {
+          const temEvento =
+            datasComEventos.has(
+              item.dataISO
+            );
+
+          let classe = "";
+
+          if (item.muted) {
+            classe = "muted";
+          }
+
+          if (
+            temEvento &&
+            !item.muted
+          ) {
+            classe = "eventDay";
+          }
+
+          return (
+            <span
+              key={`${item.dataISO}-${indice}`}
+              className={classe}
+            >
+              {item.dia}
+            </span>
+          );
+        }
+      )}
+    </div>
+  </div>
+
+  <div className="eventList">
+    <h3>Eventos do mês</h3>
+
+    {eventosDoMes.length === 0 ? (
+      <div className="eventItem">
+        <div>
+          <h4>
+            Nenhum evento neste mês
+          </h4>
+
+          <p>
+            Ainda não há eventos
+            cadastrados para este período.
+          </p>
         </div>
+      </div>
+    ) : (
+      eventosDoMes.map((evento) => {
+        const [
+          ano,
+          mes,
+          dia,
+        ] = evento.data_evento
+          .split("-")
+          .map(Number);
 
-        <div className="eventList">
-          <h3>Eventos do mês</h3>
+        const dataEvento = new Date(
+          ano,
+          mes - 1,
+          dia
+        );
 
-          <div className="eventItem">
+        const mesAbreviado =
+          dataEvento
+            .toLocaleDateString(
+              "pt-BR",
+              {
+                month: "short",
+              }
+            )
+            .replace(".", "")
+            .toUpperCase();
+
+        return (
+          <div
+            className="eventItem"
+            key={evento.id}
+          >
             <div className="dateBox">
-              <strong>09</strong>
-              <span>JUN</span>
+              <strong>
+                {String(dia).padStart(
+                  2,
+                  "0"
+                )}
+              </strong>
+
+              <span>
+                {mesAbreviado}
+              </span>
             </div>
+
             <div>
-              <h4>Primeiro encontro da LASPOERJ com os ligantes</h4>
+              <h4>
+                {evento.titulo}
+              </h4>
+
               <p>
-                Apresentação da Liga, diretoria e projetos previstos para o
-                período.
+                {evento.descricao ||
+                  "Mais informações em breve."}
               </p>
+
+              {(evento.horario ||
+                evento.local) && (
+                <p
+                  style={{
+                    marginTop: "10px",
+                    fontWeight: 700,
+                  }}
+                >
+                  {evento.horario &&
+                    evento.horario.slice(
+                      0,
+                      5
+                    )}
+
+                  {evento.horario &&
+                    evento.local &&
+                    " • "}
+
+                  {evento.local}
+                </p>
+              )}
             </div>
           </div>
+        );
+      })
+    )}
+  </div>
+</section>
 
-          <div className="eventItem">
-            <div className="dateBox">
-              <strong>15</strong>
-              <span>JUN</span>
-            </div>
-            <div>
-              <h4>Apresentação da plataforma</h4>
-              <p>
-                Alinhamento do design institucional e organização da diretoria.
-              </p>
-            </div>
+      <section id="avisos" className="avisosSection">
+  <div id="avisosConteudo"></div>
+
+  <div className="avisosCabecalho">
+    <div>
+      <p className="subtitulo">COMUNICADOS</p>
+      <h2>Avisos da LASPOERJ</h2>
+
+      <p className="avisosIntroducao">
+        Informações, comunicados e atualizações importantes da Liga.
+      </p>
+    </div>
+  </div>
+
+  {avisosSite.length === 0 ? (
+    <div className="avisosVazio">
+      <p>Nenhum aviso publicado no momento.</p>
+    </div>
+  ) : (
+    <div className="avisosGrid">
+      {avisosSite.map((aviso) => (
+        <article
+          key={aviso.id}
+          className={
+            aviso.destaque
+              ? "avisoCard avisoDestaque"
+              : "avisoCard"
+          }
+        >
+          <div className="avisoTopo">
+            <span>
+              {aviso.destaque ? "IMPORTANTE" : "COMUNICADO"}
+            </span>
+
+            {aviso.data_expiracao && (
+              <small>
+                Até{" "}
+                {new Date(
+                  `${aviso.data_expiracao}T00:00:00`
+                ).toLocaleDateString("pt-BR")}
+              </small>
+            )}
           </div>
-        </div>
-      </section>
 
-      <section id="jornal" className="contatoSection">
+          <h3>{aviso.titulo}</h3>
+          <p>{aviso.mensagem}</p>
+        </article>
+      ))}
+    </div>
+  )}
+</section>
+
+      <section id="jornal" className="jornalSection">
   <div id="jornalConteudo"></div>
-  <p className="subtitulo">FIQUE POR DENTRO</p>
-        <h2>Jornal LASPOERJ</h2>
 
-        <p className="contatoTexto">
-          Espaço dedicado às notícias, ações, entrevistas, relatos de
-          experiência e divulgação científica da liga.
-        </p>
-      </section>
+  <div className="jornalCabecalho">
+    <div>
+      <p className="subtitulo">FIQUE POR DENTRO</p>
+      <h2>Jornal LASPOERJ</h2>
+
+      <p>
+        Notícias, ações, entrevistas, relatos de experiência
+        e divulgação científica produzidos pela Liga.
+      </p>
+    </div>
+
+    <a href="/jornal" className="jornalVerTodas">
+      VER TODAS AS PUBLICAÇÕES →
+    </a>
+  </div>
+
+  {publicacoesSite.length === 0 ? (
+    <div className="jornalVazio">
+      <p>Nenhuma publicação disponível no momento.</p>
+    </div>
+  ) : (
+    <div className="jornalGrid">
+      {publicacoesSite.map((publicacao) => (
+        <article
+          key={publicacao.id}
+          className={
+            publicacao.destaque
+              ? "jornalCard jornalDestaque"
+              : "jornalCard"
+          }
+        >
+          {publicacao.imagem_url && (
+            <div className="jornalImagemBox">
+              <img
+                src={publicacao.imagem_url}
+                alt={publicacao.titulo}
+                className="jornalImagem"
+              />
+            </div>
+          )}
+
+          <div className="jornalCardConteudo">
+            <div className="jornalMeta">
+              {publicacao.categoria && (
+                <span>{publicacao.categoria}</span>
+              )}
+
+              {publicacao.data_publicacao && (
+                <small>
+                  {new Date(
+                    `${publicacao.data_publicacao}T00:00:00`
+                  ).toLocaleDateString("pt-BR")}
+                </small>
+              )}
+            </div>
+
+            <h3>{publicacao.titulo}</h3>
+
+            <p>
+              {publicacao.resumo ||
+                publicacao.conteudo?.slice(0, 180) ||
+                "Leia esta publicação do Jornal LASPOERJ."}
+            </p>
+
+            {publicacao.autor && (
+              <div className="jornalAutor">
+                Por {publicacao.autor}
+              </div>
+            )}
+
+            <a
+              href={`/jornal/${publicacao.slug}`}
+              className="jornalLerMais"
+            >
+              LER PUBLICAÇÃO →
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  )}
+</section>
 
      <section id="contato" className="contatoSection">
   <div id="contatoConteudo"></div>
@@ -447,33 +1069,40 @@ useEffect(() => {
   <div className="contatoGrid">
     <a
       className="contatoCard"
-      href="https://www.instagram.com/laspoerj"
+      href={instagramUrl()}
       target="_blank"
       rel="noopener noreferrer"
     >
       <div className="contatoIcone">◎</div>
       <span>Instagram</span>
-      <p>@laspoerj</p>
-    </a>
-
-    <a className="contatoCard" href="ligacademicasp@gmail.com">
-      <div className="contatoIcone">✉</div>
-      <span>E-mail</span>
-      <p>ligacademicasp@gmail.com</p>
+      <p>{config("instagram", "@laspoerj")}</p>
     </a>
 
     <a
       className="contatoCard"
-      href="https://www.google.com/maps/search/?api=1&query=Avenida%20Alfredo%20Balthazar%20da%20Silveira%20580%20Recreio%20dos%20Bandeirantes%20Rio%20de%20Janeiro%20RJ%2022790-710"
+      href={`mailto:${config(
+        "email_contato",
+        "ligacademicasp@gmail.com"
+      )}`}
+    >
+      <div className="contatoIcone">✉</div>
+      <span>E-mail</span>
+      <p>{config("email_contato", "ligacademicasp@gmail.com")}</p>
+    </a>
+
+    <a
+      className="contatoCard"
+      href={enderecoMapsUrl()}
       target="_blank"
       rel="noopener noreferrer"
     >
       <div className="contatoIcone">⌖</div>
       <span>Localização</span>
       <p>
-        Avenida Alfredo Balthazar da Silveira, nº 580<br />
-        Recreio dos Bandeirantes, Rio de Janeiro - RJ<br />
-        22790-710
+        {config(
+          "endereco",
+          "Avenida Alfredo Balthazar da Silveira, nº 580 - Recreio dos Bandeirantes, Rio de Janeiro - RJ, 22790-710"
+        )}
       </p>
     </a>
   </div>
@@ -576,18 +1205,21 @@ useEffect(() => {
       <a href="#diretoria">Diretoria</a>
       <a href="#eventos">Eventos</a>
       <a href="#agenda">Agenda</a>
-      <a href="#jornal">Jornal</a>
+      <a href="#avisos">Avisos</a>
+      <a href="/jornal">Jornal</a>
       <a href="#contato">Contato</a>
       <a href="#sugestoes">Sugestões</a>
     </div>
 
     <div className="footerColuna">
       <h4>Contato</h4>
-      <p>Instagram: @laspoerj</p>
-      <p>E-mail: ligacademicasp@gmail.com</p>
+      <p>Instagram: {config("instagram", "@laspoerj")}</p>
+      <p>E-mail: {config("email_contato", "ligacademicasp@gmail.com")}</p>
       <p>
-        Av. Alfredo Balthazar da Silveira, nº 580<br />
-        Recreio dos Bandeirantes - RJ
+        {config(
+          "endereco",
+          "Avenida Alfredo Balthazar da Silveira, nº 580 - Recreio dos Bandeirantes, Rio de Janeiro - RJ, 22790-710"
+        )}
       </p>
     </div>
   </div>
