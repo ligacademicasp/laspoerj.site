@@ -5903,4 +5903,74 @@ main {
   .agendaAdminOpcoes {
     grid-template-columns: 1fr;
   }
+}/* ==========================================
+   LOGIN - RECUPERAÇÃO DE SENHA
+   ========================================== */
+
+.loginLaspoerjRecuperarLinha {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -3px;
+}
+
+.loginLaspoerjRecuperar {
+  color: var(--azul-sus);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.loginLaspoerjRecuperar:hover {
+  color: var(--turquesa);
+  text-decoration: underline;
+}
+
+.loginLaspoerjSucesso {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid #bde6dc;
+  border-radius: 16px;
+  background: #f1fbf7;
+}
+
+.loginLaspoerjSucesso strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #176f57;
+  font-size: 14px;
+}
+
+.loginLaspoerjSucesso p {
+  margin: 0 0 14px;
+  color: #58746c;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.loginLaspoerjSucesso a,
+.loginLaspoerjBloco a {
+  color: var(--azul-sus);
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.loginLaspoerjSucesso a:hover,
+.loginLaspoerjBloco a:hover {
+  color: var(--turquesa);
+}
+
+.loginLaspoerjBloco {
+  margin-top: 24px;
+  padding: 20px;
+}
+
+.loginLaspoerjBloco strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.loginLaspoerjBloco p {
+  margin-bottom: 12px;
+  line-height: 1.6;
 }
