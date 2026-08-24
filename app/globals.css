@@ -6340,4 +6340,320 @@ main {
   .loginMarca small {
     font-size: 0.68rem;
   }
+}/* =========================================================
+   CORREÇÃO FINAL MOBILE — AVISOS E JORNAL
+========================================================= */
+
+@media screen and (max-width: 768px) {
+
+  /* =========================
+     AVISOS
+  ========================= */
+
+  #avisos,
+  .avisosSection {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    padding: 55px 20px !important;
+
+    overflow: hidden !important;
+  }
+
+  .avisosCabecalho {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: block !important;
+
+    margin: 0 0 28px 0 !important;
+  }
+
+  .avisosCabecalho > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .avisosCabecalho h2 {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 0 16px 0 !important;
+
+    font-size: 38px !important;
+    line-height: 1.08 !important;
+
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .avisosIntroducao {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 !important;
+
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .avisosGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    gap: 16px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: visible !important;
+  }
+
+  .avisoCard,
+  .avisoDestaque {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    flex: none !important;
+
+    margin: 0 !important;
+    padding: 24px 20px !important;
+
+    border-radius: 22px !important;
+
+    box-sizing: border-box !important;
+
+    overflow: hidden !important;
+  }
+
+  .avisoTopo {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+
+    gap: 8px !important;
+
+    margin-bottom: 15px !important;
+  }
+
+  .avisoTopo span,
+  .avisoTopo small {
+    white-space: normal !important;
+  }
+
+  .avisoCard h3 {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 0 12px 0 !important;
+
+    font-size: 26px !important;
+    line-height: 1.18 !important;
+
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .avisoCard p {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 !important;
+
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .avisosVazio {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    padding: 28px 20px !important;
+
+    box-sizing: border-box !important;
+  }
+
+
+  /* =========================
+     JORNAL
+  ========================= */
+
+  #jornal,
+  .jornalSection {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    padding: 55px 20px !important;
+
+    overflow: hidden !important;
+  }
+
+  .jornalCabecalho {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: block !important;
+
+    margin: 0 0 30px 0 !important;
+  }
+
+  .jornalCabecalho > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .jornalCabecalho .subtitulo {
+    margin-bottom: 14px !important;
+  }
+
+  .jornalCabecalho h2 {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 0 16px 0 !important;
+
+    font-size: 40px !important;
+    line-height: 1.08 !important;
+
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .jornalCabecalho p {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 !important;
+
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .jornalVerTodas {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 22px 0 0 0 !important;
+
+    padding: 15px 16px !important;
+
+    box-sizing: border-box !important;
+
+    text-align: center !important;
+
+    white-space: normal !important;
+  }
+
+  .jornalGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    gap: 18px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    overflow: visible !important;
+  }
+
+  .jornalCard,
+  .jornalDestaque {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    flex: none !important;
+
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+  }
+
+  .jornalImagemBox {
+    width: 100% !important;
+    height: auto !important;
+
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .jornalImagem {
+    width: 100% !important;
+    height: 100% !important;
+
+    object-fit: cover !important;
+  }
+
+  .jornalCardConteudo {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    padding: 22px 20px !important;
+
+    box-sizing: border-box !important;
+  }
+
+  .jornalCardConteudo h3 {
+    width: 100% !important;
+
+    font-size: 26px !important;
+    line-height: 1.2 !important;
+
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .jornalCardConteudo p {
+    width: 100% !important;
+
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .jornalVazio {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    padding: 30px 22px !important;
+
+    box-sizing: border-box !important;
+
+    text-align: center !important;
+  }
+
+  .jornalVazio p {
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+
+    word-break: normal !important;
+  }
 }
