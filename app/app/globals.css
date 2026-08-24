@@ -6055,4 +6055,1371 @@ main {
 
   font-size: 0.9rem;
   line-height: 1.5;
+}/* =========================================
+   CORREÇÃO VISUAL - LOGIN / CADASTRO
+========================================= */
+
+.loginPagina {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #f6fbff;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 460px;
+  padding: 42px 44px;
+  margin: 0 auto;
+
+  background: #ffffff;
+  border: 1px solid rgba(7, 31, 92, 0.08);
+  border-radius: 28px;
+
+  box-shadow: 0 20px 50px rgba(7, 31, 92, 0.08);
+}
+
+/* MARCA */
+
+.loginMarca {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+
+  margin-top: 26px;
+  margin-bottom: 26px;
+}
+
+.loginMarca span {
+  display: block;
+
+  font-family: "Playfair Display", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+
+  color: #071f5c;
+}
+
+.loginMarca small {
+  display: block;
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+
+  color: #63718a;
+}
+
+/* CABEÇALHO */
+
+.loginCabecalho {
+  margin-bottom: 28px;
+}
+
+.loginEtiqueta {
+  display: inline-block;
+  margin-bottom: 8px;
+
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+
+  color: #1aa8a5;
+}
+
+.loginCabecalho h1 {
+  margin: 0 0 8px;
+
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.4rem, 5vw, 3rem);
+  line-height: 1;
+
+  color: #071f5c;
+}
+
+.loginCabecalho p {
+  margin: 0;
+
+  font-size: 0.95rem;
+  line-height: 1.65;
+
+  color: #63718a;
+}
+
+/* FORMULÁRIO */
+
+.loginFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.loginFormulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  color: #44526a;
+}
+
+.loginFormulario input {
+  width: 100%;
+  height: 54px;
+
+  padding: 0 18px;
+
+  border: 1px solid #d5e1f2;
+  border-radius: 15px;
+
+  background: #f3f7fd;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+
+  color: #071f5c;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.loginFormulario input:focus {
+  border-color: #1aa8a5;
+  box-shadow: 0 0 0 4px rgba(26, 168, 165, 0.1);
+}
+
+/* ESQUECI A SENHA */
+
+.loginEsqueciSenha {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: -8px;
+}
+
+.loginEsqueciSenha a {
+  font-size: 0.86rem;
+  font-weight: 700;
+
+  color: #1aa8a5;
+  text-decoration: none;
+}
+
+.loginEsqueciSenha a:hover {
+  text-decoration: underline;
+}
+
+/* BOTÃO ENTRAR */
+
+.loginBotao {
+  width: 100%;
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 4px;
+
+  border: 0;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    90deg,
+    #071f5c 0%,
+    #0b4970 55%,
+    #1aa8a5 100%
+  );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+
+  cursor: pointer;
+}
+
+/* CRIAR CADASTRO */
+
+.loginCadastro {
+  margin-top: 30px;
+  padding-top: 24px;
+
+  border-top: 1px solid #e1e8f1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  gap: 14px;
+
+  text-align: center;
+}
+
+.loginCadastro span {
+  font-size: 0.9rem;
+
+  color: #63718a;
+}
+
+.loginCadastroBotao {
+  width: 100%;
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1.5px solid #071f5c;
+  border-radius: 14px;
+
+  color: #071f5c;
+  background: transparent;
+
+  font-size: 0.94rem;
+  font-weight: 800;
+
+  text-decoration: none;
+}
+
+.loginCadastroBotao:hover {
+  background: #071f5c;
+  color: #ffffff;
+}
+
+/* VOLTAR */
+
+.loginVoltar {
+  display: inline-flex;
+  align-items: center;
+
+  color: #63718a;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  text-decoration: none;
+}
+
+.loginVoltar:hover {
+  color: #071f5c;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .loginPagina {
+    padding: 18px;
+  }
+
+  .loginCard {
+    padding: 32px 24px;
+    border-radius: 22px;
+  }
+
+  .loginCabecalho h1 {
+    font-size: 2.35rem;
+  }
+
+  .loginMarca span {
+    font-size: 1.18rem;
+  }
+
+  .loginMarca small {
+    font-size: 0.68rem;
+  }
+}/* =========================================
+   NOVA SENHA / RECUPERAÇÃO
+========================================= */
+
+.loginPagina {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #f6fbff;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 460px;
+  padding: 42px 44px;
+  background: #ffffff;
+  border: 1px solid rgba(7, 31, 92, 0.08);
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(7, 31, 92, 0.08);
+}
+
+.loginVoltar {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 26px;
+  color: #63718a;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.loginVoltar:hover {
+  color: #071f5c;
+}
+
+.loginMarca {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 28px;
+}
+
+.loginMarca span {
+  font-family: "Playfair Display", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #071f5c;
+}
+
+.loginMarca small {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #63718a;
+}
+
+.loginCabecalho {
+  margin-bottom: 28px;
+}
+
+.loginEtiqueta {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #1aa8a5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.loginCabecalho h1 {
+  margin: 0 0 10px;
+  font-family: "Playfair Display", serif;
+  font-size: 2.55rem;
+  line-height: 1.05;
+  color: #071f5c;
+}
+
+.loginCabecalho p {
+  margin: 0;
+  color: #63718a;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.loginFormulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.loginFormulario label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #44526a;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.loginFormulario input {
+  width: 100%;
+  height: 54px;
+  padding: 0 18px;
+  border: 1px solid #d5e1f2;
+  border-radius: 15px;
+  background: #f3f7fd;
+  color: #071f5c;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.loginFormulario input:focus {
+  border-color: #1aa8a5;
+  box-shadow: 0 0 0 4px rgba(26, 168, 165, 0.1);
+}
+
+.loginBotao {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(
+    90deg,
+    #071f5c 0%,
+    #0b4970 55%,
+    #1aa8a5 100%
+  );
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+.loginBotao:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.loginErro {
+  padding: 13px 15px;
+  border-radius: 10px;
+  background: rgba(190, 40, 40, 0.08);
+  border: 1px solid rgba(190, 40, 40, 0.18);
+  color: #a12a2a;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.cadastroSucesso {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(26, 168, 165, 0.1);
+  border: 1px solid rgba(26, 168, 165, 0.3);
+  color: #087c7a;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.loginCadastroBotao {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #071f5c;
+  border-radius: 14px;
+  background: transparent;
+  color: #071f5c;
+  font-size: 0.94rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.loginCadastroBotao:hover {
+  background: #071f5c;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .loginPagina {
+    padding: 18px;
+  }
+
+  .loginCard {
+    padding: 32px 24px;
+    border-radius: 22px;
+  }
+
+  .loginCabecalho h1 {
+    font-size: 2.15rem;
+  }
+
+  .loginMarca span {
+    font-size: 1.18rem;
+  }
+
+  .loginMarca small {
+    font-size: 0.66rem;
+  }
+}/* =========================================================
+   LASPOERJ — RESPONSIVO FINAL
+   CELULAR / TABLET
+========================================================= */
+
+/* Evita estouro horizontal em toda a aplicação */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+.menuMobileBtn {
+  display: none;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1024px) {
+
+  .header {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .sobre,
+  .diretoria,
+  .orientadores,
+  .eventos,
+  .agendaSection,
+  .avisosSection,
+  .jornalSection,
+  .contatoSection,
+  .sugestoesSection {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .eventosGrid,
+  .jornalGrid,
+  .contatoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .orientadorCard {
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+  }
+
+  .fotoOrientador {
+    height: 360px;
+  }
+}
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 768px) {
+
+  /* -----------------------------------------
+     HEADER
+  ----------------------------------------- */
+
+  .header {
+    width: 100%;
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 18px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 1000;
+  }
+
+  .logoBox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-width: 0;
+  }
+
+  .logoBox img {
+    width: 54px !important;
+    height: 54px !important;
+    object-fit: contain;
+
+    flex-shrink: 0;
+  }
+
+  .logoBox > div {
+    min-width: 0;
+  }
+
+  .logoBox strong {
+    display: block;
+
+    font-size: 17px !important;
+    letter-spacing: 2px !important;
+
+    white-space: nowrap;
+  }
+
+  .logoBox span {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 8px !important;
+    letter-spacing: 0.6px;
+
+    white-space: nowrap;
+  }
+
+  /* -----------------------------------------
+     MENU HAMBÚRGUER
+  ----------------------------------------- */
+
+  .menuMobileBtn {
+    width: 46px;
+    height: 46px;
+
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 12px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    position: relative;
+    z-index: 1201;
+
+    flex-shrink: 0;
+  }
+
+  .menuMobileBtn span {
+    display: block;
+
+    width: 24px;
+    height: 2px;
+
+    border-radius: 20px;
+
+    background: #071f5c;
+
+    transition: 0.25s ease;
+  }
+
+  .menuMobileBtn.ativo span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .menuMobileBtn.ativo span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menuMobileBtn.ativo span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .menuOverlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(7, 31, 92, 0.28);
+    backdrop-filter: blur(3px);
+
+    z-index: 1090;
+  }
+
+  .menu {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+
+    width: min(82vw, 320px);
+    height: 100dvh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 5px;
+
+    padding: 94px 22px 28px;
+
+    background: #ffffff;
+
+    box-shadow: -20px 0 50px rgba(7, 31, 92, 0.14);
+
+    transform: translateX(105%);
+
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+      transform 0.28s ease,
+      visibility 0.28s ease;
+
+    overflow-y: auto;
+
+    z-index: 1100;
+  }
+
+  .menu.menuAberto {
+    transform: translateX(0);
+
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .menu a {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding: 14px 12px;
+
+    border-radius: 10px;
+
+    color: #071f5c;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
+  }
+
+  .menu a:hover {
+    background: #f3f8fc;
+  }
+
+  .menu .loginBtn {
+    justify-content: center;
+
+    margin-top: 10px;
+
+    background: linear-gradient(
+      90deg,
+      #071f5c,
+      #1aa8a5
+    );
+
+    color: white;
+
+    border-radius: 12px;
+  }
+
+  /* -----------------------------------------
+     HERO
+  ----------------------------------------- */
+
+  .hero {
+    width: 100%;
+
+    min-height: auto;
+
+    padding: 70px 20px 65px !important;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    overflow: hidden;
+  }
+
+  .hero .subtitulo {
+    font-size: 11px;
+    letter-spacing: 2px;
+
+    line-height: 1.5;
+  }
+
+  .hero h1 {
+    width: 100%;
+    max-width: 100%;
+
+    margin-top: 15px;
+
+    font-size: clamp(2.15rem, 10.5vw, 3.15rem) !important;
+    line-height: 1.03 !important;
+
+    letter-spacing: -1px;
+
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .hero h1 br {
+    display: block;
+  }
+
+  .typewriter {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    font-size: inherit !important;
+    line-height: 1.08;
+
+    white-space: normal !important;
+
+    overflow: visible !important;
+
+    border-right: none !important;
+  }
+
+  .descricao {
+    width: 100%;
+    max-width: 100% !important;
+
+    margin-top: 24px;
+
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+  }
+
+  /* -----------------------------------------
+     BOTÕES HERO
+  ----------------------------------------- */
+
+  .botoes {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 28px;
+  }
+
+  .botoes .btn {
+    width: 100%;
+
+    min-height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 14px 18px;
+
+    text-align: center;
+
+    font-size: 12px;
+  }
+
+  /* -----------------------------------------
+     TODAS AS SEÇÕES
+  ----------------------------------------- */
+
+  .sobre,
+  .diretoria,
+  .orientadores,
+  .eventos,
+  .agendaSection,
+  .avisosSection,
+  .jornalSection,
+  .contatoSection,
+  .sugestoesSection {
+    width: 100%;
+
+    padding: 65px 20px !important;
+  }
+
+  section h2 {
+    max-width: 100%;
+
+    font-size: clamp(2rem, 9vw, 2.8rem) !important;
+    line-height: 1.08 !important;
+
+    overflow-wrap: break-word;
+  }
+
+  section .subtitulo {
+    font-size: 10px;
+    line-height: 1.5;
+
+    letter-spacing: 2.2px;
+  }
+
+  /* -----------------------------------------
+     SOBRE
+  ----------------------------------------- */
+
+  .sobre {
+    grid-template-columns: 1fr !important;
+
+    gap: 35px !important;
+  }
+
+  .sobreTexto,
+  .sobreCard {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sobreTexto p,
+  .sobreCard p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+  }
+
+  .sobreCard {
+    padding: 28px 24px !important;
+    border-radius: 22px !important;
+  }
+
+  /* -----------------------------------------
+     NÚMEROS
+  ----------------------------------------- */
+
+  .numeros {
+    width: 100%;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 12px !important;
+
+    padding: 35px 16px !important;
+  }
+
+  .numeros div {
+    min-width: 0;
+
+    padding: 24px 10px !important;
+
+    border-radius: 18px !important;
+  }
+
+  .numeros strong {
+    font-size: 34px !important;
+  }
+
+  .numeros span {
+    display: block;
+
+    font-size: 11px !important;
+    line-height: 1.4;
+  }
+
+  /* -----------------------------------------
+     DIRETORIA
+  ----------------------------------------- */
+
+  .diretoriaGrid {
+    width: 100%;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 22px !important;
+
+    overflow: visible !important;
+
+    padding: 0 !important;
+  }
+
+  .membroCard {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+
+    padding: 18px !important;
+
+    border-radius: 22px !important;
+  }
+
+  .fotoMembro {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5;
+
+    object-fit: cover;
+
+    border-radius: 17px !important;
+  }
+
+  .membroCard h3 {
+    font-size: 25px !important;
+    line-height: 1.15;
+  }
+
+  .membroCard span {
+    font-size: 11px !important;
+  }
+
+  .membroCard p {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+  }
+
+  /* -----------------------------------------
+     ORIENTADORES
+  ----------------------------------------- */
+
+  .orientadoresGrid {
+    grid-template-columns: 1fr !important;
+
+    gap: 24px !important;
+  }
+
+  .orientadorCard {
+    width: 100%;
+
+    grid-template-columns: 1fr !important;
+
+    gap: 22px !important;
+
+    padding: 18px !important;
+
+    border-radius: 23px !important;
+  }
+
+  .fotoOrientador {
+    width: 100% !important;
+    height: auto !important;
+
+    aspect-ratio: 4 / 5;
+
+    object-fit: cover;
+
+    border-radius: 18px !important;
+  }
+
+  .orientadorCard h3 {
+    font-size: 28px !important;
+  }
+
+  .orientadorCard p {
+    max-width: 100%;
+
+    font-size: 14px !important;
+    line-height: 1.75 !important;
+  }
+
+  /* -----------------------------------------
+     EVENTOS
+  ----------------------------------------- */
+
+  .eventosGrid {
+    width: 100%;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 18px !important;
+  }
+
+  .eventoCard {
+    width: 100%;
+
+    padding: 24px 20px !important;
+
+    border-radius: 21px !important;
+  }
+
+  .eventoCard h3 {
+    font-size: 22px !important;
+    line-height: 1.2;
+  }
+
+  .eventoCard p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* -----------------------------------------
+     AGENDA / CALENDÁRIO
+  ----------------------------------------- */
+
+  .calendarCard {
+    width: 100%;
+
+    padding: 16px !important;
+
+    border-radius: 20px !important;
+
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .calendarCard button {
+    min-width: 38px;
+    min-height: 38px;
+  }
+
+  .eventItem {
+    width: 100%;
+
+    flex-direction: column !important;
+    align-items: flex-start !important;
+
+    gap: 10px;
+  }
+
+  /* -----------------------------------------
+     AVISOS
+  ----------------------------------------- */
+
+  .avisosGrid {
+    grid-template-columns: 1fr !important;
+
+    gap: 16px !important;
+  }
+
+  .avisoCard {
+    width: 100%;
+
+    padding: 22px 18px !important;
+  }
+
+  /* -----------------------------------------
+     JORNAL
+  ----------------------------------------- */
+
+  .jornalGrid {
+    width: 100%;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 20px !important;
+  }
+
+  .jornalCard {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .jornalCard img {
+    width: 100%;
+    height: auto;
+
+    aspect-ratio: 16 / 10;
+
+    object-fit: cover;
+  }
+
+  .jornalCardConteudo {
+    padding: 20px !important;
+  }
+
+  .jornalCardConteudo h3 {
+    font-size: 22px !important;
+    line-height: 1.25;
+  }
+
+  /* -----------------------------------------
+     CONTATO
+  ----------------------------------------- */
+
+  .contatoGrid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 15px !important;
+  }
+
+  .contatoCard {
+    width: 100%;
+
+    padding: 24px 20px !important;
+
+    overflow-wrap: anywhere;
+  }
+
+  .contatoCard p {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* -----------------------------------------
+     SUGESTÕES
+  ----------------------------------------- */
+
+  .sugestoesSection {
+    width: 100%;
+  }
+
+  .sugestoesGrid,
+  .sugestoesConteudo {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    width: 100%;
+
+    gap: 25px !important;
+  }
+
+  .sugestoesSection form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sugestoesSection input,
+  .sugestoesSection select,
+  .sugestoesSection textarea,
+  .sugestoesSection button {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* -----------------------------------------
+     RODAPÉ
+  ----------------------------------------- */
+
+  footer,
+  .footer {
+    width: 100%;
+
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    text-align: center;
+  }
+
+  .footerGrid,
+  .footerConteudo {
+    grid-template-columns: 1fr !important;
+
+    justify-items: center;
+
+    gap: 25px !important;
+  }
+
+  /* -----------------------------------------
+     BOTÃO VOLTAR AO TOPO
+  ----------------------------------------- */
+
+  .botaoTopo,
+  .voltarTopo {
+    right: 16px !important;
+    bottom: 16px !important;
+
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  /* -----------------------------------------
+     LOGIN / CADASTRO / SENHA
+  ----------------------------------------- */
+
+  .loginPagina {
+    width: 100%;
+
+    min-height: 100dvh;
+
+    padding: 18px !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .loginCard {
+    width: 100% !important;
+    max-width: 440px !important;
+
+    margin: 0 auto !important;
+
+    padding: 30px 22px !important;
+
+    border-radius: 22px !important;
+  }
+
+  .loginCabecalho h1 {
+    font-size: 2.15rem !important;
+  }
+
+  .loginFormulario input {
+    width: 100% !important;
+  }
+
+  .loginBotao,
+  .loginCadastroBotao {
+    width: 100% !important;
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 390px) {
+
+  .header {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .logoBox img {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .logoBox strong {
+    font-size: 15px !important;
+  }
+
+  .logoBox span {
+    font-size: 7px !important;
+  }
+
+  .hero {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 10vw, 2.55rem) !important;
+  }
+
+  .sobre,
+  .diretoria,
+  .orientadores,
+  .eventos,
+  .agendaSection,
+  .avisosSection,
+  .jornalSection,
+  .contatoSection,
+  .sugestoesSection {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .numeros {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .numeros strong {
+    font-size: 30px !important;
+  }
+
+  .loginCard {
+    padding: 26px 18px !important;
+  }
 }
