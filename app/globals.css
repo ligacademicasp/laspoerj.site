@@ -5973,4 +5973,86 @@ main {
 .loginLaspoerjBloco p {
   margin-bottom: 12px;
   line-height: 1.6;
+}/* =========================================
+   LOGIN - LINKS E CADASTRO
+========================================= */
+
+.loginEsqueciSenha {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -4px;
+}
+
+.loginEsqueciSenha a {
+  color: #1aa8a5;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.loginEsqueciSenha a:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+.loginCadastro {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(7, 31, 92, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  text-align: center;
+}
+
+.loginCadastro span {
+  font-size: 0.9rem;
+  color: #4b5a73;
+}
+
+.loginCadastroBotao {
+  width: 100%;
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1.5px solid #071f5c;
+  border-radius: 12px;
+
+  color: #071f5c;
+  background: transparent;
+
+  font-weight: 700;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.loginCadastroBotao:hover {
+  background: #071f5c;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.cadastroSucesso {
+  padding: 14px 16px;
+
+  border-radius: 10px;
+
+  background: rgba(26, 168, 165, 0.1);
+  border: 1px solid rgba(26, 168, 165, 0.3);
+
+  color: #087c7a;
+
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
