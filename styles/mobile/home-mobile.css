@@ -1,0 +1,764 @@
+@media (max-width: 768px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  main#topo {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9999 !important;
+    width: 100% !important;
+    height: 82px !important;
+    min-height: 82px !important;
+    padding: 10px 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background: rgba(255,255,255,.97) !important;
+    border-bottom: 1px solid #e3edf7 !important;
+    backdrop-filter: blur(12px);
+  }
+
+  .logoBox {
+    min-width: 0 !important;
+    max-width: calc(100% - 72px) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .logoBox img {
+    width: 50px !important;
+    height: 50px !important;
+    flex: 0 0 50px !important;
+    object-fit: contain !important;
+  }
+
+  .logoBox > div { min-width: 0 !important; }
+
+  .logoBox strong {
+    display: block !important;
+    font-family: "Playfair Display", serif !important;
+    font-size: clamp(20px, 6vw, 28px) !important;
+    line-height: 1 !important;
+    letter-spacing: 1px !important;
+    white-space: nowrap !important;
+    color: #071f5c !important;
+  }
+
+  .logoBox span { display: none !important; }
+
+  .menuMobileBtn {
+    position: relative !important;
+    z-index: 10002 !important;
+    flex: 0 0 52px !important;
+    width: 52px !important;
+    height: 52px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 0 !important;
+    border: 1px solid rgba(26,168,165,.18) !important;
+    border-radius: 17px !important;
+    background: rgba(210,244,247,.94) !important;
+    box-shadow: 0 8px 22px rgba(7,31,92,.08) !important;
+    font-size: 0 !important;
+  }
+
+  .menuMobileBtn::before,
+  .menuMobileBtn::after { content: none !important; }
+
+  .menuMobileBtn > span {
+    display: block !important;
+    width: 25px !important;
+    height: 3px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 50px !important;
+    background: #071f5c !important;
+    opacity: 1 !important;
+    transition: .25s ease !important;
+  }
+
+  .menuMobileBtn.ativo > span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg) !important;
+  }
+
+  .menuMobileBtn.ativo > span:nth-child(2) {
+    opacity: 0 !important;
+  }
+
+  .menuMobileBtn.ativo > span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg) !important;
+  }
+
+  .menuOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9998 !important;
+    background: rgba(7,31,92,.28) !important;
+    backdrop-filter: blur(3px);
+  }
+
+  .menu {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    z-index: 10000 !important;
+    width: min(84vw, 320px) !important;
+    height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 5px !important;
+    padding: 100px 22px 28px !important;
+    background: #fff !important;
+    box-shadow: -18px 0 50px rgba(7,31,92,.16) !important;
+    transform: translateX(105%) !important;
+    transition: transform .28s ease !important;
+    overflow-y: auto !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .menu.menuAberto {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .menu a {
+    width: 100% !important;
+    padding: 13px 12px !important;
+    border-radius: 11px !important;
+    color: #071f5c !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+  }
+
+  .menu .loginBtn {
+    margin-top: 10px !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 14px 16px !important;
+    background: linear-gradient(90deg,#071f5c,#1aa8a5) !important;
+    color: #fff !important;
+  }
+
+  .hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    padding: 52px 20px 62px !important;
+    overflow: hidden !important;
+  }
+
+  .hero .subtitulo {
+    width: 100% !important;
+    margin: 0 0 16px !important;
+    font-size: 10px !important;
+    line-height: 1.45 !important;
+    letter-spacing: 2.2px !important;
+  }
+
+  .hero h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: clamp(2.15rem,10.5vw,3rem) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -.6px !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .typewriter {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 1ch !important;
+    padding-right: 3px !important;
+    font-size: clamp(1.85rem,9vw,2.75rem) !important;
+    line-height: 1.08 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    border-right: 3px solid #1aa8a5 !important;
+    animation: blink .7s infinite !important;
+    vertical-align: top !important;
+  }
+
+  .descricao {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 24px 0 0 !important;
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    word-break: normal !important;
+  }
+
+  .botoes {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin: 28px 0 0 !important;
+  }
+
+  .botoes .btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 14px 18px !important;
+    text-align: center !important;
+  }
+
+  .sobre,
+  .diretoria,
+  .orientadores,
+  .eventos,
+  .agendaSection,
+  .avisosSection,
+  .jornalSection,
+  .contatoSection,
+  .sugestoesSection {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 58px 20px !important;
+    overflow: hidden !important;
+  }
+
+  .sobreTexto h2,
+  .diretoria h2,
+  .orientadoresIntro h2,
+  .eventos h2,
+  .agendaSection h2,
+  .avisosSection h2,
+  .jornalSection h2,
+  .contatoSection h2,
+  .sugestoesIntro h2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 18px !important;
+    font-size: clamp(2.05rem,8.8vw,2.65rem) !important;
+    line-height: 1.08 !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .sobre {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .sobreTexto,
+  .sobreCard {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .sobreTexto p,
+  .sobreCard p {
+    max-width: 100% !important;
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .sobreCard {
+    padding: 26px 22px !important;
+    border-radius: 22px !important;
+  }
+
+  .numeros {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 12px !important;
+    padding: 28px 16px !important;
+  }
+
+  .numeros div {
+    min-width: 0 !important;
+    padding: 22px 10px !important;
+    border-radius: 18px !important;
+  }
+
+  .numeros strong { font-size: 31px !important; }
+
+  .numeros span {
+    display: block !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+  }
+
+  .diretoriaGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    margin-top: 28px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+
+  .membroCard {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .fotoMembro {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4/5 !important;
+    object-fit: cover !important;
+    border-radius: 17px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .orientadoresIntro {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 28px !important;
+  }
+
+  .orientadoresGrid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .orientadorCard {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .fotoOrientador {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4/5 !important;
+    object-fit: cover !important;
+    border-radius: 17px !important;
+  }
+
+  .eventosGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .eventoCard {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 22px 18px !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+  }
+
+  .calendarCard {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+  }
+
+  .calendarHeader {
+    gap: 8px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .calendarHeader h3 {
+    min-width: 0 !important;
+    font-size: clamp(17px,5.2vw,23px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: 1px !important;
+    text-align: center !important;
+  }
+
+  .calendarHeader button {
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .weekDays,
+  .daysGrid {
+    width: 100% !important;
+    grid-template-columns: repeat(7,minmax(0,1fr)) !important;
+  }
+
+  .weekDays span {
+    font-size: 8px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .daysGrid span {
+    min-width: 0 !important;
+    padding: 8px 1px !important;
+    font-size: 12px !important;
+  }
+
+  .eventList {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 28px !important;
+  }
+
+  .eventItem {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 20px 18px !important;
+  }
+
+  .avisosCabecalho,
+  .avisosCabecalho > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+
+  .avisosCabecalho { margin: 0 0 26px !important; }
+
+  .avisosIntroducao {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.72 !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .avisosGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .avisoCard,
+  .avisoDestaque {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 22px 18px !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+  }
+
+  .avisoTopo {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 7px 10px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .avisoTopo span,
+  .avisoTopo small {
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .avisoCard h3,
+  .avisoCard p {
+    width: 100% !important;
+    max-width: 100% !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .avisoCard h3 {
+    margin: 0 0 12px !important;
+    font-size: 25px !important;
+    line-height: 1.18 !important;
+  }
+
+  .avisoCard p {
+    margin: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.72 !important;
+  }
+
+  .jornalCabecalho {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 20px !important;
+    margin: 0 0 28px !important;
+  }
+
+  .jornalCabecalho > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .jornalCabecalho > div > p:last-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.72 !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .jornalVerTodas {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 14px 16px !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .jornalGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .jornalCard,
+  .jornalDestaque {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+  }
+
+  .jornalImagemBox {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16/10 !important;
+    overflow: hidden !important;
+  }
+
+  .jornalImagem {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .jornalCardConteudo {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 20px 18px !important;
+  }
+
+  .jornalVazio {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 28px 18px !important;
+    text-align: center !important;
+  }
+
+  .jornalVazio p {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  .contatoTexto {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 26px !important;
+    font-size: 15px !important;
+    line-height: 1.72 !important;
+  }
+
+  .contatoGrid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .contatoCard {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 22px 18px !important;
+    overflow: hidden !important;
+  }
+
+  .contatoCard p {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .sugestoesIntro,
+  .sugestoesForm {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .sugestoesIntro { margin-bottom: 28px !important; }
+
+  .sugestoesForm {
+    padding: 22px 18px !important;
+    border-radius: 22px !important;
+    gap: 16px !important;
+  }
+
+  .linhaForm {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .sugestoesForm input,
+  .sugestoesForm select,
+  .sugestoesForm textarea,
+  .sugestoesForm button {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .footerSite {
+    width: 100% !important;
+    padding: 52px 20px 24px !important;
+    overflow: hidden !important;
+  }
+
+  .footerGrid {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+    text-align: center !important;
+  }
+
+  .footerMarca { text-align: center !important; }
+
+  .footerMarca img {
+    width: 78px !important;
+    height: 78px !important;
+  }
+
+  .footerMarca h2 {
+    font-size: 30px !important;
+    letter-spacing: 5px !important;
+  }
+
+  .footerMarca p,
+  .footerColuna p,
+  .footerColuna a {
+    overflow-wrap: anywhere !important;
+  }
+
+  .btnTopo {
+    right: 16px !important;
+    bottom: 16px !important;
+    width: 52px !important;
+    height: 52px !important;
+    z-index: 9000 !important;
+  }
+
+  #sobreConteudo,
+  #diretoriaConteudo,
+  #eventos,
+  #agendaConteudo,
+  #avisosConteudo,
+  #jornalConteudo,
+  #contatoConteudo,
+  #sugestoes {
+    scroll-margin-top: 94px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .header {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .logoBox img {
+    width: 46px !important;
+    height: 46px !important;
+    flex-basis: 46px !important;
+  }
+
+  .logoBox strong { font-size: 20px !important; }
+
+  .menuMobileBtn {
+    width: 48px !important;
+    height: 48px !important;
+    flex-basis: 48px !important;
+  }
+
+  .hero,
+  .sobre,
+  .diretoria,
+  .orientadores,
+  .eventos,
+  .agendaSection,
+  .avisosSection,
+  .jornalSection,
+  .contatoSection,
+  .sugestoesSection {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .hero h1 { font-size: 2.05rem !important; }
+  .typewriter { font-size: 1.82rem !important; }
+}

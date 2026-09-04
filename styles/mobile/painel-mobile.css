@@ -1,0 +1,1045 @@
+/* =========================================================
+   LASPOERJ — PAINEL MOBILE
+   Arquivo exclusivo para o painel administrativo em telas menores.
+   Importar DEPOIS de globals.css e home-mobile.css.
+========================================================= */
+
+@media (max-width: 768px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  /* =====================================================
+     ESTRUTURA GERAL
+  ===================================================== */
+
+  .painelLayout {
+    display: block !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    min-height: 100dvh !important;
+
+    background: #f4f8fc !important;
+
+    overflow-x: hidden !important;
+  }
+
+  /* =====================================================
+     SIDEBAR VIRA CABEÇALHO MOBILE
+  ===================================================== */
+
+  .painelSidebar {
+    position: relative !important;
+
+    top: auto !important;
+    left: auto !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+
+    padding: 16px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    background: #071f5c !important;
+
+    box-shadow: 0 8px 28px rgba(7, 31, 92, 0.16) !important;
+
+    overflow: hidden !important;
+  }
+
+  .painelLogo {
+    width: 100% !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    gap: 10px !important;
+
+    padding: 0 0 14px !important;
+
+    border-bottom: 1px solid rgba(255,255,255,.14) !important;
+  }
+
+  .painelLogo img {
+    width: 48px !important;
+    height: 48px !important;
+
+    object-fit: contain !important;
+
+    flex: 0 0 48px !important;
+  }
+
+  .painelLogo > div {
+    min-width: 0 !important;
+  }
+
+  .painelLogo strong {
+    display: block !important;
+
+    font-size: 18px !important;
+    line-height: 1 !important;
+
+    letter-spacing: 2px !important;
+
+    white-space: nowrap !important;
+  }
+
+  .painelLogo span {
+    display: block !important;
+
+    margin-top: 4px !important;
+
+    font-size: 8px !important;
+    line-height: 1.3 !important;
+
+    letter-spacing: 1.5px !important;
+
+    white-space: normal !important;
+  }
+
+  /* =====================================================
+     MENU DO PAINEL
+  ===================================================== */
+
+  .painelMenu {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+
+    gap: 8px !important;
+
+    margin: 14px 0 0 !important;
+    padding: 0 0 8px !important;
+
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin !important;
+  }
+
+  .painelMenu::-webkit-scrollbar {
+    height: 4px !important;
+  }
+
+  .painelMenu::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.25) !important;
+    border-radius: 50px !important;
+  }
+
+  .painelMenu a {
+    flex: 0 0 auto !important;
+
+    width: auto !important;
+    min-width: max-content !important;
+
+    padding: 11px 14px !important;
+
+    border-radius: 12px !important;
+
+    background: rgba(255,255,255,.08) !important;
+
+    color: #e4edf7 !important;
+
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+
+    white-space: nowrap !important;
+  }
+
+  .painelMenu a:hover {
+    transform: none !important;
+
+    background: rgba(255,255,255,.14) !important;
+  }
+
+  /* =====================================================
+     RODAPÉ DA SIDEBAR
+  ===================================================== */
+
+  .painelSidebarRodape {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+
+    gap: 8px !important;
+
+    margin-top: 12px !important;
+  }
+
+  .painelSidebarRodape a,
+  .painelSidebarRodape button,
+  .painelSairBtn {
+    width: 100% !important;
+    min-width: 0 !important;
+
+    min-height: 44px !important;
+
+    padding: 10px 8px !important;
+
+    border-radius: 12px !important;
+
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+
+    white-space: normal !important;
+  }
+
+  /* =====================================================
+     CONTEÚDO PRINCIPAL
+  ===================================================== */
+
+  .painelConteudo {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    padding: 24px 16px 42px !important;
+
+    overflow-x: hidden !important;
+  }
+
+  .painelDashboard {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    margin: 0 !important;
+  }
+
+  .painelCabecalho {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+
+    gap: 15px !important;
+
+    margin-bottom: 26px !important;
+  }
+
+  .painelCabecalho > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .painelSubtitulo {
+    margin-bottom: 8px !important;
+
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+
+    letter-spacing: 2px !important;
+
+    overflow-wrap: anywhere !important;
+  }
+
+  .painelCabecalho h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin: 0 0 10px !important;
+
+    font-size: clamp(2rem, 8.8vw, 2.5rem) !important;
+    line-height: 1.07 !important;
+
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .painelCabecalho p {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+
+    overflow-wrap: break-word !important;
+  }
+
+  .painelVerSite {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 13px 16px !important;
+
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  /* =====================================================
+     DASHBOARD
+  ===================================================== */
+
+  .painelCards {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 14px !important;
+  }
+
+  .painelCard {
+    width: 100% !important;
+    min-width: 0 !important;
+
+    min-height: 0 !important;
+
+    padding: 20px 18px !important;
+
+    border-radius: 20px !important;
+  }
+
+  .painelQuantidade {
+    margin-bottom: 16px !important;
+
+    font-size: 30px !important;
+  }
+
+  .painelCard h2 {
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+  }
+
+  .painelCard p {
+    margin-bottom: 18px !important;
+
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+
+  /* =====================================================
+     BOTÕES GERAIS
+  ===================================================== */
+
+  .painelBotaoPrincipal,
+  .painelBotaoSecundario {
+    max-width: 100% !important;
+
+    padding: 13px 18px !important;
+
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .painelMensagem {
+    width: 100% !important;
+
+    padding: 14px 16px !important;
+
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+
+  /* =====================================================
+     EVENTOS ADMIN
+  ===================================================== */
+
+  .eventoFormularioCard,
+  .eventosAdministracao {
+    width: 100% !important;
+
+    margin-top: 22px !important;
+
+    padding: 20px 16px !important;
+
+    border-radius: 20px !important;
+  }
+
+  .eventoFormularioCabecalho,
+  .eventosAdministracaoCabecalho {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+
+    gap: 12px !important;
+
+    margin-bottom: 20px !important;
+  }
+
+  .eventoFormularioCabecalho h2,
+  .eventosAdministracaoCabecalho h2 {
+    font-size: 26px !important;
+    line-height: 1.12 !important;
+  }
+
+  .eventoFechar {
+    align-self: flex-end !important;
+
+    width: 40px !important;
+    height: 40px !important;
+
+    flex: 0 0 40px !important;
+  }
+
+  .eventoFormulario {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 16px !important;
+  }
+
+  .eventoCampoGrande {
+    grid-column: auto !important;
+  }
+
+  .eventoCampo input,
+  .eventoCampo select,
+  .eventoCampo textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .eventoFormularioAcoes,
+  .eventoAdminAcoes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+
+    gap: 8px !important;
+  }
+
+  .eventoFormularioAcoes > *,
+  .eventoAdminAcoes > * {
+    flex: 1 1 135px !important;
+
+    min-width: 0 !important;
+  }
+
+  .eventoAdminCard {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 14px !important;
+
+    padding: 16px !important;
+  }
+
+  .eventoAdminData {
+    width: 78px !important;
+    min-height: 78px !important;
+  }
+
+  /* =====================================================
+     AGENDA ADMIN
+  ===================================================== */
+
+  .agendaAdminResumo {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 10px !important;
+
+    margin-top: 20px !important;
+  }
+
+  .agendaAdminResumo > div {
+    min-width: 0 !important;
+    min-height: 110px !important;
+
+    padding: 16px 12px !important;
+
+    border-radius: 18px !important;
+  }
+
+  .agendaAdminResumo strong {
+    font-size: 30px !important;
+  }
+
+  .agendaAdminCalendario,
+  .agendaAdminLista {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    margin-top: 20px !important;
+
+    padding: 16px !important;
+
+    border-radius: 20px !important;
+
+    overflow: hidden !important;
+  }
+
+  .agendaAdminCalendarioTopo,
+  .agendaAdminListaTopo {
+    width: 100% !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    gap: 8px !important;
+  }
+
+  .agendaAdminListaTopo {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .agendaAdminCalendarioTopo h2,
+  .agendaAdminListaTopo h2 {
+    font-size: 22px !important;
+    line-height: 1.15 !important;
+  }
+
+  .agendaAdminSemana,
+  .agendaAdminDias {
+    width: 100% !important;
+
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  }
+
+  .agendaAdminSemana span {
+    min-width: 0 !important;
+
+    font-size: 7px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .agendaAdminDia {
+    min-width: 0 !important;
+
+    padding: 7px 2px !important;
+  }
+
+  .agendaAdminDia > span {
+    font-size: 12px !important;
+  }
+
+  .agendaAdminDia small {
+    display: none !important;
+  }
+
+  .agendaPontos {
+    margin-top: 6px !important;
+
+    gap: 2px !important;
+  }
+
+  .agendaPontos i {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  .agendaAdminEventosGrid {
+    gap: 12px !important;
+  }
+
+  .agendaAdminEventoCard {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 14px !important;
+
+    padding: 15px !important;
+  }
+
+  .agendaAdminEventoData {
+    width: 76px !important;
+    min-height: 76px !important;
+  }
+
+  .agendaAdminEventoInfo {
+    min-width: 0 !important;
+  }
+
+  .agendaAdminEventoInfo h3,
+  .agendaAdminEventoInfo p,
+  .agendaAdminEventoInfo small {
+    overflow-wrap: break-word !important;
+  }
+
+  .agendaAdminEventoAcoes {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 8px !important;
+  }
+
+  .agendaAdminEventoAcoes button {
+    width: 100% !important;
+  }
+
+  .agendaAdminOpcoes {
+    grid-template-columns: 1fr !important;
+  }
+
+  .agendaAdminModal {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+
+    max-height: 88dvh !important;
+
+    padding: 18px 14px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .agendaAdminFormulario {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* =====================================================
+     SUGESTÕES ADMIN
+  ===================================================== */
+
+  .sugestoesResumoGrid {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 10px !important;
+  }
+
+  .sugestoesFiltros {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 12px !important;
+  }
+
+  .sugestaoAdminItem {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 0 !important;
+  }
+
+  .sugestaoAdminPrincipal {
+    width: 100% !important;
+
+    padding: 18px 16px !important;
+  }
+
+  .sugestaoAdminTopo {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+
+    gap: 6px !important;
+  }
+
+  .sugestaoAdminTopo > div {
+    max-width: 100% !important;
+  }
+
+  .sugestaoAdminTopo strong,
+  .sugestaoAdminPrincipal p {
+    overflow-wrap: break-word !important;
+  }
+
+  .sugestaoAdminAcoesRapidas {
+    width: 100% !important;
+
+    padding: 0 16px 16px !important;
+  }
+
+  .sugestaoAdminAcoesRapidas select {
+    width: 100% !important;
+  }
+
+  .sugestaoModal {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+
+    max-height: 88dvh !important;
+
+    padding: 18px 14px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .sugestaoModalInfoGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sugestaoModalStatus {
+    max-width: 100% !important;
+  }
+
+  .sugestaoModalAcoes {
+    justify-content: stretch !important;
+  }
+
+  .sugestaoModalAcoes > * {
+    flex: 1 1 135px !important;
+  }
+
+  /* =====================================================
+     USUÁRIOS
+  ===================================================== */
+
+  .usuariosResumoGrid {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 10px !important;
+
+    margin: 20px 0 !important;
+  }
+
+  .usuariosResumoCard {
+    min-width: 0 !important;
+
+    padding: 16px 12px !important;
+
+    border-radius: 18px !important;
+  }
+
+  .usuariosResumoCard strong {
+    font-size: 28px !important;
+  }
+
+  .usuariosPainelCard {
+    width: 100% !important;
+
+    border-radius: 20px !important;
+
+    overflow: hidden !important;
+  }
+
+  .usuariosFiltros {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 12px !important;
+
+    padding: 16px !important;
+  }
+
+  .usuariosTabela {
+    width: 100% !important;
+
+    overflow: visible !important;
+  }
+
+  .usuariosTabelaCabecalho {
+    display: none !important;
+  }
+
+  .usuarioLinha {
+    width: 100% !important;
+    min-width: 0 !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 12px !important;
+
+    padding: 16px !important;
+  }
+
+  .usuarioIdentidade {
+    min-width: 0 !important;
+  }
+
+  .usuarioIdentidade > div {
+    min-width: 0 !important;
+  }
+
+  .usuarioIdentidade strong,
+  .usuarioIdentidade span,
+  .usuarioLinha p {
+    overflow-wrap: anywhere !important;
+  }
+
+  .usuarioAcoes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+
+    gap: 8px !important;
+  }
+
+  .usuarioModal {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+
+    max-height: 88dvh !important;
+
+    padding: 18px 14px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .usuarioFormulario {
+    grid-template-columns: 1fr !important;
+  }
+
+  .usuarioModalAcoes {
+    flex-wrap: wrap !important;
+  }
+
+  .usuarioModalAcoes > * {
+    flex: 1 1 130px !important;
+  }
+
+  /* =====================================================
+     CONFIGURAÇÕES
+  ===================================================== */
+
+  .configuracoesGrid {
+    width: 100% !important;
+
+    gap: 16px !important;
+
+    margin-top: 20px !important;
+  }
+
+  .configuracoesCard {
+    width: 100% !important;
+    min-width: 0 !important;
+
+    border-radius: 20px !important;
+  }
+
+  .configuracoesCardTopo {
+    padding: 18px 16px !important;
+  }
+
+  .configuracoesCardTopo h2 {
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+  }
+
+  .configuracoesCampos {
+    width: 100% !important;
+
+    gap: 16px !important;
+
+    padding: 18px 16px !important;
+  }
+
+  .configuracoesCampos input,
+  .configuracoesCampos textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .configuracoesRodape {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: stretch !important;
+
+    gap: 8px !important;
+
+    padding: 0 16px 18px !important;
+  }
+
+  .configuracoesRodape > * {
+    flex: 1 1 135px !important;
+  }
+
+  /* =====================================================
+     EQUIPE
+  ===================================================== */
+
+  .equipeAdminSecao {
+    width: 100% !important;
+
+    margin-top: 20px !important;
+
+    border-radius: 20px !important;
+
+    overflow: hidden !important;
+  }
+
+  .equipeAdminSecaoTopo {
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+
+    gap: 12px !important;
+
+    padding: 18px 16px !important;
+  }
+
+  .equipeAdminSecaoTopo h2 {
+    font-size: 24px !important;
+    line-height: 1.15 !important;
+  }
+
+  .equipeAdminGrid {
+    width: 100% !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    gap: 14px !important;
+
+    padding: 16px !important;
+  }
+
+  .equipeAdminCard {
+    width: 100% !important;
+    min-width: 0 !important;
+
+    display: grid !important;
+    grid-template-columns: 100px minmax(0, 1fr) !important;
+
+    min-height: 0 !important;
+  }
+
+  .equipeAdminFoto img,
+  .equipeAdminSemFoto {
+    min-height: 160px !important;
+  }
+
+  .equipeAdminConteudo {
+    min-width: 0 !important;
+  }
+
+  .equipeAdminConteudo h3,
+  .equipeAdminConteudo p {
+    overflow-wrap: break-word !important;
+  }
+
+  .equipeAdminAcoes {
+    flex-wrap: wrap !important;
+  }
+
+  .equipeFormulario {
+    grid-template-columns: 1fr !important;
+  }
+
+  .equipeUploadBox,
+  .jornalUploadBox {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .equipeUploadPreview,
+  .jornalUploadPreview {
+    max-width: 100% !important;
+  }
+
+  /* =====================================================
+     JORNAL ADMIN / FORMULÁRIOS GENÉRICOS
+  ===================================================== */
+
+  .painelConteudo form,
+  .painelConteudo fieldset {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .painelConteudo input,
+  .painelConteudo select,
+  .painelConteudo textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .painelConteudo article {
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    overflow-wrap: break-word !important;
+  }
+
+  .painelConteudo table {
+    min-width: 650px !important;
+  }
+
+  .painelConteudo .tabelaWrapper,
+  .painelConteudo .tableWrapper,
+  .painelConteudo .painelTabelaWrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    overflow-x: auto !important;
+
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 390px) {
+
+  .painelSidebar {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .painelConteudo {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .painelSidebarRodape {
+    grid-template-columns: 1fr !important;
+  }
+
+  .agendaAdminResumo,
+  .sugestoesResumoGrid,
+  .usuariosResumoGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .equipeAdminCard {
+    grid-template-columns: 1fr !important;
+  }
+
+  .equipeAdminFoto img,
+  .equipeAdminSemFoto {
+    min-height: 230px !important;
+  }
+
+  .painelCabecalho h1 {
+    font-size: 1.92rem !important;
+  }
+}

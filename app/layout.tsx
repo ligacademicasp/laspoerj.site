@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "../styles/mobile/home-mobile.css";
+import "../styles/mobile/painel-mobile.css";
+import "../styles/mobile/auth-mobile.css";
 
 export const metadata: Metadata = {
   title: "LASPOERJ",
