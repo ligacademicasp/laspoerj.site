@@ -1,764 +1,587 @@
+/* =========================================================
+   LASPOERJ — NOVA HOME MOBILE
+   Substitua completamente o antigo home-mobile.css por este.
+========================================================= */
+
 @media (max-width: 768px) {
-  html, body {
+  html,
+  body {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden !important;
   }
 
-  main#topo {
+  .novaSite {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden !important;
   }
 
-  .header {
+  .novaHeader {
     position: sticky !important;
     top: 0 !important;
-    z-index: 9999 !important;
+    z-index: 5000 !important;
     width: 100% !important;
-    height: 82px !important;
-    min-height: 82px !important;
-    padding: 10px 18px !important;
+    min-height: 76px !important;
+    padding: 9px 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    background: rgba(255,255,255,.97) !important;
-    border-bottom: 1px solid #e3edf7 !important;
-    backdrop-filter: blur(12px);
+    gap: 12px !important;
   }
 
-  .logoBox {
+  .novaMarca {
     min-width: 0 !important;
-    max-width: calc(100% - 72px) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
+    max-width: calc(100% - 58px) !important;
+    gap: 9px !important;
   }
 
-  .logoBox img {
-    width: 50px !important;
-    height: 50px !important;
-    flex: 0 0 50px !important;
-    object-fit: contain !important;
+  .novaMarca img {
+    width: 48px !important;
+    height: 48px !important;
+    flex: 0 0 48px !important;
   }
 
-  .logoBox > div { min-width: 0 !important; }
-
-  .logoBox strong {
-    display: block !important;
-    font-family: "Playfair Display", serif !important;
-    font-size: clamp(20px, 6vw, 28px) !important;
-    line-height: 1 !important;
-    letter-spacing: 1px !important;
-    white-space: nowrap !important;
-    color: #071f5c !important;
+  .novaMarca strong {
+    font-size: 19px !important;
+    letter-spacing: 2px !important;
   }
 
-  .logoBox span { display: none !important; }
+  .novaMarca span {
+    margin-top: 4px !important;
+    font-size: 6px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 1.2px !important;
+  }
 
-  .menuMobileBtn {
+  .novaMenuBotao {
     position: relative !important;
-    z-index: 10002 !important;
-    flex: 0 0 52px !important;
-    width: 52px !important;
-    height: 52px !important;
+    z-index: 5200 !important;
+    width: 48px !important;
+    height: 48px !important;
+    flex: 0 0 48px !important;
+    padding: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 5px !important;
-    padding: 0 !important;
-    border: 1px solid rgba(26,168,165,.18) !important;
-    border-radius: 17px !important;
-    background: rgba(210,244,247,.94) !important;
-    box-shadow: 0 8px 22px rgba(7,31,92,.08) !important;
-    font-size: 0 !important;
+    border: 1px solid rgba(7,31,92,.08) !important;
+    border-radius: 15px !important;
+    background: #eef8f8 !important;
   }
 
-  .menuMobileBtn::before,
-  .menuMobileBtn::after { content: none !important; }
-
-  .menuMobileBtn > span {
+  .novaMenuBotao span {
     display: block !important;
-    width: 25px !important;
-    height: 3px !important;
-    margin: 0 !important;
-    border: 0 !important;
-    border-radius: 50px !important;
+    width: 23px !important;
+    height: 2px !important;
+    border-radius: 999px !important;
     background: #071f5c !important;
-    opacity: 1 !important;
-    transition: .25s ease !important;
+    transition: .22s ease !important;
   }
 
-  .menuMobileBtn.ativo > span:nth-child(1) {
-    transform: translateY(8px) rotate(45deg) !important;
-  }
+  .novaMenuBotaoAtivo span:nth-child(1) { transform: translateY(7px) rotate(45deg) !important; }
+  .novaMenuBotaoAtivo span:nth-child(2) { opacity: 0 !important; }
+  .novaMenuBotaoAtivo span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) !important; }
 
-  .menuMobileBtn.ativo > span:nth-child(2) {
-    opacity: 0 !important;
-  }
-
-  .menuMobileBtn.ativo > span:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg) !important;
-  }
-
-  .menuOverlay {
+  .novaMenuFundo {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 9998 !important;
-    background: rgba(7,31,92,.28) !important;
-    backdrop-filter: blur(3px);
+    z-index: 4990 !important;
+    display: block !important;
+    border: 0 !important;
+    background: rgba(3,15,44,.34) !important;
+    backdrop-filter: blur(3px) !important;
   }
 
-  .menu {
+  .novaMenu {
     position: fixed !important;
     top: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
     left: auto !important;
-    z-index: 10000 !important;
-    width: min(84vw, 320px) !important;
+    z-index: 5100 !important;
+    width: min(84vw,315px) !important;
     height: 100dvh !important;
+    padding: 92px 20px 26px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
-    gap: 5px !important;
-    padding: 100px 22px 28px !important;
+    gap: 4px !important;
     background: #fff !important;
-    box-shadow: -18px 0 50px rgba(7,31,92,.16) !important;
+    box-shadow: -18px 0 55px rgba(7,31,92,.15) !important;
     transform: translateX(105%) !important;
-    transition: transform .28s ease !important;
-    overflow-y: auto !important;
     visibility: hidden !important;
     pointer-events: none !important;
+    transition: transform .25s ease !important;
+    overflow-y: auto !important;
   }
 
-  .menu.menuAberto {
+  .novaMenuAberto {
     transform: translateX(0) !important;
     visibility: visible !important;
     pointer-events: auto !important;
   }
 
-  .menu a {
+  .novaMenu a {
     width: 100% !important;
-    padding: 13px 12px !important;
-    border-radius: 11px !important;
-    color: #071f5c !important;
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    white-space: normal !important;
+    padding: 13px 11px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
   }
 
-  .menu .loginBtn {
-    margin-top: 10px !important;
-    display: flex !important;
-    justify-content: center !important;
-    padding: 14px 16px !important;
-    background: linear-gradient(90deg,#071f5c,#1aa8a5) !important;
-    color: #fff !important;
-  }
-
-  .hero {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: auto !important;
-    padding: 52px 20px 62px !important;
-    overflow: hidden !important;
-  }
-
-  .hero .subtitulo {
-    width: 100% !important;
-    margin: 0 0 16px !important;
-    font-size: 10px !important;
-    line-height: 1.45 !important;
-    letter-spacing: 2.2px !important;
-  }
-
-  .hero h1 {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    font-size: clamp(2.15rem,10.5vw,3rem) !important;
-    line-height: 1.02 !important;
-    letter-spacing: -.6px !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-  }
-
-  .typewriter {
-    display: inline-block !important;
-    width: auto !important;
-    max-width: 100% !important;
-    min-width: 1ch !important;
-    padding-right: 3px !important;
-    font-size: clamp(1.85rem,9vw,2.75rem) !important;
-    line-height: 1.08 !important;
-    white-space: nowrap !important;
-    overflow: visible !important;
-    border-right: 3px solid #1aa8a5 !important;
-    animation: blink .7s infinite !important;
-    vertical-align: top !important;
-  }
-
-  .descricao {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 24px 0 0 !important;
-    font-size: 15px !important;
-    line-height: 1.75 !important;
-    word-break: normal !important;
-  }
-
-  .botoes {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    margin: 28px 0 0 !important;
-  }
-
-  .botoes .btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 52px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 14px 18px !important;
+  .novaAreaInterna {
+    margin-top: 9px !important;
+    padding: 14px !important;
     text-align: center !important;
   }
 
-  .sobre,
-  .diretoria,
-  .orientadores,
-  .eventos,
-  .agendaSection,
-  .avisosSection,
-  .jornalSection,
-  .contatoSection,
-  .sugestoesSection {
+  .novaHero {
     width: 100% !important;
-    max-width: 100% !important;
-    padding: 58px 20px !important;
-    overflow: hidden !important;
-  }
-
-  .sobreTexto h2,
-  .diretoria h2,
-  .orientadoresIntro h2,
-  .eventos h2,
-  .agendaSection h2,
-  .avisosSection h2,
-  .jornalSection h2,
-  .contatoSection h2,
-  .sugestoesIntro h2 {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 0 18px !important;
-    font-size: clamp(2.05rem,8.8vw,2.65rem) !important;
-    line-height: 1.08 !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-  }
-
-  .sobre {
+    min-height: 0 !important;
+    padding: 46px 18px 58px !important;
     display: grid !important;
     grid-template-columns: 1fr !important;
-    gap: 28px !important;
+    gap: 32px !important;
   }
 
-  .sobreTexto,
-  .sobreCard {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
+  .novaHeroTexto { max-width: 100% !important; }
 
-  .sobreTexto p,
-  .sobreCard p {
-    max-width: 100% !important;
-    font-size: 15px !important;
-    line-height: 1.75 !important;
-    overflow-wrap: break-word !important;
-  }
-
-  .sobreCard {
-    padding: 26px 22px !important;
-    border-radius: 22px !important;
-  }
-
-  .numeros {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
-    gap: 12px !important;
-    padding: 28px 16px !important;
-  }
-
-  .numeros div {
-    min-width: 0 !important;
-    padding: 22px 10px !important;
-    border-radius: 18px !important;
-  }
-
-  .numeros strong { font-size: 31px !important; }
-
-  .numeros span {
-    display: block !important;
-    font-size: 11px !important;
-    line-height: 1.35 !important;
-  }
-
-  .diretoriaGrid {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
-    margin-top: 28px !important;
-    padding: 0 !important;
-    overflow: visible !important;
-    scroll-snap-type: none !important;
-  }
-
-  .membroCard {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    padding: 18px !important;
-    border-radius: 22px !important;
-  }
-
-  .fotoMembro {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 4/5 !important;
-    object-fit: cover !important;
-    border-radius: 17px !important;
-    margin-bottom: 18px !important;
-  }
-
-  .orientadoresIntro {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-bottom: 28px !important;
-  }
-
-  .orientadoresGrid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
-  }
-
-  .orientadorCard {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 18px !important;
-    padding: 18px !important;
-    border-radius: 22px !important;
-  }
-
-  .fotoOrientador {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 4/5 !important;
-    object-fit: cover !important;
-    border-radius: 17px !important;
-  }
-
-  .eventosGrid {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-
-  .eventoCard {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding: 22px 18px !important;
-    border-radius: 20px !important;
-    overflow: hidden !important;
-  }
-
-  .calendarCard {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 16px !important;
-    border-radius: 20px !important;
-    overflow: hidden !important;
-  }
-
-  .calendarHeader {
-    gap: 8px !important;
-    margin-bottom: 22px !important;
-  }
-
-  .calendarHeader h3 {
-    min-width: 0 !important;
-    font-size: clamp(17px,5.2vw,23px) !important;
-    line-height: 1.15 !important;
-    letter-spacing: 1px !important;
-    text-align: center !important;
-  }
-
-  .calendarHeader button {
-    flex: 0 0 40px !important;
-    width: 40px !important;
-    height: 40px !important;
-  }
-
-  .weekDays,
-  .daysGrid {
-    width: 100% !important;
-    grid-template-columns: repeat(7,minmax(0,1fr)) !important;
-  }
-
-  .weekDays span {
+  .novaEtiqueta {
+    padding: 7px 10px !important;
     font-size: 8px !important;
-    letter-spacing: 0 !important;
+    letter-spacing: 1.8px !important;
   }
 
-  .daysGrid span {
-    min-width: 0 !important;
-    padding: 8px 1px !important;
-    font-size: 12px !important;
-  }
-
-  .eventList {
+  .novaHeroTexto h1 {
     width: 100% !important;
     max-width: 100% !important;
-    margin-top: 28px !important;
-  }
-
-  .eventItem {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 14px !important;
-    padding: 20px 18px !important;
-  }
-
-  .avisosCabecalho,
-  .avisosCabecalho > div {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-  }
-
-  .avisosCabecalho { margin: 0 0 26px !important; }
-
-  .avisosIntroducao {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    font-size: 15px !important;
-    line-height: 1.72 !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-  }
-
-  .avisosGrid {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
-  }
-
-  .avisoCard,
-  .avisoDestaque {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    padding: 22px 18px !important;
-    border-radius: 20px !important;
-    overflow: hidden !important;
-  }
-
-  .avisoTopo {
-    width: 100% !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 7px 10px !important;
-    margin-bottom: 14px !important;
-  }
-
-  .avisoTopo span,
-  .avisoTopo small {
-    max-width: 100% !important;
-    white-space: normal !important;
-  }
-
-  .avisoCard h3,
-  .avisoCard p {
-    width: 100% !important;
-    max-width: 100% !important;
+    margin: 22px 0 18px !important;
+    font-size: clamp(2.45rem,11.4vw,3.2rem) !important;
+    line-height: 1.01 !important;
+    letter-spacing: -1.5px !important;
     word-break: normal !important;
     overflow-wrap: break-word !important;
   }
 
-  .avisoCard h3 {
-    margin: 0 0 12px !important;
-    font-size: 25px !important;
-    line-height: 1.18 !important;
-  }
-
-  .avisoCard p {
-    margin: 0 !important;
-    font-size: 15px !important;
+  .novaHeroTexto > p {
+    max-width: 100% !important;
+    font-size: 14px !important;
     line-height: 1.72 !important;
   }
 
-  .jornalCabecalho {
+  .novaHeroAcoes {
     width: 100% !important;
-    max-width: 100% !important;
+    margin-top: 26px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
-    justify-content: flex-start !important;
-    gap: 20px !important;
-    margin: 0 0 28px !important;
+    gap: 12px !important;
   }
 
-  .jornalCabecalho > div {
+  .novaBotaoPrimario,
+  .novaBotaoTexto {
     width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .jornalCabecalho > div > p:last-child {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    font-size: 15px !important;
-    line-height: 1.72 !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-  }
-
-  .jornalVerTodas {
-    width: 100% !important;
-    max-width: 100% !important;
+    min-height: 50px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin: 0 !important;
-    padding: 14px 16px !important;
-    box-sizing: border-box !important;
     text-align: center !important;
-    white-space: normal !important;
   }
 
-  .jornalGrid {
+  .novaBotaoTexto {
+    border: 1px solid #dce8f2 !important;
+    border-radius: 999px !important;
+  }
+
+  .novaHeroPainel {
     width: 100% !important;
+    min-height: 390px !important;
+    padding: 22px !important;
+    border-radius: 28px 28px 28px 8px !important;
+  }
+
+  .novaHeroMarcaGrande {
+    right: -48px !important;
+    top: 64px !important;
+  }
+
+  .novaHeroMarcaGrande img {
+    width: 190px !important;
+    height: 190px !important;
+  }
+
+  .novaHeroPainelTopo span {
+    font-size: 19px !important;
+    letter-spacing: 2px !important;
+  }
+
+  .novaHeroPainelTopo small {
+    font-size: 7px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .novaHeroPainelCentro p {
+    max-width: 280px !important;
+    font-size: 27px !important;
+    line-height: 1.18 !important;
+  }
+
+  .novaHeroPainelRodape { gap: 8px !important; }
+  .novaHeroPainelRodape strong { font-size: 23px !important; }
+  .novaHeroPainelRodape span { font-size: 7px !important; }
+
+  .novaSobre,
+  .novaDiretoria,
+  .novaOrientadores,
+  .novaEventos,
+  .novaAgenda,
+  .novaAvisos,
+  .novaJornal {
+    width: 100% !important;
+    padding: 64px 18px !important;
+  }
+
+  .novaSecaoCabecalho,
+  .novaOrientadoresCabecalho {
+    width: 100% !important;
+    margin-bottom: 34px !important;
+    display: grid !important;
+    grid-template-columns: 40px minmax(0,1fr) !important;
+    gap: 14px !important;
+  }
+
+  .novaNumeroSecao {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 8px !important;
+  }
+
+  .novaSecaoCabecalho h2,
+  .novaOrientadoresCabecalho h2,
+  .novaJornalTopo h2 {
     max-width: 100% !important;
+    font-size: clamp(2rem,9.3vw,2.65rem) !important;
+    line-height: 1.03 !important;
+    letter-spacing: -1px !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .novaKicker,
+  .novaOrientadoresCabecalho p {
+    font-size: 8px !important;
+    letter-spacing: 2px !important;
+  }
+
+  .novaSobreGrade {
+    width: 100% !important;
     display: grid !important;
     grid-template-columns: 1fr !important;
-    gap: 18px !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    gap: 34px !important;
   }
 
-  .jornalCard,
-  .jornalDestaque {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    min-height: 0 !important;
-    border-radius: 20px !important;
-    overflow: hidden !important;
+  .novaSobreTextoPrincipal {
+    position: relative !important;
+    top: auto !important;
+    padding-left: 18px !important;
   }
 
-  .jornalImagemBox {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 16/10 !important;
-    overflow: hidden !important;
+  .novaSobreTextoPrincipal p {
+    font-size: 24px !important;
+    line-height: 1.42 !important;
   }
 
-  .jornalImagem {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
+  .novaSobrePilares article {
+    grid-template-columns: 34px minmax(0,1fr) !important;
+    gap: 8px 12px !important;
+    padding: 23px 0 !important;
   }
 
-  .jornalCardConteudo {
+  .novaSobrePilares article > span { grid-row: 1 / 3 !important; }
+  .novaSobrePilares h3 { font-size: 23px !important; }
+  .novaSobrePilares p { grid-column: 2 !important; font-size: 13px !important; }
+
+  .novaIndicadores {
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding: 20px 18px !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
   }
 
-  .jornalVazio {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 28px 18px !important;
-    text-align: center !important;
+  .novaIndicadores div {
+    min-height: 135px !important;
+    padding: 24px 17px !important;
+    border-right: 1px solid rgba(255,255,255,.12) !important;
+    border-bottom: 1px solid rgba(255,255,255,.12) !important;
   }
 
-  .jornalVazio p {
+  .novaIndicadores strong { font-size: 34px !important; }
+  .novaIndicadores span { font-size: 9px !important; line-height: 1.35 !important; }
+
+  .novaDiretoriaMosaico {
     width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    font-size: 15px !important;
-    line-height: 1.6 !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 
-  .contatoTexto {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-bottom: 26px !important;
-    font-size: 15px !important;
-    line-height: 1.72 !important;
+  .novaDiretorDestaque {
+    min-height: 510px !important;
+    border-radius: 26px 8px 26px 26px !important;
   }
 
-  .contatoGrid {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: grid !important;
+  .novaDiretorDestaqueTexto {
+    left: 22px !important;
+    right: 22px !important;
+    bottom: 24px !important;
+  }
+
+  .novaDiretorDestaqueTexto h3 { font-size: 33px !important; }
+  .novaDiretorDestaqueTexto p { font-size: 12px !important; }
+
+  .novaDiretoresMenores {
     grid-template-columns: 1fr !important;
     gap: 14px !important;
   }
 
-  .contatoCard {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 22px 18px !important;
-    overflow: hidden !important;
-  }
-
-  .contatoCard p {
-    max-width: 100% !important;
-    overflow-wrap: anywhere !important;
-  }
-
-  .sugestoesIntro,
-  .sugestoesForm {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .sugestoesIntro { margin-bottom: 28px !important; }
-
-  .sugestoesForm {
-    padding: 22px 18px !important;
-    border-radius: 22px !important;
-    gap: 16px !important;
-  }
-
-  .linhaForm {
+  .novaDiretorCard {
     display: grid !important;
+    grid-template-columns: 112px minmax(0,1fr) !important;
+    border-radius: 8px 21px 21px 21px !important;
+  }
+
+  .novaDiretorCardFoto {
+    height: 100% !important;
+    min-height: 165px !important;
+    aspect-ratio: auto !important;
+  }
+
+  .novaDiretorCard > div:last-child {
+    min-width: 0 !important;
+    padding: 17px !important;
+  }
+
+  .novaDiretorCard h3 {
+    font-size: 22px !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .novaDiretorCard p {
+    display: -webkit-box !important;
+    overflow: hidden !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 3 !important;
+  }
+
+  .novaOrientadores { padding-top: 68px !important; padding-bottom: 68px !important; }
+  .novaOrientadoresCabecalho small { font-size: 12px !important; }
+
+  .novaOrientadorLinha {
+    width: 100% !important;
+    grid-template-columns: 72px minmax(0,1fr) !important;
+    gap: 14px !important;
+    padding: 22px 0 !important;
+  }
+
+  .novaOrientadorNumero { display: none !important; }
+  .novaOrientadorFoto { width: 72px !important; height: 72px !important; }
+  .novaOrientadorTexto { min-width: 0 !important; }
+  .novaOrientadorTexto h3 { font-size: 25px !important; }
+  .novaOrientadorTexto p { font-size: 12px !important; line-height: 1.65 !important; }
+
+  .novaLinhaDoTempo { width: 100% !important; }
+
+  .novaEventoLinha {
+    width: 100% !important;
+    grid-template-columns: 62px minmax(0,1fr) !important;
+    gap: 12px 14px !important;
+    padding: 22px 0 !important;
+  }
+
+  .novaEventoIndice { display: none !important; }
+  .novaEventoData strong { font-size: 31px !important; }
+  .novaEventoConteudo { min-width: 0 !important; }
+  .novaEventoConteudo h3 { font-size: 23px !important; overflow-wrap: break-word !important; }
+  .novaEventoConteudo > p { font-size: 12px !important; }
+  .novaEventoDetalhes span { max-width: 100% !important; white-space: normal !important; }
+
+  .novaAgendaGrade {
+    width: 100% !important;
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
 
-  .sugestoesForm input,
-  .sugestoesForm select,
-  .sugestoesForm textarea,
-  .sugestoesForm button {
+  .novaCalendario,
+  .novaAgendaLista {
+    width: 100% !important;
+    padding: 16px !important;
+    border-radius: 22px 7px 22px 22px !important;
+    overflow: hidden !important;
+  }
+
+  .novaCalendarioTopo {
+    grid-template-columns: 40px minmax(0,1fr) 40px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .novaCalendarioTopo button { width: 40px !important; height: 40px !important; }
+  .novaCalendarioTopo h3 { font-size: 18px !important; overflow-wrap: break-word !important; }
+  .novaCalendarioSemana span { font-size: 7px !important; }
+  .novaCalendarioDias span { min-height: 43px !important; font-size: 11px !important; }
+  .novaAgendaLista { border-radius: 7px 22px 22px 22px !important; }
+
+  .novaAvisosGrade {
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+
+  .novaAvisoPrincipal {
+    min-height: 360px !important;
+    padding: 24px 20px !important;
+    border-radius: 25px 25px 7px 25px !important;
+  }
+
+  .novaAvisoPrincipalTopo {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .novaAvisoPrincipal h3 {
+    margin-top: 65px !important;
+    font-size: 32px !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .novaAvisoPrincipal p { font-size: 13px !important; }
+  .novaAvisosMenores article { grid-template-columns: 34px minmax(0,1fr) !important; gap: 11px !important; }
+  .novaAvisosMenores h3 { font-size: 20px !important; overflow-wrap: break-word !important; }
+
+  .novaJornalTopo {
+    width: 100% !important;
+    margin-bottom: 30px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 18px !important;
+  }
+
+  .novaJornalTopo > a { align-self: flex-start !important; }
+
+  .novaJornalGrade {
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .novaMateriaPrincipal { border-radius: 7px 24px 24px 24px !important; }
+  .novaMateriaImagem { aspect-ratio: 16/10 !important; }
+  .novaMateriaTexto { padding: 21px 18px 24px !important; }
+  .novaMateriaTexto h3 { font-size: 28px !important; overflow-wrap: break-word !important; }
+
+  .novaMateriasLaterais article {
+    grid-template-columns: 105px minmax(0,1fr) !important;
+    border-radius: 18px !important;
+  }
+
+  .novaMateriaLateralImagem { min-height: 135px !important; }
+  .novaMateriaLateralTexto { padding: 14px !important; }
+  .novaMateriaLateralTexto h3 { font-size: 18px !important; overflow-wrap: break-word !important; }
+
+  .novaFinal {
+    width: 100% !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .novaContato,
+  .novaSugestoes {
+    width: 100% !important;
+    padding: 62px 18px !important;
+  }
+
+  .novaContato {
+    border-right: 0 !important;
+    border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  }
+
+  .novaContato h2,
+  .novaSugestoes h2 { font-size: 37px !important; }
+
+  .novaContatoLinks a {
+    grid-template-columns: 82px minmax(0,1fr) 18px !important;
+    gap: 10px !important;
+  }
+
+  .novaContatoLinks strong {
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .novaFormularioLinha {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .novaSugestoes input,
+  .novaSugestoes select,
+  .novaSugestoes textarea,
+  .novaSugestoes form > button {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
   }
 
-  .footerSite {
+  .novaFooter {
     width: 100% !important;
-    padding: 52px 20px 24px !important;
-    overflow: hidden !important;
+    padding: 38px 18px 22px !important;
   }
 
-  .footerGrid {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 30px !important;
-    text-align: center !important;
+  .novaFooterMarca { align-items: flex-start !important; }
+  .novaFooterMarca img { width: 50px !important; height: 50px !important; }
+  .novaFooterMarca strong { font-size: 20px !important; letter-spacing: 3px !important; }
+  .novaFooterMarca span { font-size: 8px !important; line-height: 1.5 !important; }
+  .novaFooter nav { gap: 14px 18px !important; margin: 27px 0 24px !important; }
+  .novaFooterFinal { flex-direction: column !important; gap: 7px !important; }
+
+  .novaVoltarTopo {
+    right: 15px !important;
+    bottom: 15px !important;
+    width: 48px !important;
+    height: 48px !important;
   }
 
-  .footerMarca { text-align: center !important; }
+  .novaEstadoVazio { width: 100% !important; padding: 26px 18px !important; }
 
-  .footerMarca img {
-    width: 78px !important;
-    height: 78px !important;
-  }
-
-  .footerMarca h2 {
-    font-size: 30px !important;
-    letter-spacing: 5px !important;
-  }
-
-  .footerMarca p,
-  .footerColuna p,
-  .footerColuna a {
-    overflow-wrap: anywhere !important;
-  }
-
-  .btnTopo {
-    right: 16px !important;
-    bottom: 16px !important;
-    width: 52px !important;
-    height: 52px !important;
-    z-index: 9000 !important;
-  }
-
-  #sobreConteudo,
-  #diretoriaConteudo,
+  #sobre,
+  #diretoria,
   #eventos,
-  #agendaConteudo,
-  #avisosConteudo,
-  #jornalConteudo,
-  #contatoConteudo,
-  #sugestoes {
-    scroll-margin-top: 94px !important;
-  }
+  #agenda,
+  #avisos,
+  #jornal,
+  #contato,
+  #sugestoes { scroll-margin-top: 88px !important; }
 }
 
 @media (max-width: 390px) {
-  .header {
+  .novaHeader { padding-left: 12px !important; padding-right: 12px !important; }
+  .novaMarca img { width: 44px !important; height: 44px !important; flex-basis: 44px !important; }
+  .novaMarca strong { font-size: 17px !important; }
+  .novaMarca span { font-size: 5.5px !important; }
+
+  .novaHero,
+  .novaSobre,
+  .novaDiretoria,
+  .novaOrientadores,
+  .novaEventos,
+  .novaAgenda,
+  .novaAvisos,
+  .novaJornal,
+  .novaContato,
+  .novaSugestoes,
+  .novaFooter {
     padding-left: 14px !important;
     padding-right: 14px !important;
   }
 
-  .logoBox img {
-    width: 46px !important;
-    height: 46px !important;
-    flex-basis: 46px !important;
-  }
-
-  .logoBox strong { font-size: 20px !important; }
-
-  .menuMobileBtn {
-    width: 48px !important;
-    height: 48px !important;
-    flex-basis: 48px !important;
-  }
-
-  .hero,
-  .sobre,
-  .diretoria,
-  .orientadores,
-  .eventos,
-  .agendaSection,
-  .avisosSection,
-  .jornalSection,
-  .contatoSection,
-  .sugestoesSection {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-
-  .hero h1 { font-size: 2.05rem !important; }
-  .typewriter { font-size: 1.82rem !important; }
+  .novaHeroTexto h1 { font-size: 2.32rem !important; }
+  .novaHeroPainelCentro p { font-size: 25px !important; }
+  .novaIndicadores strong { font-size: 31px !important; }
+  .novaDiretorCard { grid-template-columns: 95px minmax(0,1fr) !important; }
+  .novaContatoLinks a { grid-template-columns: 72px minmax(0,1fr) 16px !important; }
 }
