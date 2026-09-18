@@ -19,7 +19,20 @@
   .v2MenuBotaoAtivo span:nth-child(2) { opacity: 0 !important; }
   .v2MenuBotaoAtivo span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) !important; }
 
-  .v2MenuOverlay { position: fixed !important; inset: 0 !important; z-index: 5090 !important; display: block !important; border: 0 !important; background: rgba(3,15,44,.35) !important; backdrop-filter: blur(3px) !important; }
+  /* O overlay precisa ficar ABAIXO do header.
+     O menu está dentro do header; se o overlay tiver z-index maior que o header,
+     ele cobre e desfoca o próprio menu no Chrome/Samsung. */
+  .v2MenuOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 4900 !important;
+    display: block !important;
+    border: 0 !important;
+    background: rgba(3, 15, 44, .52) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
   .v2Menu { position: fixed !important; top: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 5200 !important; width: min(84vw,310px) !important; height: 100dvh !important; padding: 88px 20px 25px !important; display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 4px !important; background: #fff !important; box-shadow: -18px 0 50px rgba(7,31,92,.16) !important; transform: translateX(105%) !important; visibility: hidden !important; pointer-events: none !important; transition: .25s ease !important; overflow-y: auto !important; }
   .v2MenuAberto { transform: translateX(0) !important; visibility: visible !important; pointer-events: auto !important; }
   .v2Menu a { width: 100% !important; padding: 12px 10px !important; font-size: 13px !important; }
@@ -43,6 +56,7 @@
 
   .v2Numeros { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
   .v2Numeros > div { min-width: 0 !important; min-height: 102px !important; padding: 18px 14px !important; gap: 10px !important; border-bottom: 1px solid rgba(255,255,255,.12) !important; }
+  .v2NumeroIcone { font-size: 21px !important; }
   .v2Numeros strong { font-size: 30px !important; }
   .v2Numeros small { font-size: 8px !important; line-height: 1.25 !important; }
 
@@ -122,347 +136,46 @@
   .v2HeroTexto h1 { font-size: 2.35rem !important; }
   .v2FrasePrincipal { left: 27% !important; font-size: 18px !important; }
   .v2Palavras { display: none !important; }
+  .v2NumeroIcone { display: none !important; }
   .v2Numeros > div { justify-content: center !important; text-align: center !important; }
 }
 
 
-@media (max-width: 768px) {
-  .v2Numeros > div {
-    justify-content: center !important;
-    text-align: center !important;
-  }
-
-  .v2Numeros > div > div {
-    width: 100% !important;
-    text-align: center !important;
-  }
-}
-
 /* =========================================================
-   LASPOERJ — NOVAS SEÇÕES MOBILE
+   CORREÇÃO DEFINITIVA DO MENU MOBILE
+   Importante: este arquivo é carregado DEPOIS do globals.css.
 ========================================================= */
-
 @media (max-width: 768px) {
-  .v2Menu a.ativo:not(.v2AreaInterna) {
-    color: #1aa8a5 !important;
-    background: #f3fbfb !important;
-  }
-
-  .v2Menu a.ativo:not(.v2AreaInterna)::after {
-    display: none !important;
-  }
-
-  .v2Projetos,
-  .v2Galeria {
-    width: 100% !important;
-    padding: 56px 17px !important;
-  }
-
-  .v2ProjetosTopo,
-  .v2GaleriaTopo {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 14px !important;
-    margin-bottom: 24px !important;
-  }
-
-  .v2ProjetosTopo h2,
-  .v2GaleriaTopo h2 {
-    max-width: 100% !important;
-    font-size: 32px !important;
-    line-height: 1.04 !important;
-  }
-
-  .v2ProjetosTopo > a,
-  .v2GaleriaTopo > a {
-    font-size: 8px !important;
-  }
-
-  .v2ProjetosGrade {
-    grid-template-columns: 1fr !important;
-    gap: 14px !important;
-  }
-
-  .v2ProjetoCard,
-  .v2ProjetoCardPrincipal {
-    display: block !important;
-    width: 100% !important;
-    grid-column: auto !important;
-    border-radius: 17px !important;
-  }
-
-  .v2ProjetoImagem,
-  .v2ProjetoCardPrincipal .v2ProjetoImagem {
-    aspect-ratio: 16 / 9 !important;
-    min-height: 0 !important;
-  }
-
-  .v2ProjetoTexto {
-    padding: 18px !important;
-  }
-
-  .v2ProjetoTexto h3 {
-    font-size: 22px !important;
-  }
-
-  .v2ProjetoTexto p {
-    font-size: 10px !important;
-  }
-
-  .v2ProximoEvento {
-    width: calc(100% - 34px) !important;
-    margin: 0 17px !important;
-    padding: 22px 18px !important;
-    grid-template-columns: 70px minmax(0, 1fr) !important;
-    gap: 14px !important;
-    border-radius: 20px !important;
-  }
-
-  .v2ProximoEventoEtiqueta {
-    grid-column: 1 / -1 !important;
-    justify-self: start !important;
-  }
-
-  .v2ProximoEventoData strong {
-    font-size: 39px !important;
-  }
-
-  .v2ProximoEventoConteudo {
-    min-width: 0 !important;
-  }
-
-  .v2ProximoEventoConteudo h2 {
-    font-size: 25px !important;
-    overflow-wrap: break-word !important;
-  }
-
-  .v2ProximoEventoConteudo > p {
-    font-size: 10px !important;
-  }
-
-  .v2ProximoEventoConteudo > div span {
-    max-width: 100% !important;
-    font-size: 8px !important;
-    white-space: normal !important;
-  }
-
-  .v2ProximoEvento > a {
-    grid-column: 1 / -1 !important;
-    width: 100% !important;
-    min-height: 45px !important;
-  }
-
-  .v2GaleriaGrade {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    grid-auto-rows: 150px !important;
-    gap: 9px !important;
-  }
-
-  .v2GaleriaItemGrande {
-    grid-column: 1 / -1 !important;
-    grid-row: span 2 !important;
-  }
-
-  .v2GaleriaItem {
-    border-radius: 13px !important;
-  }
-
-  .v2GaleriaItem strong {
-    font-size: 12px !important;
-  }
-
-  .v2GaleriaItemGrande strong {
-    font-size: 23px !important;
-  }
-
-  .v2FooterFinal {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 8px !important;
-  }
-
-  .v2FooterFinal span {
-    font-size: 7px !important;
-    line-height: 1.5 !important;
-  }
-
-  #projetos {
-    scroll-margin-top: 82px !important;
-  }
-}
-
-@media (max-width: 390px) {
-  .v2GaleriaGrade {
-    grid-template-columns: 1fr !important;
-    grid-auto-rows: 190px !important;
-  }
-
-  .v2GaleriaItemGrande {
-    grid-column: auto !important;
-    grid-row: auto !important;
-  }
-
-  .v2GaleriaItemGrande strong {
-    font-size: 18px !important;
-  }
-
-  .v2ProximoEvento {
-    grid-template-columns: 60px minmax(0, 1fr) !important;
-  }
-}
-/* =========================================================
-   CORREÇÃO — MENU MOBILE SEM DESFOQUE
-========================================================= */
-
-@media (max-width: 768px) {
-
-  .menuOverlay {
-    position: fixed !important;
-    inset: 0 !important;
-
-    background: rgba(7, 31, 92, 0.38) !important;
-
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-
-    filter: none !important;
-
-    z-index: 9998 !important;
-  }
-
-  .menu,
-  .menu.menuAberto {
-    position: fixed !important;
-
-    top: 0 !important;
-    right: 0 !important;
-
-    width: min(84vw, 320px) !important;
-    height: 100dvh !important;
-
-    padding: 105px 28px 35px !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 24px !important;
-
-    background: #ffffff !important;
-
-    opacity: 1 !important;
-
-    filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-
-    transform: none !important;
-
-    box-shadow: -14px 0 40px rgba(7, 31, 92, 0.18) !important;
-
-    z-index: 10001 !important;
-  }
-
-  .menu a {
-    opacity: 1 !important;
-    filter: none !important;
-
-    color: #071f5c !important;
-
-    font-size: 17px !important;
-    line-height: 1.25 !important;
-    font-weight: 700 !important;
-
-    text-shadow: none !important;
-  }
-
-  .menu a:hover,
-  .menu a:active {
-    color: #1aa8a5 !important;
-  }
-
-  .menuMobileBtn {
-    position: relative !important;
-    z-index: 10002 !important;
-
-    filter: none !important;
+  /* O header cria o contexto de empilhamento do menu. */
+  .v2Header {
+    z-index: 5000 !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-} /* =========================================================
-   CORREÇÃO DEFINITIVA — MENU MOBILE SEM DESFOQUE
-========================================================= */
 
-@media (max-width: 768px) {
-
-  /* Fundo atrás do menu */
-  .v2MenuOverlay {
-    position: fixed !important;
-    inset: 0 !important;
-
-    background: rgba(3, 15, 44, 0.50) !important;
-
-    /* REMOVE O BLUR QUE ESTÁ EMBASSANDO O MENU */
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    filter: none !important;
-
-    z-index: 5090 !important;
-  }
-
-  /* Menu lateral */
-  .v2Menu {
-    position: fixed !important;
-
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-
-    width: min(84vw, 310px) !important;
-    height: 100dvh !important;
-
+  /* Menu e botão ficam dentro do header e, portanto, acima do overlay. */
+  .v2Menu,
+  .v2Menu.v2MenuAberto {
     z-index: 5200 !important;
-
-    filter: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-
     opacity: 1 !important;
-
-    isolation: isolate !important;
-
-    box-shadow: -18px 0 50px rgba(7, 31, 92, 0.22) !important;
-  }
-
-  /* MODO CLARO */
-  html:not([data-theme="dark"]) .v2Menu {
-    background: #ffffff !important;
-  }
-
-  html:not([data-theme="dark"]) .v2Menu a {
-    color: #071f5c !important;
-  }
-
-  /* MODO ESCURO */
-  html[data-theme="dark"] .v2Menu {
-    background: #081827 !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-  }
-
-  html[data-theme="dark"] .v2Menu a {
-    color: #eaf2ff !important;
-  }
-
-  html[data-theme="dark"] .v2Menu a:hover,
-  html[data-theme="dark"] .v2Menu a.ativo {
-    color: #43c9c4 !important;
-  }
-
-  /* Botão X / hambúrguer também nítido */
-  .v2MenuBotao {
     filter: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
 
+  .v2MenuBotao,
+  .v2MenuBotaoAtivo {
     z-index: 5300 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Overlay sempre abaixo do header/menu. */
+  .v2MenuOverlay {
+    z-index: 4900 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
   }
 }
