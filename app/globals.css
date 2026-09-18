@@ -8585,3 +8585,458 @@ main {
     width: 100%;
   }
 }
+
+
+
+/* =========================================================
+   MODO ESCURO — LASPOERJ
+   Tema salvo em localStorage: "laspoerj-theme"
+========================================================= */
+
+:root {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --azul-marinho: #e8f0ff;
+  --turquesa: #43c9c4;
+  --azul-sus: #66a5ff;
+  --fundo: #06111f;
+  --fundo-claro: #091827;
+  --texto: #b7c6d7;
+  --branco: #0b1a2b;
+}
+
+html[data-theme="dark"] body {
+  background: #06111f;
+  color: #b7c6d7;
+}
+
+/* -------------------------
+   Botão de tema
+------------------------- */
+
+.themeToggle {
+  min-width: 42px;
+  height: 40px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid rgba(7, 31, 92, 0.14);
+  border-radius: 999px;
+  background: #f4f8fb;
+  color: #071f5c;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    color .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.themeToggle:hover {
+  transform: translateY(-1px);
+  border-color: rgba(26, 168, 165, .45);
+  box-shadow: 0 8px 20px rgba(7,31,92,.08);
+}
+
+.themeToggleIcone {
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+}
+
+.themeToggleIcone svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-theme="dark"] .themeToggle {
+  border-color: rgba(255,255,255,.12);
+  background: #10243a;
+  color: #eaf2ff;
+  box-shadow: none;
+}
+
+/* -------------------------
+   Home V2
+------------------------- */
+
+html[data-theme="dark"] .laspoV2 {
+  --v2-navy: #eaf2ff;
+  --v2-teal: #43c9c4;
+  --v2-sus: #66a5ff;
+  --v2-text: #b7c6d7;
+  --v2-line: rgba(255,255,255,.10);
+  background: #06111f;
+  color: #b7c6d7;
+}
+
+html[data-theme="dark"] .v2Header {
+  background: rgba(6,17,31,.96);
+  border-bottom-color: rgba(255,255,255,.09);
+}
+
+html[data-theme="dark"] .v2Marca strong,
+html[data-theme="dark"] .v2Menu a {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2Marca span {
+  color: #43c9c4;
+}
+
+html[data-theme="dark"] .v2Menu a.ativo,
+html[data-theme="dark"] .v2Menu a:hover {
+  color: #43c9c4;
+}
+
+html[data-theme="dark"] .v2AreaInterna {
+  background: #43c9c4;
+  color: #041725 !important;
+}
+
+html[data-theme="dark"] .v2Hero {
+  background:
+    radial-gradient(circle at 85% 18%, rgba(67,201,196,.11), transparent 25%),
+    radial-gradient(circle at 18% 80%, rgba(102,165,255,.08), transparent 26%),
+    linear-gradient(100deg,#06111f 0%,#081827 58%,#0a1d2d 100%);
+}
+
+html[data-theme="dark"] .v2HeroTexto h1,
+html[data-theme="dark"] .v2FrasePrincipal,
+html[data-theme="dark"] .v2FraseLateral {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2HeroDescricao,
+html[data-theme="dark"] .v2Palavras {
+  color: #aebfd2;
+}
+
+html[data-theme="dark"] .v2Arco {
+  border-color: rgba(102,165,255,.22);
+}
+
+html[data-theme="dark"] .v2Arco2 {
+  border-color: rgba(102,165,255,.055);
+}
+
+html[data-theme="dark"] .v2BtnSecundario {
+  border-color: rgba(234,242,255,.55);
+  background: transparent;
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2Sobre,
+html[data-theme="dark"] .v2Diretoria,
+html[data-theme="dark"] .v2Projetos,
+html[data-theme="dark"] .v2PainelInformacoes,
+html[data-theme="dark"] .v2Acao,
+html[data-theme="dark"] .v2Galeria,
+html[data-theme="dark"] .v2ContatoSugestoes {
+  background: #06111f;
+}
+
+html[data-theme="dark"] .v2Sobre h2,
+html[data-theme="dark"] .v2Diretoria h2,
+html[data-theme="dark"] .v2Projetos h2,
+html[data-theme="dark"] .v2MiniTitulo h2,
+html[data-theme="dark"] .v2Acao h2,
+html[data-theme="dark"] .v2Galeria h2,
+html[data-theme="dark"] .v2ContatoSugestoes h2,
+html[data-theme="dark"] .v2TituloLinha h2 {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2Sobre p,
+html[data-theme="dark"] .v2ProjetoTexto p,
+html[data-theme="dark"] .v2MateriaPrincipalTexto p,
+html[data-theme="dark"] .v2DiretorTexto p,
+html[data-theme="dark"] .v2AvisosLista p,
+html[data-theme="dark"] .v2Compromissos p,
+html[data-theme="dark"] .v2Timeline p {
+  color: #aebfd2;
+}
+
+html[data-theme="dark"] .v2Pilares article,
+html[data-theme="dark"] .v2Diretor,
+html[data-theme="dark"] .v2ProjetoCard,
+html[data-theme="dark"] .v2MateriaPrincipal,
+html[data-theme="dark"] .v2MateriasMenores article,
+html[data-theme="dark"] .v2ColunaEventos,
+html[data-theme="dark"] .v2ColunaAgenda,
+html[data-theme="dark"] .v2ColunaAvisos,
+html[data-theme="dark"] .v2ContatoCard,
+html[data-theme="dark"] .v2SugestaoCard,
+html[data-theme="dark"] .v2Calendar,
+html[data-theme="dark"] .v2Vazio {
+  border-color: rgba(255,255,255,.10);
+  background: #0b1a2b;
+  color: #b7c6d7;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .v2DiretorTexto h3,
+html[data-theme="dark"] .v2ProjetoTexto h3,
+html[data-theme="dark"] .v2MateriaPrincipalTexto h3,
+html[data-theme="dark"] .v2MateriasMenores h3,
+html[data-theme="dark"] .v2Timeline h3,
+html[data-theme="dark"] .v2Compromissos h4,
+html[data-theme="dark"] .v2AvisosLista h4 {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2DiretorTexto span,
+html[data-theme="dark"] .v2ProjetoTexto > span,
+html[data-theme="dark"] .v2MateriaPrincipalTexto > span {
+  color: #43c9c4;
+}
+
+html[data-theme="dark"] .v2DiretorTexto p {
+  border-top-color: rgba(255,255,255,.10);
+}
+
+html[data-theme="dark"] .v2PilarIcone {
+  background: rgba(67,201,196,.10);
+  color: #43c9c4;
+}
+
+html[data-theme="dark"] .v2Sobre blockquote,
+html[data-theme="dark"] .v2Acao blockquote {
+  color: #dce7f5;
+  border-color: rgba(255,255,255,.12);
+}
+
+html[data-theme="dark"] .v2ProximoEvento {
+  background:
+    radial-gradient(circle at 88% 15%, rgba(67,201,196,.12), transparent 28%),
+    #0b1a2b;
+  border-color: rgba(255,255,255,.10);
+}
+
+html[data-theme="dark"] .v2ProximoEvento h2 {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2ProximoEvento p {
+  color: #aebfd2;
+}
+
+html[data-theme="dark"] .v2AvisoDestaque {
+  border-color: rgba(67,201,196,.18);
+  background: linear-gradient(145deg,#0b1a2b,#10283a);
+}
+
+html[data-theme="dark"] .v2Dia,
+html[data-theme="dark"] .v2CalendarGrid > span {
+  color: #b7c6d7;
+}
+
+html[data-theme="dark"] .v2GaleriaItem {
+  background: #0b1a2b;
+}
+
+html[data-theme="dark"] .v2ContatoSugestoes input,
+html[data-theme="dark"] .v2ContatoSugestoes textarea,
+html[data-theme="dark"] .v2ContatoSugestoes select {
+  border-color: rgba(255,255,255,.12);
+  background: #0b1a2b;
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .v2ContatoSugestoes input::placeholder,
+html[data-theme="dark"] .v2ContatoSugestoes textarea::placeholder {
+  color: #74889d;
+}
+
+/* Menu mobile da Home */
+@media (max-width: 768px) {
+  html[data-theme="dark"] .v2Menu {
+    background: #081827 !important;
+    border-color: rgba(255,255,255,.10) !important;
+  }
+
+  html[data-theme="dark"] .v2MenuBotao {
+    border-color: rgba(255,255,255,.12);
+    background: #10243a;
+  }
+
+  html[data-theme="dark"] .v2MenuBotao span {
+    background: #eaf2ff;
+  }
+
+  .v2Menu .themeToggle {
+    width: 100%;
+    justify-content: flex-start;
+    min-height: 44px;
+    padding-left: 14px;
+  }
+}
+
+/* -------------------------
+   LASPOERJ em Ação — arquivo
+------------------------- */
+
+.jornalTopoAcoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+html[data-theme="dark"] .jornalPagina {
+  background: #06111f;
+}
+
+html[data-theme="dark"] .jornalPaginaTopo {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(67,201,196,.10), transparent 25%),
+    linear-gradient(135deg,#071728,#0b1d31);
+}
+
+html[data-theme="dark"] .jornalPaginaTopo h1,
+html[data-theme="dark"] .jornalArquivo h2,
+html[data-theme="dark"] .jornalArquivoCard h3,
+html[data-theme="dark"] .jornalArquivoCard h3 a {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .jornalPaginaDescricao,
+html[data-theme="dark"] .jornalArquivoCard p {
+  color: #aebfd2;
+}
+
+html[data-theme="dark"] .jornalArquivo {
+  background: #06111f;
+}
+
+html[data-theme="dark"] .jornalArquivoCard,
+html[data-theme="dark"] .jornalArquivoEstado,
+html[data-theme="dark"] .jornalBusca input,
+html[data-theme="dark"] .jornalCategoriaFiltro select {
+  border-color: rgba(255,255,255,.10);
+  background: #0b1a2b;
+  color: #eaf2ff;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .jornalArquivoSemImagem {
+  background: #10243a;
+}
+
+html[data-theme="dark"] .jornalPaginaFooter {
+  background: #04101d;
+}
+
+/* -------------------------
+   Página individual da matéria
+------------------------- */
+
+.materiaAcoesTopo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+html[data-theme="dark"] .materiaPagina {
+  background:
+    radial-gradient(circle at 92% 5%, rgba(67,201,196,.08), transparent 23%),
+    radial-gradient(circle at 8% 35%, rgba(102,165,255,.06), transparent 24%),
+    #06111f;
+}
+
+html[data-theme="dark"] .materiaBarraTopo {
+  border-bottom-color: rgba(255,255,255,.10);
+}
+
+html[data-theme="dark"] .materiaMarca strong,
+html[data-theme="dark"] .materiaCabecalho h1,
+html[data-theme="dark"] .materiaConteudo .markdownContent h2,
+html[data-theme="dark"] .materiaConteudo .markdownContent h3,
+html[data-theme="dark"] .materiaConteudo .markdownContent h4 {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .materiaResumo,
+html[data-theme="dark"] .materiaAutor,
+html[data-theme="dark"] .materiaConteudo .markdownContent p,
+html[data-theme="dark"] .materiaConteudo .markdownContent ul,
+html[data-theme="dark"] .materiaConteudo .markdownContent ol {
+  color: #b7c6d7;
+}
+
+html[data-theme="dark"] .materiaConteudo,
+html[data-theme="dark"] .materiaImagemBox,
+html[data-theme="dark"] .materiaEstado {
+  border-color: rgba(255,255,255,.10);
+  background: #0b1a2b;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .materiaConteudo .markdownContent blockquote {
+  background: #10243a;
+  color: #dce8f6;
+}
+
+html[data-theme="dark"] .materiaVoltar {
+  border-color: rgba(67,201,196,.28);
+  background: #0b1a2b;
+  color: #69d6d1;
+}
+
+@media (max-width: 768px) {
+  .jornalTopoAcoes {
+    align-items: flex-start;
+  }
+
+  .jornalTopoAcoes .themeToggle {
+    flex: 0 0 auto;
+  }
+
+  .materiaAcoesTopo {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .materiaBarraTopo {
+    align-items: stretch !important;
+  }
+
+  .materiaAcoesTopo .materiaVoltar {
+    flex: 1;
+  }
+
+  .themeToggleTexto {
+    display: none;
+  }
+
+  .themeToggle {
+    width: 42px;
+    padding: 0;
+  }
+
+  .v2Menu .themeToggleTexto {
+    display: inline;
+  }
+
+  .v2Menu .themeToggle {
+    width: 100%;
+    padding: 0 14px;
+  }
+}

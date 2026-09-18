@@ -8,6 +8,20 @@ import "../styles/mobile/auth-mobile.css";
 
 const siteUrl = "https://laspoerj-site-djm2.vercel.app";
 
+const temaInicialScript = `
+(function () {
+  try {
+    var salvo = localStorage.getItem("laspoerj-theme");
+    var tema = salvo === "dark" || salvo === "light"
+      ? salvo
+      : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+    document.documentElement.dataset.theme = tema;
+    document.documentElement.style.colorScheme = tema;
+  } catch (e) {}
+})();
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -66,7 +80,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: temaInicialScript }}
+        />
+      </head>
+
       <body>{children}</body>
     </html>
   );

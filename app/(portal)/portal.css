@@ -1243,3 +1243,154 @@
     justify-self: start;
   }
 }
+
+
+
+/* =========================================================
+   MODO ESCURO — PÁGINAS INSTITUCIONAIS
+========================================================= */
+
+html[data-theme="dark"] .portalSite {
+  --portal-navy: #eaf2ff;
+  --portal-teal: #43c9c4;
+  --portal-sus: #66a5ff;
+  --portal-text: #b7c6d7;
+  --portal-line: rgba(255,255,255,.10);
+  --portal-bg: #091827;
+
+  background: #06111f;
+  color: #b7c6d7;
+}
+
+html[data-theme="dark"] .portalHeader {
+  border-bottom-color: rgba(255,255,255,.09);
+  background: rgba(6,17,31,.96);
+}
+
+html[data-theme="dark"] .portalMarca strong,
+html[data-theme="dark"] .portalMenu a {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .portalMenu a.ativo,
+html[data-theme="dark"] .portalMenu a:hover {
+  color: #43c9c4;
+}
+
+html[data-theme="dark"] .portalAreaInterna {
+  background: #43c9c4;
+  color: #041725 !important;
+}
+
+html[data-theme="dark"] .portalHero {
+  background:
+    radial-gradient(circle at 88% 20%, rgba(67,201,196,.10), transparent 24%),
+    radial-gradient(circle at 5% 90%, rgba(102,165,255,.07), transparent 28%),
+    #06111f;
+}
+
+html[data-theme="dark"] .portalHero h1,
+html[data-theme="dark"] .portalManifesto h2,
+html[data-theme="dark"] .portalSecaoTopo h2,
+html[data-theme="dark"] .portalCardsLinks h3,
+html[data-theme="dark"] .portalPublicacaoTexto h3,
+html[data-theme="dark"] .portalListaEditorial h3,
+html[data-theme="dark"] .portalEtapas h3,
+html[data-theme="dark"] .portalDocumentosCategorias h3,
+html[data-theme="dark"] .portalEstadoExplicativo h3,
+html[data-theme="dark"] .portalDocumentosCategoriaTitulo span,
+html[data-theme="dark"] .portalDocumentosLista h3 {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .portalHeroDescricao,
+html[data-theme="dark"] .portalManifestoTexto p,
+html[data-theme="dark"] .portalCardsLinks p,
+html[data-theme="dark"] .portalPublicacaoTexto p,
+html[data-theme="dark"] .portalListaEditorial p,
+html[data-theme="dark"] .portalEtapas p,
+html[data-theme="dark"] .portalDocumentosCategorias p,
+html[data-theme="dark"] .portalDocumentosLista p {
+  color: #aebfd2;
+}
+
+html[data-theme="dark"] .portalManifesto,
+html[data-theme="dark"] .portalManifestoClaro,
+html[data-theme="dark"] .portalConteudo,
+html[data-theme="dark"] .portalNavegacaoInstitucional,
+html[data-theme="dark"] .portalTransparenciaNota {
+  background: #06111f;
+}
+
+html[data-theme="dark"] .portalManifestoClaro {
+  border-top-color: rgba(255,255,255,.10);
+  border-bottom-color: rgba(255,255,255,.10);
+}
+
+html[data-theme="dark"] .portalCardsLinks > a,
+html[data-theme="dark"] .portalPublicacoesGrid article,
+html[data-theme="dark"] .portalEstado,
+html[data-theme="dark"] .portalEtapas article {
+  border-color: rgba(255,255,255,.10);
+  background: #0b1a2b;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .portalEtapas article {
+  border-top-color: #43c9c4;
+}
+
+html[data-theme="dark"] .portalPublicacaoImagem {
+  background: #10243a;
+}
+
+html[data-theme="dark"] .portalListaEditorial,
+html[data-theme="dark"] .portalListaEditorial article,
+html[data-theme="dark"] .portalDocumentosCategorias,
+html[data-theme="dark"] .portalDocumentosCategorias article,
+html[data-theme="dark"] .portalDocumentosCategoriaTitulo,
+html[data-theme="dark"] .portalDocumentosLista article {
+  border-color: rgba(255,255,255,.10);
+}
+
+html[data-theme="dark"] .portalTransparenciaNota p {
+  background: #0b1a2b;
+  color: #aebfd2;
+}
+
+html[data-theme="dark"] .portalDocumentosCategorias strong {
+  background: #10243a;
+  color: #9fb3c8;
+}
+
+html[data-theme="dark"] .portalDocumentosLista a {
+  border-color: rgba(255,255,255,.12);
+  background: #0b1a2b;
+}
+
+@media (max-width: 768px) {
+  html[data-theme="dark"] .portalMenu {
+    background: #081827;
+  }
+
+  html[data-theme="dark"] .portalMenuBtn {
+    border-color: rgba(255,255,255,.10);
+    background: #10243a;
+  }
+
+  html[data-theme="dark"] .portalMenuBtn span {
+    background: #eaf2ff;
+  }
+
+  .portalMenu .themeToggle {
+    width: 100%;
+    min-height: 44px;
+    justify-content: flex-start;
+    padding: 0 10px;
+    margin-top: 4px;
+  }
+
+  .portalMenu .themeToggleTexto {
+    display: inline;
+  }
+}

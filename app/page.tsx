@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type MembroEquipe = {
   id: number;
@@ -393,6 +394,7 @@ export default function Home() {
           <a className={secaoAtiva === "agenda" ? "ativo" : ""} href="#agenda" onClick={() => setMenuAberto(false)}>Agenda</a>
           <a className={secaoAtiva === "jornal" ? "ativo" : ""} href="#jornal" onClick={() => setMenuAberto(false)}>LASPOERJ em Ação</a>
           <a className={secaoAtiva === "contato" ? "ativo" : ""} href="#contato" onClick={() => setMenuAberto(false)}>Contato</a>
+          <ThemeToggle />
           <a href="/login" className="v2AreaInterna" onClick={() => setMenuAberto(false)}>Área interna</a>
         </nav>
 

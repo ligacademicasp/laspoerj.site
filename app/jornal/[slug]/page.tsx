@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import MarkdownContent from "@/components/MarkdownContent";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type Publicacao = {
   id: number;
@@ -125,9 +126,13 @@ export default function PublicacaoPage() {
             </div>
           </Link>
 
-          <Link href="/jornal" className="materiaVoltar">
-            ← Todas as publicações
-          </Link>
+          <div className="materiaAcoesTopo">
+            <ThemeToggle />
+
+            <Link href="/jornal" className="materiaVoltar">
+              ← Todas as publicações
+            </Link>
+          </div>
         </div>
 
         <article>

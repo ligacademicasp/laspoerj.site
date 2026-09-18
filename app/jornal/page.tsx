@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type Publicacao = {
   id: number;
@@ -102,9 +103,13 @@ export default function JornalPage() {
     <main className="jornalPagina">
       <header className="jornalPaginaTopo">
         <div className="jornalPaginaTopoInterno">
-          <a href="/" className="jornalPaginaVoltar">
-            ← VOLTAR AO SITE
-          </a>
+          <div className="jornalTopoAcoes">
+            <a href="/" className="jornalPaginaVoltar">
+              ← VOLTAR AO SITE
+            </a>
+
+            <ThemeToggle />
+          </div>
 
           <p className="subtitulo">LASPOERJ EM AÇÃO</p>
 

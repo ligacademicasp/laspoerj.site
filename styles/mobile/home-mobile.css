@@ -311,3 +311,81 @@
     grid-template-columns: 60px minmax(0, 1fr) !important;
   }
 }
+/* =========================================================
+   CORREÇÃO — MENU MOBILE SEM DESFOQUE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .menuOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+
+    background: rgba(7, 31, 92, 0.38) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    filter: none !important;
+
+    z-index: 9998 !important;
+  }
+
+  .menu,
+  .menu.menuAberto {
+    position: fixed !important;
+
+    top: 0 !important;
+    right: 0 !important;
+
+    width: min(84vw, 320px) !important;
+    height: 100dvh !important;
+
+    padding: 105px 28px 35px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+
+    background: #ffffff !important;
+
+    opacity: 1 !important;
+
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    transform: none !important;
+
+    box-shadow: -14px 0 40px rgba(7, 31, 92, 0.18) !important;
+
+    z-index: 10001 !important;
+  }
+
+  .menu a {
+    opacity: 1 !important;
+    filter: none !important;
+
+    color: #071f5c !important;
+
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+    font-weight: 700 !important;
+
+    text-shadow: none !important;
+  }
+
+  .menu a:hover,
+  .menu a:active {
+    color: #1aa8a5 !important;
+  }
+
+  .menuMobileBtn {
+    position: relative !important;
+    z-index: 10002 !important;
+
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

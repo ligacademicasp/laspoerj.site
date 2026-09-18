@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { href: "/institucional", label: "Institucional" },
@@ -67,6 +68,8 @@ export default function PortalHeader() {
           >
             LASPOERJ em Ação
           </Link>
+
+          <ThemeToggle />
 
           <Link
             href="/login"
