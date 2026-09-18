@@ -388,4 +388,81 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+} /* =========================================================
+   CORREÇÃO DEFINITIVA — MENU MOBILE SEM DESFOQUE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  /* Fundo atrás do menu */
+  .v2MenuOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+
+    background: rgba(3, 15, 44, 0.50) !important;
+
+    /* REMOVE O BLUR QUE ESTÁ EMBASSANDO O MENU */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+
+    z-index: 5090 !important;
+  }
+
+  /* Menu lateral */
+  .v2Menu {
+    position: fixed !important;
+
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    width: min(84vw, 310px) !important;
+    height: 100dvh !important;
+
+    z-index: 5200 !important;
+
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    opacity: 1 !important;
+
+    isolation: isolate !important;
+
+    box-shadow: -18px 0 50px rgba(7, 31, 92, 0.22) !important;
+  }
+
+  /* MODO CLARO */
+  html:not([data-theme="dark"]) .v2Menu {
+    background: #ffffff !important;
+  }
+
+  html:not([data-theme="dark"]) .v2Menu a {
+    color: #071f5c !important;
+  }
+
+  /* MODO ESCURO */
+  html[data-theme="dark"] .v2Menu {
+    background: #081827 !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  html[data-theme="dark"] .v2Menu a {
+    color: #eaf2ff !important;
+  }
+
+  html[data-theme="dark"] .v2Menu a:hover,
+  html[data-theme="dark"] .v2Menu a.ativo {
+    color: #43c9c4 !important;
+  }
+
+  /* Botão X / hambúrguer também nítido */
+  .v2MenuBotao {
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    z-index: 5300 !important;
+  }
 }
