@@ -885,6 +885,14 @@
     padding: 9px 15px;
     display: flex;
     justify-content: space-between;
+
+    /* IMPORTANTE:
+       o menu fica dentro do header. O header precisa ficar acima do overlay. */
+    z-index: 5000;
+
+    /* Evita artefatos de desfoque no Chrome/Samsung */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .portalMarca {
@@ -911,6 +919,9 @@
   .portalMenuBtn {
     position: relative;
     z-index: 5300;
+    filter: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     width: 46px;
     height: 46px;
     flex: 0 0 46px;
@@ -957,7 +968,15 @@
     flex-direction: column;
     align-items: stretch;
     gap: 3px;
+
+    /* Fundo sólido: o menu nunca deve receber blur */
     background: #fff;
+    opacity: 1;
+    filter: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    isolation: isolate;
+
     box-shadow: -20px 0 55px rgba(7,31,92,.18);
     transform: translateX(104%);
     visibility: hidden;
@@ -991,11 +1010,20 @@
   .portalOverlay {
     position: fixed;
     inset: 0;
-    z-index: 5100;
+
+    /* O overlay precisa ficar ABAIXO do header/menu.
+       Antes ele estava em 5100, acima do header (5000),
+       então acabava cobrindo/desfocando o próprio menu. */
+    z-index: 4900;
+
     display: block;
     border: 0;
-    background: rgba(3,15,44,.36);
-    backdrop-filter: blur(3px);
+    background: rgba(3,15,44,.52);
+
+    /* Sem blur: apenas escurece o site atrás do menu */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    filter: none;
   }
 
   .portalHero {
@@ -1392,5 +1420,58 @@ html[data-theme="dark"] .portalDocumentosLista a {
 
   .portalMenu .themeToggleTexto {
     display: inline;
+  }
+}
+
+
+/* =========================================================
+   CORREÇÃO DEFINITIVA — MENU MOBILE DO PORTAL
+   Institucional / Projetos / Pesquisa / Transparência /
+   Faça parte / Documentos
+========================================================= */
+@media (max-width: 768px) {
+  .portalHeader {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5000 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  .portalMenu,
+  .portalMenu.portalMenuAberto {
+    z-index: 5200 !important;
+    opacity: 1 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    isolation: isolate !important;
+  }
+
+  .portalMenuBtn,
+  .portalMenuBtnAtivo {
+    z-index: 5300 !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .portalOverlay {
+    z-index: 4900 !important;
+    background: rgba(3, 15, 44, .52) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+
+  html:not([data-theme="dark"]) .portalMenu,
+  html:not([data-theme="dark"]) .portalMenu.portalMenuAberto {
+    background: #ffffff !important;
+  }
+
+  html[data-theme="dark"] .portalMenu,
+  html[data-theme="dark"] .portalMenu.portalMenuAberto {
+    background: #081827 !important;
   }
 }
