@@ -1475,3 +1475,140 @@ html[data-theme="dark"] .portalDocumentosLista a {
     background: #081827 !important;
   }
 }
+
+
+/* =========================================================
+   MODO ESCURO — CORREÇÃO GLOBAL DE CONTRASTE DO PORTAL
+   Corrige todos os blocos que usavam --portal-navy também
+   como cor de fundo. No modo escuro, --portal-navy vira
+   uma cor clara para os títulos, então esses fundos precisam
+   de uma cor escura fixa.
+========================================================= */
+
+/* Pesquisa — bloco gráfico */
+html[data-theme="dark"] .portalPesquisaGrafismo {
+  background: #071f5c !important;
+}
+
+html[data-theme="dark"] .portalPesquisaGrafismo span {
+  color: #eaf2ff;
+}
+
+html[data-theme="dark"] .portalPesquisaGrafismo span:nth-child(2),
+html[data-theme="dark"] .portalPesquisaGrafismo span:nth-child(4) {
+  color: #7ed8d4;
+}
+
+/* Institucional — Ensino, Pesquisa e Extensão */
+html[data-theme="dark"] .portalTresPilares {
+  background: #071f5c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portalTresPilares article {
+  background: transparent !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+html[data-theme="dark"] .portalTresPilares h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portalTresPilares p {
+  color: #b8cddd !important;
+}
+
+html[data-theme="dark"] .portalTresPilares span {
+  color: #76d7d2 !important;
+}
+
+/* Projetos — placeholder de imagem */
+html[data-theme="dark"] .portalPublicacaoImagem > div {
+  background: #071f5c !important;
+  color: #ffffff !important;
+}
+
+/* Transparência — faixa de indicadores */
+html[data-theme="dark"] .portalImpacto {
+  background: #071f5c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portalImpacto > div {
+  background: transparent !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+html[data-theme="dark"] .portalImpacto strong {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portalImpacto span {
+  color: #a9c2d5 !important;
+}
+
+/* Faixas finais escuras */
+html[data-theme="dark"] .portalChamadaEscura {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(67,201,196,.18), transparent 25%),
+    #071f5c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portalChamadaEscura h2 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .portalChamadaEscura > p {
+  color: #b8cddd !important;
+}
+
+/* Botão Área interna */
+html[data-theme="dark"] .portalAreaInterna {
+  background: #43c9c4 !important;
+  color: #041725 !important;
+}
+
+/* Cards e estados do portal */
+html[data-theme="dark"] .portalCardsLinks > a,
+html[data-theme="dark"] .portalPublicacoesGrid article,
+html[data-theme="dark"] .portalEtapas article,
+html[data-theme="dark"] .portalEstado {
+  background: #0b1a2b !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+/* Documentos */
+html[data-theme="dark"] .portalDocumentosCategorias strong {
+  background: #10243a !important;
+  color: #b7c6d7 !important;
+}
+
+html[data-theme="dark"] .portalDocumentosLista a {
+  background: #10243a !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: #69d6d1 !important;
+}
+
+/* Processo seletivo */
+html[data-theme="dark"] .portalStatusCard {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(255,255,255,.08), transparent 24%),
+    linear-gradient(145deg,#06194a,#0b3b69 63%,#117f87) !important;
+}
+
+/* Rodapé */
+html[data-theme="dark"] .portalFooter {
+  background: #041333 !important;
+  color: #ffffff !important;
+}
+
+/* Mobile: mantém exatamente o mesmo contraste */
+@media (max-width: 768px) {
+  html[data-theme="dark"] .portalTresPilares,
+  html[data-theme="dark"] .portalImpacto,
+  html[data-theme="dark"] .portalPesquisaGrafismo,
+  html[data-theme="dark"] .portalChamadaEscura {
+    background-color: #071f5c !important;
+  }
+}

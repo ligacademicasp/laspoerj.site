@@ -9040,3 +9040,107 @@ html[data-theme="dark"] .materiaVoltar {
     padding: 0 14px;
   }
 }
+
+
+/* =========================================================
+   MODO ESCURO — CORREÇÃO DE CONTRASTE
+   Evita fundos claros com textos brancos.
+========================================================= */
+
+/* HOME — botões que usavam --v2-navy como fundo */
+html[data-theme="dark"] .v2BtnPrimario,
+html[data-theme="dark"] .v2SobreIntroducao > a {
+  background: #43c9c4 !important;
+  color: #041725 !important;
+  border-color: #43c9c4 !important;
+}
+
+html[data-theme="dark"] .v2BtnPrimario:hover,
+html[data-theme="dark"] .v2SobreIntroducao > a:hover {
+  background: #69d8d3 !important;
+  color: #03131f !important;
+}
+
+/* HOME — imagens/placeholder que herdavam o navy clareado */
+html[data-theme="dark"] .v2MateriaImagem,
+html[data-theme="dark"] .v2MateriaMenorImagem,
+html[data-theme="dark"] .v2ProjetoImagem {
+  background: linear-gradient(135deg, #0b1a2b, #0f5e69) !important;
+}
+
+html[data-theme="dark"] .v2MateriaImagem > div,
+html[data-theme="dark"] .v2MateriaMenorImagem > div,
+html[data-theme="dark"] .v2ProjetoImagem > div {
+  background: #10243a !important;
+  color: #eaf2ff !important;
+}
+
+/* HOME — contato precisa continuar realmente escuro */
+html[data-theme="dark"] .v2ContatoSugestoes {
+  background: #071f5c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .v2Contato,
+html[data-theme="dark"] .v2Sugestoes {
+  background: transparent !important;
+}
+
+html[data-theme="dark"] .v2Contato h2,
+html[data-theme="dark"] .v2Sugestoes h2,
+html[data-theme="dark"] .v2ContatoLinks strong {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .v2Sugestoes button {
+  background: #43c9c4 !important;
+  color: #041725 !important;
+}
+
+/* HOME — garante contraste em cards e blocos claros */
+html[data-theme="dark"] .v2Acao blockquote {
+  background: #0b1a2b !important;
+  color: #dce7f5 !important;
+}
+
+html[data-theme="dark"] .v2ProjetoCard,
+html[data-theme="dark"] .v2MateriaPrincipal,
+html[data-theme="dark"] .v2MateriasMenores article,
+html[data-theme="dark"] .v2Diretor,
+html[data-theme="dark"] .v2Pilares article,
+html[data-theme="dark"] .v2ColunaEventos,
+html[data-theme="dark"] .v2ColunaAgenda,
+html[data-theme="dark"] .v2ColunaAvisos,
+html[data-theme="dark"] .v2Vazio {
+  background: #0b1a2b !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+/* Jornal / matéria — reforço para áreas que podem permanecer claras */
+html[data-theme="dark"] .jornalArquivoCard,
+html[data-theme="dark"] .jornalArquivoEstado,
+html[data-theme="dark"] .materiaConteudo,
+html[data-theme="dark"] .materiaImagemBox,
+html[data-theme="dark"] .materiaEstado {
+  background: #0b1a2b !important;
+  border-color: rgba(255,255,255,.10) !important;
+}
+
+html[data-theme="dark"] .jornalArquivoCard h3,
+html[data-theme="dark"] .jornalArquivoCard h3 a,
+html[data-theme="dark"] .materiaCabecalho h1 {
+  color: #eaf2ff !important;
+}
+
+html[data-theme="dark"] .jornalArquivoCard p,
+html[data-theme="dark"] .materiaResumo,
+html[data-theme="dark"] .materiaAutor,
+html[data-theme="dark"] .materiaConteudo {
+  color: #b7c6d7 !important;
+}
+
+/* Segurança: elementos brancos de ação não podem ficar com texto branco */
+html[data-theme="dark"] .v2AreaInterna {
+  background: #43c9c4 !important;
+  color: #041725 !important;
+}
