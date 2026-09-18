@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import MarkdownContent from "@/components/MarkdownContent";
 
 type Publicacao = {
   id: number;
@@ -19,8 +22,8 @@ type Publicacao = {
 };
 
 export default function PublicacaoPage() {
-  const params = useParams<{ slug: string }>();
-  const slug = params?.slug;
+  const params = useParams();
+  const slug = String(params.slug ?? "");
 
   const [publicacao, setPublicacao] = useState<Publicacao | null>(null);
   const [carregando, setCarregando] = useState(true);
@@ -28,27 +31,17 @@ export default function PublicacaoPage() {
 
   useEffect(() => {
     async function carregarPublicacao() {
-      if (!slug) {
-        setErro("Publicação não encontrada.");
-        setCarregando(false);
-        return;
-      }
+      setCarregando(true);
+      setErro("");
 
-      let consulta = supabase
+      const { data, error } = await supabase
         .from("publicacoes")
         .select(
           "id, slug, titulo, resumo, conteudo, autor, categoria, imagem_url, destaque, publicado, data_publicacao"
         )
-        .eq("publicado", true);
-
-      // Compatibilidade com links antigos como /jornal/3
-      if (/^\d+$/.test(slug)) {
-        consulta = consulta.eq("id", Number(slug));
-      } else {
-        consulta = consulta.eq("slug", slug);
-      }
-
-      const { data, error } = await consulta.maybeSingle();
+        .eq("slug", slug)
+        .eq("publicado", true)
+        .maybeSingle();
 
       if (error) {
         console.error("Erro ao carregar publicação:", error);
@@ -58,16 +51,18 @@ export default function PublicacaoPage() {
       }
 
       if (!data) {
-        setErro("Esta publicação não existe ou não está disponível.");
+        setErro("Esta publicação não foi encontrada.");
         setCarregando(false);
         return;
       }
 
-      setPublicacao(data);
+      setPublicacao(data as Publicacao);
       setCarregando(false);
     }
 
-    carregarPublicacao();
+    if (slug) {
+      carregarPublicacao();
+    }
   }, [slug]);
 
   function formatarData(data: string | null) {
@@ -85,8 +80,10 @@ export default function PublicacaoPage() {
   if (carregando) {
     return (
       <main className="materiaPagina">
-        <div className="materiaEstado">
-          Carregando publicação...
+        <div className="materiaContainer">
+          <div className="materiaEstado">
+            <p>Carregando publicação...</p>
+          </div>
         </div>
       </main>
     );
@@ -95,13 +92,15 @@ export default function PublicacaoPage() {
   if (erro || !publicacao) {
     return (
       <main className="materiaPagina">
-        <div className="materiaEstado">
-          <h1>Publicação indisponível</h1>
-          <p>{erro}</p>
+        <div className="materiaContainer">
+          <div className="materiaEstado">
+            <h1>Publicação indisponível</h1>
+            <p>{erro}</p>
 
-          <a href="/jornal" className="materiaVoltar">
-            ← Voltar ao Jornal LASPOERJ
-          </a>
+            <Link href="/jornal" className="materiaVoltar materiaVoltarFinal">
+              ← Voltar ao LASPOERJ em Ação
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -109,70 +108,86 @@ export default function PublicacaoPage() {
 
   return (
     <main className="materiaPagina">
-      <article className="materiaContainer">
-        <a href="/jornal" className="materiaVoltar">
-          ← Voltar ao Jornal LASPOERJ
-        </a>
+      <div className="materiaContainer">
+        <div className="materiaBarraTopo">
+          <Link href="/" className="materiaMarca">
+            <Image
+              src="/logo.png"
+              alt="LASPOERJ"
+              width={54}
+              height={54}
+              priority
+            />
 
-        <header className="materiaCabecalho">
-          <div className="materiaMeta">
-            {publicacao.categoria && (
-              <span>{publicacao.categoria}</span>
+            <div>
+              <strong>LASPOERJ</strong>
+              <span>LASPOERJ EM AÇÃO</span>
+            </div>
+          </Link>
+
+          <Link href="/jornal" className="materiaVoltar">
+            ← Todas as publicações
+          </Link>
+        </div>
+
+        <article>
+          <header className="materiaCabecalho">
+            <div className="materiaMeta">
+              {publicacao.categoria && (
+                <span>{publicacao.categoria}</span>
+              )}
+
+              {publicacao.data_publicacao && (
+                <small>
+                  {formatarData(publicacao.data_publicacao)}
+                </small>
+              )}
+            </div>
+
+            <h1>{publicacao.titulo}</h1>
+
+            {publicacao.resumo && (
+              <p className="materiaResumo">
+                {publicacao.resumo}
+              </p>
             )}
 
-            {publicacao.data_publicacao && (
-              <small>
-                {formatarData(publicacao.data_publicacao)}
-              </small>
+            {publicacao.autor && (
+              <p className="materiaAutor">
+                Por {publicacao.autor}
+              </p>
             )}
-          </div>
+          </header>
 
-          <h1>{publicacao.titulo}</h1>
-
-          {publicacao.resumo && (
-            <p className="materiaResumo">
-              {publicacao.resumo}
-            </p>
+          {publicacao.imagem_url && (
+            <div className="materiaImagemBox materiaImagemInteira">
+              <img
+                src={publicacao.imagem_url}
+                alt={publicacao.titulo}
+                className="materiaImagem"
+              />
+            </div>
           )}
 
-          {publicacao.autor && (
-            <p className="materiaAutor">
-              Por {publicacao.autor}
-            </p>
-          )}
-        </header>
-
-        {publicacao.imagem_url && (
-          <div className="materiaImagemBox">
-            <img
-              src={publicacao.imagem_url}
-              alt={publicacao.titulo}
-              className="materiaImagem"
+          <div className="materiaConteudo">
+            <MarkdownContent
+              content={
+                publicacao.conteudo ||
+                "Conteúdo indisponível."
+              }
             />
           </div>
-        )}
 
-        <div className="materiaConteudo">
-          {(publicacao.conteudo || "")
-            .split("\n")
-            .map((paragrafo, indice) =>
-              paragrafo.trim() ? (
-                <p key={indice}>{paragrafo}</p>
-              ) : (
-                <br key={indice} />
-              )
-            )}
-        </div>
-
-        <div className="materiaRodape">
-          <a
-            href="/jornal"
-            className="materiaVoltar materiaVoltarFinal"
-          >
-            ← Voltar para outras publicações
-          </a>
-        </div>
-      </article>
+          <footer className="materiaRodape">
+            <Link
+              href="/jornal"
+              className="materiaVoltar materiaVoltarFinal"
+            >
+              ← Voltar ao LASPOERJ em Ação
+            </Link>
+          </footer>
+        </article>
+      </div>
     </main>
   );
 }

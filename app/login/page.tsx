@@ -6,136 +6,131 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 type ProfileAcesso = {
-  tipo_usuario: "administrador" | "orientador" | "ligante";
-  ativo: boolean;
+  tipo_usuario: "administrador" | "orientador" | "ligante" | null;
+  ativo: boolean | null;
 };
 
 export default function LoginPage() {
   const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const [verificandoSessao, setVerificandoSessao] = useState(true);
+  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    async function verificarSessao() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    async function verificarSessaoAtual() {
+      const { data: { user } } = await supabase.auth.getUser();
 
-      if (!user) return;
+      if (!user) {
+        setVerificandoSessao(false);
+        return;
+      }
 
       const { data: profile } = await supabase
         .from("profiles")
         .select("tipo_usuario, ativo")
         .eq("id", user.id)
-        .maybeSingle();
-
-      const perfil = profile as ProfileAcesso | null;
+        .maybeSingle<ProfileAcesso>();
 
       if (
-        perfil?.ativo &&
-        (perfil.tipo_usuario === "administrador" ||
-          perfil.tipo_usuario === "orientador")
+        profile?.ativo === true &&
+        (profile.tipo_usuario === "administrador" ||
+          profile.tipo_usuario === "orientador")
       ) {
         router.replace("/area-interna/painel");
+        return;
       }
+
+      setVerificandoSessao(false);
     }
 
-    verificarSessao();
+    verificarSessaoAtual();
   }, [router]);
 
-  async function entrar(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setErro("");
+  async function entrar(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setCarregando(true);
+    setErro("");
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: senha,
-      });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password: senha,
+    });
 
-      if (error || !data.user) {
-        setErro("E-mail ou senha inválidos.");
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("tipo_usuario, ativo")
-        .eq("id", data.user.id)
-        .maybeSingle();
-
-      if (profileError || !profile) {
-        await supabase.auth.signOut();
-
-        setErro(
-          "Não foi possível localizar seu perfil. Entre em contato com a diretoria."
-        );
-        return;
-      }
-
-      const perfil = profile as ProfileAcesso;
-
-      if (!perfil.ativo) {
-        await supabase.auth.signOut();
-
-        setErro("Seu cadastro está desativado.");
-        return;
-      }
-
-      if (
-        perfil.tipo_usuario === "administrador" ||
-        perfil.tipo_usuario === "orientador"
-      ) {
-        router.replace("/area-interna/painel");
-        router.refresh();
-        return;
-      }
-
-      await supabase.auth.signOut();
-
-      setErro(
-        "Seu cadastro está ativo, mas sua área de acesso ainda não está disponível."
-      );
-    } finally {
+    if (error || !data.user) {
+      setErro("E-mail ou senha inválidos. Verifique seus dados e tente novamente.");
       setCarregando(false);
+      return;
     }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("tipo_usuario, ativo")
+      .eq("id", data.user.id)
+      .maybeSingle<ProfileAcesso>();
+
+    if (profileError || !profile) {
+      await supabase.auth.signOut({ scope: "local" });
+      setErro("Não foi possível localizar o perfil desta conta.");
+      setCarregando(false);
+      return;
+    }
+
+    if (!profile.ativo) {
+      await supabase.auth.signOut({ scope: "local" });
+      setErro("Esta conta está inativa. Entre em contato com a administração da LASPOERJ.");
+      setCarregando(false);
+      return;
+    }
+
+    if (
+      profile.tipo_usuario === "administrador" ||
+      profile.tipo_usuario === "orientador"
+    ) {
+      router.replace("/area-interna/painel");
+      router.refresh();
+      return;
+    }
+
+    await supabase.auth.signOut({ scope: "local" });
+    setErro("Sua conta está cadastrada como Ligante. O painel administrativo é exclusivo para Diretoria e Orientadores.");
+    setCarregando(false);
+  }
+
+  if (verificandoSessao) {
+    return (
+      <main className="loginLaspoerjPagina">
+        <div className="loginLaspoerjCard loginLaspoerjCarregando">
+          <strong>LASPOERJ</strong>
+          <p>Verificando sua sessão...</p>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <main className="loginPagina">
-      <section className="loginCard">
-        <Link href="/" className="loginVoltar">
-          ← Voltar ao site
-        </Link>
+    <main className="loginLaspoerjPagina">
+      <section className="loginLaspoerjCard">
+        <a href="/" className="loginLaspoerjVoltar">
+          ← VOLTAR AO SITE
+        </a>
 
-        <div className="loginMarca">
-          <span>LASPOERJ</span>
-          <small>LIGA ACADÊMICA • ESTÁCIO RJ</small>
-        </div>
-
-        <div className="loginCabecalho">
-          <span className="loginEtiqueta">ÁREA INTERNA</span>
-
-          <h1>Bem-vindo</h1>
-
+        <div className="loginLaspoerjMarca">
+          <span>ÁREA RESTRITA</span>
+          <h1>LASPOERJ</h1>
           <p>
-            Entre com seu e-mail e senha para acessar a área interna da
-            LASPOERJ.
+            Acesso administrativo da Liga Acadêmica de Saúde Pública Odontológica.
           </p>
         </div>
 
-        <form onSubmit={entrar} className="loginFormulario">
+        <form className="loginLaspoerjForm" onSubmit={entrar}>
           <label>
-            E-mail
+            <span>E-mail</span>
             <input
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="seuemail@exemplo.com"
               autoComplete="email"
               required
@@ -143,41 +138,33 @@ export default function LoginPage() {
           </label>
 
           <label>
-            Senha
+            <span>Senha</span>
             <input
               type="password"
               value={senha}
-              onChange={(event) => setSenha(event.target.value)}
-              placeholder="Digite sua senha"
+              onChange={(e) => setSenha(e.target.value)}
+              placeholder="Sua senha"
               autoComplete="current-password"
               required
             />
           </label>
 
-          <div className="loginEsqueciSenha">
-            <Link href="/recuperar-senha">
+          <div className="loginLaspoerjRecuperarLinha">
+            <Link href="/recuperar-senha" className="loginLaspoerjRecuperar">
               Esqueci minha senha
             </Link>
           </div>
 
-          {erro && <div className="loginErro">{erro}</div>}
+          {erro && <div className="loginLaspoerjErro">{erro}</div>}
 
-          <button
-            type="submit"
-            className="loginBotao"
-            disabled={carregando}
-          >
-            {carregando ? "Entrando..." : "Entrar"}
+          <button type="submit" disabled={carregando}>
+            {carregando ? "ENTRANDO..." : "ENTRAR NO PAINEL →"}
           </button>
         </form>
 
-        <div className="loginCadastro">
-          <span>Ainda não possui uma conta?</span>
-
-          <Link href="/cadastro" className="loginCadastroBotao">
-            Criar cadastro
-          </Link>
-        </div>
+        <p className="loginLaspoerjAviso">
+          O painel administrativo é destinado à Diretoria e aos Professores Orientadores autorizados.
+        </p>
       </section>
     </main>
   );

@@ -1,0 +1,1596 @@
+/* =========================================================
+   LASPOERJ — ÁREA INTERNA V2
+   Dashboard e navegação administrativa.
+   Este arquivo usa classes admin* para não interferir na Home.
+========================================================= */
+
+.adminShell {
+  --admin-marinho: #071f5c;
+  --admin-marinho-2: #0b3569;
+  --admin-turquesa: #1aa8a5;
+  --admin-sus: #2b74d8;
+  --admin-texto: #52637a;
+  --admin-muted: #8796a9;
+  --admin-linha: #dce7f1;
+  --admin-fundo: #f4f8fc;
+  --admin-card: #ffffff;
+
+  width: 100%;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  background: var(--admin-fundo);
+  color: var(--admin-texto);
+}
+
+.adminSidebar {
+  position: relative;
+  z-index: 3000;
+  min-width: 0;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(26,168,165,.20), transparent 25%),
+    linear-gradient(180deg, #06194a 0%, #071f5c 58%, #06183f 100%);
+  color: #fff;
+}
+
+.adminSidebarInner {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  padding: 26px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.adminBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 0 6px 23px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+.adminBrand img {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  object-fit: contain;
+}
+
+.adminBrand div {
+  min-width: 0;
+}
+
+.adminBrand strong {
+  display: block;
+  color: #fff;
+  font-family: "Playfair Display", serif;
+  font-size: 21px;
+  line-height: 1;
+  letter-spacing: 2.5px;
+}
+
+.adminBrand span {
+  display: block;
+  margin-top: 5px;
+  color: #82d8d3;
+  font-size: 7px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.adminNavWrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.adminNav {
+  min-height: 0;
+  padding: 20px 2px 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.22) transparent;
+}
+
+.adminNavGrupo + .adminNavGrupo {
+  margin-top: 19px;
+}
+
+.adminNavGrupo > p {
+  margin: 0 10px 8px;
+  color: #7390ad;
+  font-size: 8px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+.adminNavLink {
+  position: relative;
+  width: 100%;
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 3px 0;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #c5d4e2;
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 700;
+  transition:
+    background .18s ease,
+    color .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+}
+
+.adminNavLink:hover {
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  transform: translateX(2px);
+}
+
+.adminNavLinkAtivo {
+  border-color: rgba(126,216,212,.16);
+  background: linear-gradient(90deg, rgba(26,168,165,.22), rgba(255,255,255,.05));
+  color: #fff;
+}
+
+.adminNavLinkAtivo::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 8px;
+  background: #62d0cb;
+}
+
+.adminNavIcone {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  display: grid;
+  place-items: center;
+  color: #7fb7c8;
+}
+
+.adminNavLinkAtivo .adminNavIcone {
+  color: #78ddd8;
+}
+
+.adminSidebarFooter {
+  display: grid;
+  gap: 8px;
+  padding: 15px 2px 0;
+  border-top: 1px solid rgba(255,255,255,.11);
+}
+
+.adminSidebarFooter > a,
+.adminSidebarFooter .painelSairBtn {
+  width: 100%;
+  min-height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 11px;
+  background: rgba(255,255,255,.055);
+  color: #d5e3ec;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.adminSidebarFooter > a:hover,
+.adminSidebarFooter .painelSairBtn:hover:not(:disabled) {
+  border-color: rgba(126,216,212,.28);
+  background: rgba(255,255,255,.10);
+  color: #fff;
+}
+
+.adminMobileToggle,
+.adminMobileOverlay {
+  display: none;
+}
+
+.adminMain {
+  min-width: 0;
+  width: 100%;
+  padding: 42px 44px 70px;
+  overflow-x: hidden;
+}
+
+.adminDashboard {
+  width: min(1380px, 100%);
+  margin: 0 auto;
+}
+
+.adminDashboardTopo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 35px;
+  margin-bottom: 28px;
+}
+
+.adminEyebrow,
+.adminSecaoTitulo p,
+.adminCardCabecalho p {
+  margin: 0 0 8px;
+  color: var(--admin-turquesa);
+  font-size: 9px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: 2.3px;
+  text-transform: uppercase;
+}
+
+.adminDashboardTopo h1 {
+  margin: 0;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(42px, 4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -1.1px;
+}
+
+.adminDashboardDescricao {
+  max-width: 700px;
+  margin: 14px 0 0;
+  color: var(--admin-texto);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.adminDataAtual {
+  margin: 10px 0 0;
+  color: #94a1b2;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.adminTopoAcoes {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.adminBotaoPrimario,
+.adminBotaoSecundario {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 17px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.adminBotaoPrimario {
+  border: 1px solid var(--admin-marinho);
+  background: var(--admin-marinho);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(7,31,92,.13);
+}
+
+.adminBotaoSecundario {
+  border: 1px solid var(--admin-linha);
+  background: #fff;
+  color: var(--admin-marinho);
+}
+
+.adminBotaoSecundario:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.adminAvisoSistema {
+  margin: 0 0 22px;
+  padding: 13px 15px;
+  border: 1px solid rgba(43,116,216,.16);
+  border-radius: 12px;
+  background: rgba(43,116,216,.06);
+  color: #31577f;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.adminMetricas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 13px;
+  margin-bottom: 40px;
+}
+
+.adminMetrica {
+  position: relative;
+  min-width: 0;
+  min-height: 145px;
+  padding: 20px 21px;
+  overflow: hidden;
+  border: 1px solid var(--admin-linha);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 25px rgba(7,31,92,.035);
+  transition: .2s ease;
+}
+
+.adminMetrica:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(7,31,92,.08);
+}
+
+.adminMetrica > span {
+  display: block;
+  min-height: 29px;
+  color: #7a899c;
+  font-size: 9px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+
+.adminMetrica strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.adminMetrica small {
+  display: block;
+  margin-top: 9px;
+  color: #9aa6b5;
+  font-size: 9px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.adminMetricaDestaque {
+  border-color: rgba(26,168,165,.24);
+  background:
+    radial-gradient(circle at 92% 7%, rgba(26,168,165,.17), transparent 33%),
+    #fff;
+}
+
+.adminMetricaDestaque strong {
+  color: var(--admin-turquesa);
+}
+
+.adminSecao {
+  margin-top: 38px;
+}
+
+.adminSecaoTitulo {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.adminSecaoTitulo h2,
+.adminCardCabecalho h2 {
+  margin: 0;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.adminAcoesRapidas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
+}
+
+.adminAcoesRapidas a {
+  min-width: 0;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  border: 1px solid var(--admin-linha);
+  border-radius: 16px;
+  background: #fff;
+  transition: .18s ease;
+}
+
+.adminAcoesRapidas a:hover {
+  border-color: rgba(26,168,165,.34);
+  transform: translateY(-2px);
+}
+
+.adminAcoesRapidas a > span {
+  margin-bottom: 18px;
+  color: var(--admin-turquesa);
+  font-family: "Playfair Display", serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.adminAcoesRapidas strong {
+  color: var(--admin-marinho);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.adminAcoesRapidas small {
+  margin-top: 5px;
+  color: #8c99a9;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.adminDuasColunas {
+  display: grid;
+  grid-template-columns: minmax(0,1.25fr) minmax(340px,.75fr);
+  gap: 16px;
+  margin-top: 42px;
+}
+
+.adminDuasColunasInferior {
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  margin-top: 16px;
+}
+
+.adminProximoEvento,
+.adminPendencias,
+.adminResumoOrganizacao,
+.adminAtalhosGestao {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--admin-linha);
+  border-radius: 19px;
+  background: #fff;
+  box-shadow: 0 9px 28px rgba(7,31,92,.035);
+}
+
+.adminCardCabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #e8eff5;
+}
+
+.adminCardCabecalho > a {
+  align-self: center;
+  color: var(--admin-turquesa);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.adminEventoConteudo {
+  display: grid;
+  grid-template-columns: 105px minmax(0,1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 28px 28px 32px;
+}
+
+.adminEventoDataGrande {
+  width: 105px;
+  height: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px 17px 17px 5px;
+  background:
+    linear-gradient(145deg, var(--admin-marinho), #0e5673);
+  color: #fff;
+  box-shadow: 0 15px 30px rgba(7,31,92,.14);
+}
+
+.adminEventoDataGrande strong {
+  color: #fff;
+  font-family: "Playfair Display", serif;
+  font-size: 42px;
+  line-height: .9;
+}
+
+.adminEventoDataGrande span {
+  margin-top: 8px;
+  color: #8bded9;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.adminEventoInfo {
+  min-width: 0;
+}
+
+.adminEventoInfo > small {
+  color: #8291a3;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.adminEventoInfo h3 {
+  margin: 8px 0 12px;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 27px;
+  line-height: 1.1;
+  overflow-wrap: break-word;
+}
+
+.adminEventoMeta,
+.adminEventoStatus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.adminEventoMeta span {
+  padding: 7px 9px;
+  border: 1px solid var(--admin-linha);
+  border-radius: 999px;
+  color: #66778d;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.adminEventoStatus {
+  margin-top: 12px;
+}
+
+.adminStatus {
+  padding: 6px 9px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.adminStatusPublicado {
+  background: rgba(26,168,165,.11);
+  color: #087b78;
+}
+
+.adminStatusRascunho {
+  background: #eef2f6;
+  color: #6f7e90;
+}
+
+.adminStatusDestaque {
+  background: rgba(43,116,216,.10);
+  color: #2b63a8;
+}
+
+.adminEstadoVazio {
+  padding: 33px 28px;
+}
+
+.adminEstadoVazio strong {
+  display: block;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 21px;
+}
+
+.adminEstadoVazio p {
+  max-width: 600px;
+  margin: 8px 0 17px;
+  color: #7e8da0;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.adminEstadoVazio a {
+  color: var(--admin-turquesa);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.adminPendenciasLista {
+  display: grid;
+  padding: 5px 0;
+}
+
+.adminPendenciasLista > a {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr) 16px;
+  gap: 12px;
+  align-items: center;
+  padding: 15px 19px;
+  border-bottom: 1px solid #edf2f6;
+  transition: background .16s ease;
+}
+
+.adminPendenciasLista > a:last-child {
+  border-bottom: 0;
+}
+
+.adminPendenciasLista > a:hover {
+  background: #f8fbfd;
+}
+
+.adminPendenciaNumero {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-family: "Playfair Display", serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.adminPendencia-turquesa {
+  background: rgba(26,168,165,.11);
+  color: #087f7c;
+}
+
+.adminPendencia-azul {
+  background: rgba(43,116,216,.10);
+  color: #2b63a8;
+}
+
+.adminPendencia-marinho {
+  background: rgba(7,31,92,.08);
+  color: var(--admin-marinho);
+}
+
+.adminPendencia-areia {
+  background: #f6f0e5;
+  color: #8a6532;
+}
+
+.adminPendenciasLista strong {
+  display: block;
+  color: var(--admin-marinho);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.adminPendenciasLista small {
+  display: block;
+  margin-top: 3px;
+  color: #8f9cad;
+  font-size: 8.5px;
+  line-height: 1.45;
+}
+
+.adminPendenciasLista b {
+  color: #9aa7b6;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.adminEstruturaGrade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+  padding: 18px 20px 22px;
+}
+
+.adminEstruturaGrade a {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #e5edf4;
+  border-radius: 14px;
+  background: #f9fbfd;
+}
+
+.adminEstruturaGrade span {
+  display: block;
+  color: #7d8c9f;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+
+.adminEstruturaGrade strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 31px;
+  line-height: 1;
+}
+
+.adminEstruturaGrade small {
+  display: block;
+  margin-top: 7px;
+  color: #9ba6b4;
+  font-size: 8.5px;
+}
+
+.adminLinksGestao {
+  display: grid;
+  padding: 7px 20px 20px;
+}
+
+.adminLinksGestao a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  min-height: 47px;
+  border-bottom: 1px solid #edf2f6;
+  color: var(--admin-marinho);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.adminLinksGestao a:last-child {
+  border-bottom: 0;
+}
+
+.adminLinksGestao span {
+  color: var(--admin-turquesa);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* =========================================================
+   Mantém as páginas administrativas já existentes confortáveis
+   dentro do novo shell até cada módulo receber o redesign.
+========================================================= */
+
+.adminMain .painelDashboard {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+}
+
+.adminMain .painelCabecalho {
+  margin-bottom: 30px;
+}
+
+.adminMain .painelCabecalho h1 {
+  font-size: 42px;
+}
+
+.adminMain .painelVerSite {
+  box-shadow: none;
+}
+
+@media (max-width: 1180px) {
+  .adminShell {
+    grid-template-columns: 238px minmax(0,1fr);
+  }
+
+  .adminMain {
+    padding: 34px 28px 60px;
+  }
+
+  .adminMetricas,
+  .adminAcoesRapidas {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .adminDuasColunas {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .adminShell {
+    display: block;
+    min-height: 100dvh;
+  }
+
+  .adminSidebar {
+    position: sticky;
+    top: 0;
+    z-index: 5000;
+    width: 100%;
+    height: 74px;
+    background: #06194a;
+    box-shadow: 0 7px 24px rgba(7,31,92,.17);
+  }
+
+  .adminSidebarInner {
+    position: relative;
+    top: auto;
+    height: 74px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .adminBrand {
+    max-width: calc(100% - 60px);
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .adminBrand img {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .adminBrand strong {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  .adminBrand span {
+    font-size: 6px;
+    letter-spacing: 1.4px;
+  }
+
+  .adminMobileToggle {
+    position: relative;
+    z-index: 5300;
+    margin-left: auto;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 14px;
+    background: rgba(255,255,255,.08);
+  }
+
+  .adminMobileToggle span {
+    width: 22px;
+    height: 2px;
+    display: block;
+    border-radius: 999px;
+    background: #fff;
+    transition: .2s ease;
+  }
+
+  .adminMobileToggleAtivo span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .adminMobileToggleAtivo span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .adminMobileToggleAtivo span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .adminNavWrap {
+    position: fixed;
+    z-index: 5200;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(86vw, 330px);
+    height: 100dvh;
+    padding: 86px 16px 18px;
+    display: flex;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(26,168,165,.18), transparent 25%),
+      #06194a;
+    box-shadow: -20px 0 55px rgba(0,0,0,.2);
+    transform: translateX(104%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform .24s ease;
+  }
+
+  .adminNavWrapAberto {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .adminNav {
+    flex: 1;
+    padding-top: 0;
+  }
+
+  .adminSidebarFooter {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+
+  .adminMobileOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5100;
+    display: block;
+    border: 0;
+    background: rgba(2,12,35,.42);
+    backdrop-filter: blur(3px);
+  }
+
+  .adminMain {
+    padding: 26px 15px 55px;
+  }
+
+  .adminDashboardTopo {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .adminDashboardTopo h1 {
+    font-size: clamp(36px, 10vw, 47px);
+  }
+
+  .adminDashboardDescricao {
+    font-size: 13px;
+  }
+
+  .adminTopoAcoes {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .adminTopoAcoes > * {
+    flex: 1 1 130px;
+  }
+
+  .adminMetricas {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .adminMetrica {
+    min-height: 127px;
+    padding: 17px 15px;
+    border-radius: 15px;
+  }
+
+  .adminMetrica strong {
+    font-size: 34px;
+  }
+
+  .adminMetrica > span {
+    font-size: 8px;
+  }
+
+  .adminAcoesRapidas {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .adminAcoesRapidas a {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 38px minmax(0,1fr);
+    gap: 3px 12px;
+    padding: 15px;
+  }
+
+  .adminAcoesRapidas a > span {
+    grid-row: 1 / 3;
+    margin: 0;
+    align-self: center;
+  }
+
+  .adminAcoesRapidas small {
+    grid-column: 2;
+  }
+
+  .adminDuasColunas,
+  .adminDuasColunasInferior {
+    grid-template-columns: 1fr;
+    margin-top: 30px;
+  }
+
+  .adminCardCabecalho {
+    padding: 18px 17px;
+  }
+
+  .adminEventoConteudo {
+    grid-template-columns: 78px minmax(0,1fr);
+    gap: 15px;
+    padding: 22px 17px 24px;
+  }
+
+  .adminEventoDataGrande {
+    width: 78px;
+    height: 90px;
+  }
+
+  .adminEventoDataGrande strong {
+    font-size: 34px;
+  }
+
+  .adminEventoInfo h3 {
+    font-size: 23px;
+  }
+
+  .adminPendenciasLista > a {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .adminEstruturaGrade {
+    grid-template-columns: 1fr;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Páginas antigas dentro do novo shell */
+  .adminMain .painelDashboard {
+    max-width: 100% !important;
+  }
+
+  .adminMain .painelCabecalho {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .adminMain .painelCabecalho h1 {
+    font-size: 34px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .adminMain {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .adminMetricas {
+    grid-template-columns: 1fr;
+  }
+
+  .adminEventoConteudo {
+    grid-template-columns: 1fr;
+  }
+
+  .adminEventoDataGrande {
+    width: 82px;
+  }
+}
+
+
+/* =========================================================
+   PORTAL PÚBLICO — CONTROLE ADMINISTRATIVO
+========================================================= */
+
+.portalAdminPagina,
+.documentosAdminPagina {
+  width: 100%;
+}
+
+.portalAdminAjuda {
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  border: 1px solid rgba(26,168,165,.20);
+  border-radius: 17px;
+  background: rgba(26,168,165,.055);
+}
+
+.portalAdminAjuda strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+}
+
+.portalAdminAjuda p {
+  max-width: 850px;
+  margin: 0;
+  color: #6e8094;
+  font-size: 10px;
+  line-height: 1.65;
+}
+
+.portalAdminAjuda > a {
+  flex: 0 0 auto;
+  color: var(--admin-turquesa);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.portalAdminGrupos {
+  display: grid;
+  gap: 18px;
+}
+
+.portalAdminCard {
+  overflow: hidden;
+  border: 1px solid #dbe7f2;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(7,31,92,.04);
+}
+
+.portalAdminCardTopo {
+  padding: 21px 23px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid #e7eef5;
+  background: #f9fbfd;
+}
+
+.portalAdminCardTopo > div > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--admin-turquesa);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.portalAdminCardTopo h2 {
+  margin: 0 0 5px;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+}
+
+.portalAdminCardTopo p {
+  margin: 0;
+  color: #8290a3;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.portalAdminCardTopo > a {
+  align-self: flex-start;
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid #dce7f1;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--admin-turquesa);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.portalAdminCampos {
+  padding: 23px;
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 18px;
+}
+
+.portalAdminCampos label {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.portalAdminCampos label > span,
+.documentosAdminCampo > span {
+  color: var(--admin-marinho);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .55px;
+  text-transform: uppercase;
+}
+
+.portalAdminCampos input,
+.portalAdminCampos select,
+.portalAdminCampos textarea,
+.documentosAdminCampo input,
+.documentosAdminCampo select,
+.documentosAdminCampo textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d6e3ee;
+  border-radius: 12px;
+  outline: none;
+  background: #fbfdff;
+  color: #52637a;
+  font-family: inherit;
+  font-size: 12px;
+  transition: .18s ease;
+}
+
+.portalAdminCampos input,
+.portalAdminCampos select,
+.documentosAdminCampo input,
+.documentosAdminCampo select {
+  min-height: 46px;
+  padding: 0 13px;
+}
+
+.portalAdminCampos textarea,
+.documentosAdminCampo textarea {
+  padding: 12px 13px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+.portalAdminCampos input:focus,
+.portalAdminCampos select:focus,
+.portalAdminCampos textarea:focus,
+.documentosAdminCampo input:focus,
+.documentosAdminCampo select:focus,
+.documentosAdminCampo textarea:focus {
+  border-color: var(--admin-turquesa);
+  box-shadow: 0 0 0 4px rgba(26,168,165,.08);
+}
+
+.portalAdminCampos small,
+.documentosAdminCampo small {
+  color: #95a1b0;
+  font-size: 8.5px;
+  line-height: 1.5;
+}
+
+/* DOCUMENTOS */
+
+.documentosAdminFormularioCard,
+.documentosAdminListaCard {
+  margin-top: 22px;
+  overflow: hidden;
+  border: 1px solid #dbe7f2;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(7,31,92,.04);
+}
+
+.documentosAdminFormulario {
+  padding: 23px;
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 18px;
+}
+
+.documentosAdminCampo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.documentosAdminCampoGrande {
+  grid-column: 1 / -1;
+}
+
+.documentosAdminCampo input[type="file"] {
+  min-height: auto;
+  padding: 11px;
+  background: #f8fbfd;
+}
+
+.documentosAdminArquivoAtual {
+  grid-column: 1 / -1;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  border: 1px solid #e1eaf2;
+  border-radius: 12px;
+  background: #f8fbfd;
+}
+
+.documentosAdminArquivoAtual span {
+  color: #7b899b;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.documentosAdminArquivoAtual a {
+  color: var(--admin-turquesa);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.documentosAdminLista {
+  display: grid;
+}
+
+.documentosAdminLista article {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) auto;
+  gap: 17px;
+  align-items: center;
+  padding: 19px 22px;
+  border-top: 1px solid #e9eff5;
+}
+
+.documentosAdminLista article:first-child {
+  border-top: 0;
+}
+
+.documentosAdminOrdem {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(26,168,165,.09);
+  color: var(--admin-turquesa);
+  font-family: "Playfair Display", serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.documentosAdminConteudo {
+  min-width: 0;
+}
+
+.documentosAdminConteudo h3 {
+  margin: 8px 0 5px;
+  color: var(--admin-marinho);
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+}
+
+.documentosAdminConteudo p {
+  margin: 0;
+  color: #7f8da0;
+  font-size: 9.5px;
+  line-height: 1.55;
+}
+
+.documentosAdminAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.documentosAdminAcoes a,
+.documentosAdminAcoes button {
+  min-height: 35px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dbe6ef;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--admin-marinho);
+  font-family: inherit;
+  font-size: 8.5px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.documentosAdminAcoes .eventoExcluir {
+  border-color: rgba(176,52,63,.18);
+  color: #a23c45;
+}
+
+/* =========================================================
+   COMPLEMENTOS DAS PÁGINAS PÚBLICAS
+========================================================= */
+
+.portalStatusAcoes {
+  margin-top: 21px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.portalStatusAcoes a {
+  padding: 10px 13px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.portalDocumentosPublicos {
+  width: min(1380px,100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 35px;
+}
+
+.portalDocumentosCategoriaTitulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--portal-line);
+}
+
+.portalDocumentosCategoriaTitulo span {
+  color: var(--portal-navy);
+  font-family: "Playfair Display", serif;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.portalDocumentosCategoriaTitulo strong {
+  color: var(--portal-teal);
+  font-family: "Playfair Display", serif;
+  font-size: 19px;
+}
+
+.portalDocumentosLista {
+  display: grid;
+}
+
+.portalDocumentosLista article {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--portal-line);
+}
+
+.portalDocumentosLista h3 {
+  margin: 0 0 5px;
+  color: var(--portal-navy);
+  font-family: "Playfair Display", serif;
+  font-size: 23px;
+}
+
+.portalDocumentosLista p {
+  max-width: 850px;
+  margin: 0;
+  color: #7c8a9d;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.portalDocumentosLista a {
+  padding: 10px 13px;
+  border: 1px solid var(--portal-line);
+  border-radius: 999px;
+  color: var(--portal-teal);
+  font-size: 8.5px;
+  font-weight: 800;
+}
+
+.portalImpacto {
+  grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+}
+
+@media (max-width: 768px) {
+  .portalAdminAjuda {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .portalAdminCardTopo {
+    flex-direction: column;
+  }
+
+  .portalAdminCampos,
+  .documentosAdminFormulario {
+    grid-template-columns: 1fr;
+    padding: 17px;
+  }
+
+  .documentosAdminCampoGrande {
+    grid-column: auto;
+  }
+
+  .documentosAdminArquivoAtual {
+    grid-column: auto;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .documentosAdminLista article {
+    grid-template-columns: 42px minmax(0,1fr);
+    padding: 17px 15px;
+  }
+
+  .documentosAdminAcoes {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .portalDocumentosLista article {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .portalDocumentosLista a {
+    justify-self: start;
+  }
+}
+
+
+/* =========================================================
+   FORMULÁRIOS CRUD — EVENTOS / AVISOS
+========================================================= */
+
+.adminMain .eventoFormularioCard,
+.adminMain .eventosAdministracao {
+  width: 100%;
+}
+
+.adminMain .eventoFormulario input,
+.adminMain .eventoFormulario textarea,
+.adminMain .eventoFormulario select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d6e3ee;
+  border-radius: 12px;
+  outline: none;
+  background: #fbfdff;
+  color: #52637a;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.adminMain .eventoFormulario input,
+.adminMain .eventoFormulario select {
+  min-height: 46px;
+  padding: 0 13px;
+}
+
+.adminMain .eventoFormulario textarea {
+  padding: 12px 13px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+.adminMain .eventoFormulario input:focus,
+.adminMain .eventoFormulario textarea:focus,
+.adminMain .eventoFormulario select:focus {
+  border-color: #1aa8a5;
+  box-shadow: 0 0 0 4px rgba(26,168,165,.08);
+}
+
+.adminMain .eventoFormularioAcoes {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .adminMain .eventoFormulario {
+    grid-template-columns: 1fr !important;
+  }
+
+  .adminMain .eventoCampoGrande,
+  .adminMain .eventoFormularioAcoes {
+    grid-column: auto !important;
+  }
+
+  .adminMain .eventoFormularioAcoes {
+    flex-direction: column-reverse;
+  }
+
+  .adminMain .eventoFormularioAcoes button {
+    width: 100%;
+  }
+}

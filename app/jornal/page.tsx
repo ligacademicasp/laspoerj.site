@@ -1,25 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Publicacao = {
-  id: string;
-  titulo: string;
+  id: number;
   slug: string;
+  titulo: string;
   resumo: string | null;
   conteudo: string | null;
   autor: string | null;
   categoria: string | null;
   imagem_url: string | null;
-  created_at: string | null;
+  destaque: boolean;
+  publicado: boolean;
+  data_publicacao: string | null;
 };
 
 export default function JornalPage() {
   const [publicacoes, setPublicacoes] = useState<Publicacao[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [busca, setBusca] = useState("");
+  const [categoria, setCategoria] = useState("Todas");
 
   useEffect(() => {
     async function carregarPublicacoes() {
@@ -29,252 +32,249 @@ export default function JornalPage() {
       const { data, error } = await supabase
         .from("publicacoes")
         .select(
-          "id, titulo, slug, resumo, conteudo, autor, categoria, imagem_url, created_at"
+          "id, slug, titulo, resumo, conteudo, autor, categoria, imagem_url, destaque, publicado, data_publicacao"
         )
         .eq("publicado", true)
-        .order("created_at", { ascending: false });
+        .order("destaque", { ascending: false })
+        .order("data_publicacao", { ascending: false });
 
       if (error) {
-        console.error(
-          "Erro ao carregar publicações:",
-          error
-        );
-
-        setErro(
-          "Não foi possível carregar as publicações."
-        );
-
+        console.error("Erro ao carregar o LASPOERJ em Ação:", error);
+        setErro("Não foi possível carregar as publicações do LASPOERJ em Ação.");
         setPublicacoes([]);
-      } else {
-        setPublicacoes(
-          (data ?? []) as Publicacao[]
-        );
+        setCarregando(false);
+        return;
       }
 
+      setPublicacoes(data ?? []);
       setCarregando(false);
     }
 
     carregarPublicacoes();
   }, []);
 
+  const categorias = useMemo(() => {
+    const lista = publicacoes
+      .map((publicacao) => publicacao.categoria)
+      .filter((item): item is string => Boolean(item));
+
+    return ["Todas", ...Array.from(new Set(lista)).sort()];
+  }, [publicacoes]);
+
+  const publicacoesFiltradas = useMemo(() => {
+    const termo = busca.trim().toLocaleLowerCase("pt-BR");
+
+    return publicacoes.filter((publicacao) => {
+      const correspondeCategoria =
+        categoria === "Todas" || publicacao.categoria === categoria;
+
+      const textoCompleto = [
+        publicacao.titulo,
+        publicacao.resumo,
+        publicacao.conteudo,
+        publicacao.autor,
+        publicacao.categoria,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLocaleLowerCase("pt-BR");
+
+      const correspondeBusca =
+        termo.length === 0 || textoCompleto.includes(termo);
+
+      return correspondeCategoria && correspondeBusca;
+    });
+  }, [publicacoes, busca, categoria]);
+
   function formatarData(data: string | null) {
     if (!data) return "";
 
-    return new Date(data).toLocaleDateString(
-      "pt-BR",
-      {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }
-    );
+    const [ano, mes, dia] = data.split("-").map(Number);
+
+    return new Date(ano, mes - 1, dia).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
   }
 
   return (
     <main className="jornalPagina">
+      <header className="jornalPaginaTopo">
+        <div className="jornalPaginaTopoInterno">
+          <a href="/" className="jornalPaginaVoltar">
+            ← VOLTAR AO SITE
+          </a>
 
-      {/* HERO */}
-      <section className="jornalHero">
-        <div className="jornalHeroInterno">
-
-          <span className="jornalKicker">
-            FIQUE POR DENTRO
-          </span>
+          <p className="subtitulo">LASPOERJ EM AÇÃO</p>
 
           <h1>
-            Jornal LASPOERJ
+            Informação, ciência
+            <br />
+            e saúde coletiva.
           </h1>
 
-          <p>
-            Notícias, ações, entrevistas,
-            relatos de experiência e
-            divulgação científica
-            produzidos pela Liga.
+          <p className="jornalPaginaDescricao">
+            Acompanhe notícias, ações, entrevistas, relatos de experiência,
+            produções científicas e conteúdos de saúde pública da LASPOERJ.
           </p>
-
         </div>
-      </section>
+      </header>
 
-      {/* PUBLICAÇÕES */}
-      <section className="jornalListaSection">
-        <div className="jornalListaInterna">
-
-          <div className="jornalCabecalhoLista">
-
-            <div>
-              <span className="jornalKicker">
-                PUBLICAÇÕES
-              </span>
-
-              <h2>
-                Conteúdos da LASPOERJ
-              </h2>
-
-              <p>
-                Acompanhe as principais
-                notícias, projetos, eventos
-                e produções da Liga.
-              </p>
-            </div>
-
-            <Link
-              href="/"
-              className="jornalVoltar"
-            >
-              ← Voltar ao início
-            </Link>
-
+      <section className="jornalArquivo">
+        <div className="jornalArquivoCabecalho">
+          <div>
+            <p className="subtitulo">PUBLICAÇÕES</p>
+            <h2>Arquivo LASPOERJ em Ação</h2>
           </div>
 
-          {/* CARREGANDO */}
-          {carregando && (
-            <div className="jornalEstado">
-              <p>
-                Carregando publicações...
-              </p>
-            </div>
-          )}
+          <div className="jornalContador">
+            <strong>{publicacoesFiltradas.length}</strong>
+            <span>
+              {publicacoesFiltradas.length === 1
+                ? "publicação"
+                : "publicações"}
+            </span>
+          </div>
+        </div>
 
-          {/* ERRO */}
-          {!carregando && erro && (
-            <div
-              className="jornalEstado jornalEstadoErro"
+        <div className="jornalFiltros">
+          <label className="jornalBusca">
+            <span>Buscar publicação</span>
+
+            <input
+              type="search"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              placeholder="Digite um título, tema ou autor..."
+            />
+          </label>
+
+          <label className="jornalCategoriaFiltro">
+            <span>Categoria</span>
+
+            <select
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
             >
-              <p>{erro}</p>
-            </div>
-          )}
+              {categorias.map((item) => (
+                <option value={item} key={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
-          {/* SEM PUBLICAÇÕES */}
-          {!carregando &&
-            !erro &&
-            publicacoes.length === 0 && (
-              <div className="jornalEstado">
-                <p>
-                  Nenhuma publicação disponível
-                  no momento.
-                </p>
-              </div>
-            )}
-
-          {/* LISTAGEM */}
-          {!carregando &&
-            !erro &&
-            publicacoes.length > 0 && (
-              <div className="jornalGrid">
-
-                {publicacoes.map(
-                  (publicacao) => (
-                    <article
-                      key={publicacao.id}
-                      className="jornalCard"
-                    >
-
-                      {/* IMAGEM */}
-                      {publicacao.imagem_url ? (
-                        <Link
-                          href={`/jornal/${publicacao.slug}`}
-                          className="jornalCardImagem"
-                        >
-                          <img
-                            src={
-                              publicacao.imagem_url
-                            }
-                            alt={
-                              publicacao.titulo
-                            }
-                          />
-                        </Link>
-                      ) : (
-                        <Link
-                          href={`/jornal/${publicacao.slug}`}
-                          className="jornalCardImagem jornalCardImagemSemFoto"
-                        >
-                          <span>
-                            LASPOERJ
-                          </span>
-                        </Link>
-                      )}
-
-                      {/* CONTEÚDO */}
-                      <div className="jornalCardConteudo">
-
-                        <div className="jornalCardMeta">
-
-                          <span>
-                            {publicacao.categoria ||
-                              "Notícia"}
-                          </span>
-
-                          {publicacao.created_at && (
-                            <>
-                              <span>
-                                •
-                              </span>
-
-                              <span>
-                                {formatarData(
-                                  publicacao.created_at
-                                )}
-                              </span>
-                            </>
-                          )}
-
-                        </div>
-
-                        <h3>
-                          <Link
-                            href={`/jornal/${publicacao.slug}`}
-                          >
-                            {publicacao.titulo}
-                          </Link>
-                        </h3>
-
-                        {publicacao.resumo && (
-                          <p>
-                            {publicacao.resumo}
-                          </p>
-                        )}
-
-                        {!publicacao.resumo &&
-                          publicacao.conteudo && (
-                            <p>
-                              {publicacao.conteudo
-                                .replace(
-                                  /\n/g,
-                                  " "
-                                )
-                                .substring(
-                                  0,
-                                  180
-                                )}
-
-                              {publicacao
-                                .conteudo
-                                .length > 180
-                                ? "..."
-                                : ""}
-                            </p>
-                          )}
-
-                        <Link
-                          href={`/jornal/${publicacao.slug}`}
-                          className="jornalCardLink"
-                        >
-                          Ler publicação →
-                        </Link>
-
-                      </div>
-
-                    </article>
-                  )
+        {carregando ? (
+          <div className="jornalArquivoEstado">
+            Carregando publicações...
+          </div>
+        ) : erro ? (
+          <div className="jornalArquivoEstado">
+            <h3>Não foi possível carregar o LASPOERJ em Ação</h3>
+            <p>{erro}</p>
+          </div>
+        ) : publicacoesFiltradas.length === 0 ? (
+          <div className="jornalArquivoEstado">
+            <h3>Nenhuma publicação encontrada</h3>
+            <p>
+              Tente alterar a pesquisa ou escolher outra categoria.
+            </p>
+          </div>
+        ) : (
+          <div className="jornalArquivoGrid">
+            {publicacoesFiltradas.map((publicacao) => (
+              <article
+                className={
+                  publicacao.destaque
+                    ? "jornalArquivoCard jornalArquivoDestaque"
+                    : "jornalArquivoCard"
+                }
+                key={publicacao.id}
+              >
+                {publicacao.imagem_url ? (
+                  <a
+                    href={`/jornal/${publicacao.slug}`}
+                    className="jornalArquivoImagemBox"
+                    aria-label={`Ler ${publicacao.titulo}`}
+                  >
+                    <img
+                      src={publicacao.imagem_url}
+                      alt={publicacao.titulo}
+                      className="jornalArquivoImagem"
+                    />
+                  </a>
+                ) : (
+                  <div className="jornalArquivoSemImagem">
+                    <span>LASPOERJ</span>
+                  </div>
                 )}
 
-              </div>
-            )}
+                <div className="jornalArquivoConteudo">
+                  <div className="jornalArquivoMeta">
+                    <div>
+                      {publicacao.destaque && (
+                        <span className="jornalEtiquetaDestaque">
+                          DESTAQUE
+                        </span>
+                      )}
 
-        </div>
+                      {publicacao.categoria && (
+                        <span>{publicacao.categoria}</span>
+                      )}
+                    </div>
+
+                    {publicacao.data_publicacao && (
+                      <small>
+                        {formatarData(publicacao.data_publicacao)}
+                      </small>
+                    )}
+                  </div>
+
+                  <h3>
+                    <a href={`/jornal/${publicacao.slug}`}>
+                      {publicacao.titulo}
+                    </a>
+                  </h3>
+
+                  <p>
+                    {publicacao.resumo ||
+                      publicacao.conteudo?.slice(0, 220) ||
+                      "Leia esta publicação do LASPOERJ em Ação."}
+                  </p>
+
+                  <div className="jornalArquivoRodape">
+                    <span>
+                      {publicacao.autor
+                        ? `Por ${publicacao.autor}`
+                        : "LASPOERJ"}
+                    </span>
+
+                    <a
+                      href={`/jornal/${publicacao.slug}`}
+                      className="jornalArquivoLer"
+                    >
+                      LER PUBLICAÇÃO →
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
+      <footer className="jornalPaginaFooter">
+        <div>
+          <strong>LASPOERJ</strong>
+          <span>
+            Liga Acadêmica de Saúde Pública Odontológica • Estácio RJ
+          </span>
+        </div>
+
+        <a href="/">Voltar para a página inicial</a>
+      </footer>
     </main>
   );
 }

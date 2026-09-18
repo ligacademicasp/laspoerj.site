@@ -6,21 +6,25 @@ import { supabase } from "@/lib/supabase";
 
 export default function NovaSenhaPage() {
   const [senha, setSenha] = useState("");
-  const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [erro, setErro] = useState("");
-  const [sucesso, setSucesso] = useState("");
-  const [carregando, setCarregando] = useState(false);
-  const [sessaoValida, setSessaoValida] = useState(false);
+  const [confirmacao, setConfirmacao] = useState("");
   const [verificando, setVerificando] = useState(true);
+  const [podeAlterar, setPodeAlterar] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState(false);
 
   useEffect(() => {
+    let montado = true;
+
     async function verificarSessao() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
+      if (!montado) return;
+
       if (session) {
-        setSessaoValida(true);
+        setPodeAlterar(true);
       }
 
       setVerificando(false);
@@ -31,183 +35,133 @@ export default function NovaSenhaPage() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "PASSWORD_RECOVERY" && session) {
-        setSessaoValida(true);
+      if (!montado) return;
+
+      if (
+        event === "PASSWORD_RECOVERY" ||
+        (event === "SIGNED_IN" && session)
+      ) {
+        setPodeAlterar(true);
         setVerificando(false);
+        setErro("");
       }
     });
 
     return () => {
+      montado = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  async function alterarSenha(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  async function salvarNovaSenha(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setErro("");
-    setSucesso("");
+    setSucesso(false);
 
     if (senha.length < 8) {
-      setErro("A senha deve ter pelo menos 8 caracteres.");
+      setErro("A nova senha precisa ter pelo menos 8 caracteres.");
       return;
     }
 
-    if (senha !== confirmarSenha) {
-      setErro("As senhas não coincidem.");
+    if (senha !== confirmacao) {
+      setErro("As senhas não são iguais.");
       return;
     }
 
-    setCarregando(true);
+    setSalvando(true);
 
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: senha,
-      });
+    const { error } = await supabase.auth.updateUser({
+      password: senha,
+    });
 
-      if (error) {
-        setErro("Não foi possível alterar sua senha. Solicite um novo link.");
-        return;
-      }
-
-      setSucesso("Senha alterada com sucesso.");
-
-      setSenha("");
-      setConfirmarSenha("");
-
-      await supabase.auth.signOut();
-    } catch {
-      setErro("Ocorreu um erro ao alterar sua senha.");
-    } finally {
-      setCarregando(false);
+    if (error) {
+      console.error("Erro ao redefinir senha:", error);
+      setErro(
+        "Não foi possível alterar a senha. O link pode ter expirado. Solicite uma nova recuperação."
+      );
+      setSalvando(false);
+      return;
     }
-  }
 
-  if (verificando) {
-    return (
-      <main className="loginPagina">
-        <section className="loginCard">
-          <p>Verificando link de recuperação...</p>
-        </section>
-      </main>
-    );
-  }
+    setSucesso(true);
+    setSenha("");
+    setConfirmacao("");
+    setSalvando(false);
 
-  if (!sessaoValida && !sucesso) {
-    return (
-      <main className="loginPagina">
-        <section className="loginCard">
-          <Link href="/login" className="loginVoltar">
-            ← Voltar ao login
-          </Link>
-
-          <div className="loginMarca">
-            <span>LASPOERJ</span>
-            <small>LIGA ACADÊMICA • ESTÁCIO RJ</small>
-          </div>
-
-          <div className="loginCabecalho">
-            <span className="loginEtiqueta">RECUPERAÇÃO DE SENHA</span>
-
-            <h1>Link inválido</h1>
-
-            <p>
-              Este link de recuperação é inválido ou expirou. Solicite um novo
-              e-mail para redefinir sua senha.
-            </p>
-          </div>
-
-          <Link
-            href="/recuperar-senha"
-            className="loginCadastroBotao"
-          >
-            Solicitar novo link
-          </Link>
-        </section>
-      </main>
-    );
+    await supabase.auth.signOut({ scope: "local" });
   }
 
   return (
-    <main className="loginPagina">
-      <section className="loginCard">
-        <Link href="/login" className="loginVoltar">
-          ← Voltar ao login
+    <main className="loginLaspoerjPagina">
+      <section className="loginLaspoerjCard">
+        <Link href="/login" className="loginLaspoerjVoltar">
+          ← VOLTAR AO LOGIN
         </Link>
 
-        <div className="loginMarca">
-          <span>LASPOERJ</span>
-          <small>LIGA ACADÊMICA • ESTÁCIO RJ</small>
-        </div>
-
-        <div className="loginCabecalho">
-          <span className="loginEtiqueta">NOVA SENHA</span>
-
+        <div className="loginLaspoerjMarca">
+          <span>NOVA SENHA</span>
           <h1>Crie uma nova senha</h1>
-
-          <p>
-            Digite abaixo a nova senha que deseja utilizar para acessar sua
-            conta.
-          </p>
+          <p>Escolha uma nova senha para sua conta da LASPOERJ.</p>
         </div>
 
-        {sucesso ? (
-          <>
-            <div className="cadastroSucesso">
-              Sua senha foi alterada com sucesso.
-            </div>
-
-            <Link
-              href="/login"
-              className="loginCadastroBotao"
-              style={{ marginTop: "20px" }}
-            >
-              Ir para o login
-            </Link>
-          </>
+        {verificando ? (
+          <div className="loginLaspoerjSucesso">
+            <strong>Verificando link...</strong>
+            <p>Aguarde enquanto validamos sua solicitação de recuperação.</p>
+          </div>
+        ) : sucesso ? (
+          <div className="loginLaspoerjSucesso">
+            <strong>Senha alterada com sucesso!</strong>
+            <p>
+              Sua nova senha já está ativa. Entre novamente para acessar sua conta.
+            </p>
+            <Link href="/login">Ir para o login →</Link>
+          </div>
+        ) : !podeAlterar ? (
+          <div className="loginLaspoerjErro loginLaspoerjBloco">
+            <strong>Link inválido ou expirado.</strong>
+            <p>Solicite um novo link de recuperação de senha.</p>
+            <Link href="/recuperar-senha">Solicitar novo link</Link>
+          </div>
         ) : (
-          <form onSubmit={alterarSenha} className="loginFormulario">
+          <form className="loginLaspoerjForm" onSubmit={salvarNovaSenha}>
             <label>
-              Nova senha
-
+              <span>Nova senha</span>
               <input
                 type="password"
                 value={senha}
-                onChange={(event) => setSenha(event.target.value)}
+                onChange={(e) => setSenha(e.target.value)}
                 placeholder="Mínimo de 8 caracteres"
-                minLength={8}
                 autoComplete="new-password"
+                minLength={8}
                 required
               />
             </label>
 
             <label>
-              Confirmar nova senha
-
+              <span>Confirmar nova senha</span>
               <input
                 type="password"
-                value={confirmarSenha}
-                onChange={(event) =>
-                  setConfirmarSenha(event.target.value)
-                }
-                placeholder="Digite novamente a nova senha"
-                minLength={8}
+                value={confirmacao}
+                onChange={(e) => setConfirmacao(e.target.value)}
+                placeholder="Digite novamente"
                 autoComplete="new-password"
+                minLength={8}
                 required
               />
             </label>
 
-            {erro && <div className="loginErro">{erro}</div>}
+            {erro && <div className="loginLaspoerjErro">{erro}</div>}
 
-            <button
-              type="submit"
-              className="loginBotao"
-              disabled={carregando}
-            >
-              {carregando ? "Alterando..." : "Alterar senha"}
+            <button type="submit" disabled={salvando}>
+              {salvando ? "SALVANDO..." : "SALVAR NOVA SENHA →"}
             </button>
           </form>
         )}
+
+        <p className="loginLaspoerjAviso">
+          Utilize uma senha exclusiva e não compartilhe suas credenciais.
+        </p>
       </section>
     </main>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 
@@ -54,13 +54,14 @@ type ConfiguracoesSite = Record<string, string>;
 
 export default function Home() {
   const [menuAberto, setMenuAberto] = useState(false);
-  const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
+  const [mostrarTopo, setMostrarTopo] = useState(false);
+  const [secaoAtiva, setSecaoAtiva] = useState("topo");
 
-  const [eventosSite, setEventosSite] = useState<Evento[]>([]);
-  const [avisosSite, setAvisosSite] = useState<Aviso[]>([]);
-  const [publicacoesSite, setPublicacoesSite] = useState<Publicacao[]>([]);
-  const [equipeSite, setEquipeSite] = useState<MembroEquipe[]>([]);
-  const [configuracoesSite, setConfiguracoesSite] = useState<ConfiguracoesSite>({});
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [avisos, setAvisos] = useState<Aviso[]>([]);
+  const [publicacoes, setPublicacoes] = useState<Publicacao[]>([]);
+  const [equipe, setEquipe] = useState<MembroEquipe[]>([]);
+  const [configuracoes, setConfiguracoes] = useState<ConfiguracoesSite>({});
 
   const [mesCalendario, setMesCalendario] = useState(() => {
     const hoje = new Date();
@@ -75,46 +76,73 @@ export default function Home() {
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
-    async function carregarDados() {
-      const [eventosResultado, avisosResultado, publicacoesResultado, equipeResultado, configuracoesResultado] = await Promise.all([
-        supabase.from("eventos").select("id, titulo, descricao, data_evento, horario, local, destaque, publicado").eq("publicado", true).order("data_evento", { ascending: true }),
-        supabase.from("avisos").select("id, titulo, mensagem, publico, destaque, publicado, data_expiracao").eq("publicado", true).eq("publico", "todos").order("id", { ascending: false }),
-        supabase.from("publicacoes").select("id, slug, titulo, resumo, conteudo, autor, categoria, imagem_url, destaque, publicado, data_publicacao").eq("publicado", true).order("data_publicacao", { ascending: false }),
-        supabase.from("equipe").select("id, nome, cargo, bio, foto_url, grupo, ordem, ativo").eq("ativo", true).order("ordem", { ascending: true }),
-        supabase.from("configuracoes_site").select("chave, valor"),
-      ]);
+    async function carregar() {
+      const [eventosR, avisosR, publicacoesR, equipeR, configuracoesR] =
+        await Promise.all([
+          supabase
+            .from("eventos")
+            .select(
+              "id, titulo, descricao, data_evento, horario, local, destaque, publicado"
+            )
+            .eq("publicado", true)
+            .order("data_evento", { ascending: true }),
+          supabase
+            .from("avisos")
+            .select(
+              "id, titulo, mensagem, publico, destaque, publicado, data_expiracao"
+            )
+            .eq("publicado", true)
+            .eq("publico", "todos")
+            .order("id", { ascending: false }),
+          supabase
+            .from("publicacoes")
+            .select(
+              "id, slug, titulo, resumo, conteudo, autor, categoria, imagem_url, destaque, publicado, data_publicacao"
+            )
+            .eq("publicado", true)
+            .order("data_publicacao", { ascending: false }),
+          supabase
+            .from("equipe")
+            .select("id, nome, cargo, bio, foto_url, grupo, ordem, ativo")
+            .eq("ativo", true)
+            .order("ordem", { ascending: true }),
+          supabase.from("configuracoes_site").select("chave, valor"),
+        ]);
 
-      if (eventosResultado.error) console.error("Erro ao carregar eventos:", eventosResultado.error);
-      else setEventosSite(eventosResultado.data ?? []);
+      if (!eventosR.error) setEventos(eventosR.data ?? []);
+      else console.error("Erro ao carregar eventos:", eventosR.error);
 
-      if (avisosResultado.error) console.error("Erro ao carregar avisos:", avisosResultado.error);
-      else {
+      if (!avisosR.error) {
         const hoje = new Date().toISOString().split("T")[0];
-        const validos = (avisosResultado.data ?? []).filter((aviso) => !aviso.data_expiracao || aviso.data_expiracao >= hoje);
-        setAvisosSite(validos);
+        setAvisos(
+          (avisosR.data ?? []).filter(
+            (aviso) => !aviso.data_expiracao || aviso.data_expiracao >= hoje
+          )
+        );
+      } else {
+        console.error("Erro ao carregar avisos:", avisosR.error);
       }
 
-      if (publicacoesResultado.error) console.error("Erro ao carregar publicações:", publicacoesResultado.error);
-      else setPublicacoesSite(publicacoesResultado.data ?? []);
+      if (!publicacoesR.error) setPublicacoes(publicacoesR.data ?? []);
+      else console.error("Erro ao carregar publicações:", publicacoesR.error);
 
-      if (equipeResultado.error) console.error("Erro ao carregar equipe:", equipeResultado.error);
-      else setEquipeSite((equipeResultado.data ?? []) as MembroEquipe[]);
+      if (!equipeR.error) setEquipe((equipeR.data ?? []) as MembroEquipe[]);
+      else console.error("Erro ao carregar equipe:", equipeR.error);
 
-      if (configuracoesResultado.error) console.error("Erro ao carregar configurações:", configuracoesResultado.error);
-      else {
+      if (!configuracoesR.error) {
         const mapa: ConfiguracoesSite = {};
-        (configuracoesResultado.data ?? []).forEach((item) => {
+        (configuracoesR.data ?? []).forEach((item) => {
           mapa[item.chave] = item.valor ?? "";
         });
-        setConfiguracoesSite(mapa);
+        setConfiguracoes(mapa);
       }
     }
 
-    carregarDados();
+    carregar();
   }, []);
 
   useEffect(() => {
-    const aoRolar = () => setMostrarBotaoTopo(window.scrollY > 420);
+    const aoRolar = () => setMostrarTopo(window.scrollY > 450);
     window.addEventListener("scroll", aoRolar);
     aoRolar();
     return () => window.removeEventListener("scroll", aoRolar);
@@ -122,33 +150,101 @@ export default function Home() {
 
   useEffect(() => {
     document.body.style.overflow = menuAberto ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [menuAberto]);
 
+  useEffect(() => {
+    document.documentElement.classList.add("reveal-ready");
+
+    const elementos = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]")
+    );
+
+    if (!("IntersectionObserver" in window)) {
+      elementos.forEach((elemento) => elemento.classList.add("revelado"));
+      return () => document.documentElement.classList.remove("reveal-ready");
+    }
+
+    const observer = new IntersectionObserver(
+      (entradas) => {
+        entradas.forEach((entrada) => {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("revelado");
+            observer.unobserve(entrada.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    elementos.forEach((elemento) => observer.observe(elemento));
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove("reveal-ready");
+    };
+  }, [eventos, avisos, publicacoes, equipe]);
+
+  useEffect(() => {
+    const ids = ["topo", "sobre", "projetos", "eventos", "agenda", "jornal", "contato"];
+    const secoes = ids
+      .map((id) => document.getElementById(id))
+      .filter((secao): secao is HTMLElement => Boolean(secao));
+
+    if (!("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entradas) => {
+        const visiveis = entradas
+          .filter((entrada) => entrada.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visiveis[0]?.target.id) {
+          setSecaoAtiva(visiveis[0].target.id);
+        }
+      },
+      { rootMargin: "-18% 0px -62% 0px", threshold: [0.05, 0.2, 0.45] }
+    );
+
+    secoes.forEach((secao) => observer.observe(secao));
+    return () => observer.disconnect();
+  }, []);
+
   function config(chave: string, fallback: string) {
-    const valor = configuracoesSite[chave];
+    const valor = configuracoes[chave];
     return valor && valor.trim() ? valor : fallback;
   }
 
   function instagramUrl() {
-    const usuario = config("instagram", "@laspoerj").replace(/^@/, "").trim();
-    return `https://www.instagram.com/${usuario}`;
+    return `https://www.instagram.com/${config("instagram", "@laspoerj")
+      .replace(/^@/, "")
+      .trim()}`;
   }
 
   function enderecoMapsUrl() {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config("endereco", "Avenida Alfredo Balthazar da Silveira, nº 580 - Recreio dos Bandeirantes, Rio de Janeiro - RJ, 22790-710"))}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      config(
+        "endereco",
+        "Avenida Alfredo Balthazar da Silveira, nº 580 - Recreio dos Bandeirantes, Rio de Janeiro - RJ, 22790-710"
+      )
+    )}`;
   }
 
-  async function enviarSugestao(e: React.FormEvent<HTMLFormElement>) {
+  async function enviarSugestao(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     try {
       setEnviando(true);
-      const { error } = await supabase.from("sugestoes").insert([{ nome, categoria: tipo, whatsapp, email, mensagem }]);
+      const { error } = await supabase.from("sugestoes").insert([
+        { nome, categoria: tipo, whatsapp, email, mensagem },
+      ]);
+
       if (error) {
-        console.error("Erro ao enviar sugestão:", error);
         alert(error.message);
         return;
       }
+
       alert("Sugestão enviada com sucesso!");
       setNome("");
       setTipo("Aluno");
@@ -156,289 +252,480 @@ export default function Home() {
       setEmail("");
       setMensagem("");
     } catch (error) {
-      console.error("Erro ao enviar sugestão:", error);
+      console.error(error);
       alert("Não foi possível enviar a sugestão.");
     } finally {
       setEnviando(false);
     }
   }
 
-  const diretoria = useMemo(() => equipeSite.filter((membro) => membro.grupo === "diretoria"), [equipeSite]);
-  const orientadores = useMemo(() => equipeSite.filter((membro) => membro.grupo === "orientador"), [equipeSite]);
-  const membroDestaque = diretoria[0];
-  const outrosDiretores = diretoria.slice(1);
-  const avisoPrincipal = avisosSite.find((aviso) => aviso.destaque) ?? avisosSite[0];
-  const outrosAvisos = avisosSite.filter((aviso) => aviso.id !== avisoPrincipal?.id).slice(0, 4);
-  const publicacaoPrincipal = publicacoesSite.find((publicacao) => publicacao.destaque) ?? publicacoesSite[0];
-  const publicacoesSecundarias = publicacoesSite.filter((publicacao) => publicacao.id !== publicacaoPrincipal?.id).slice(0, 3);
+  const diretoria = useMemo(
+    () => equipe.filter((membro) => membro.grupo === "diretoria"),
+    [equipe]
+  );
 
-  const anoCalendario = mesCalendario.getFullYear();
-  const numeroMesCalendario = mesCalendario.getMonth();
-  const tituloCalendario = mesCalendario.toLocaleDateString("pt-BR", { month: "long", year: "numeric" }).toUpperCase();
+  const orientadores = useMemo(
+    () => equipe.filter((membro) => membro.grupo === "orientador"),
+    [equipe]
+  );
 
-  function mudarMesCalendario(direcao: number) {
-    setMesCalendario((mesAtual) => new Date(mesAtual.getFullYear(), mesAtual.getMonth() + direcao, 1));
+  const publicacaoPrincipal =
+    publicacoes.find((publicacao) => publicacao.destaque) ?? publicacoes[0];
+
+  const publicacoesLaterais = publicacoes
+    .filter((publicacao) => publicacao.id !== publicacaoPrincipal?.id)
+    .slice(0, 2);
+
+  const avisoPrincipal = avisos.find((aviso) => aviso.destaque) ?? avisos[0];
+  const avisosMenores = avisos
+    .filter((aviso) => aviso.id !== avisoPrincipal?.id)
+    .slice(0, 3);
+
+
+  const hojeISO = new Date().toISOString().split("T")[0];
+  const proximoEvento =
+    eventos.find((evento) => evento.data_evento >= hojeISO);
+
+  const projetosAcoes = publicacoes
+    .filter((publicacao) =>
+      /a[cç][aã]o|projeto|extens[aã]o|comunidade|campanha/i.test(
+        `${publicacao.categoria ?? ""} ${publicacao.titulo}`
+      )
+    )
+    .slice(0, 3);
+
+  const projetosExibidos =
+    projetosAcoes.length >= 3 ? projetosAcoes : publicacoes.slice(0, 3);
+
+  const galeriaFotos = publicacoes
+    .filter((publicacao) => Boolean(publicacao.imagem_url))
+    .slice(0, 6);
+
+  const ano = mesCalendario.getFullYear();
+  const mes = mesCalendario.getMonth();
+
+  const tituloCalendario = mesCalendario
+    .toLocaleDateString("pt-BR", { month: "long", year: "numeric" })
+    .toUpperCase();
+
+  function mudarMes(direcao: number) {
+    setMesCalendario(
+      (atual) => new Date(atual.getFullYear(), atual.getMonth() + direcao, 1)
+    );
   }
 
-  function criarDataISO(ano: number, mes: number, dia: number) {
-    const data = new Date(ano, mes, dia);
-    return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+  function criarISO(anoValor: number, mesValor: number, diaValor: number) {
+    const data = new Date(anoValor, mesValor, diaValor);
+    return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(data.getDate()).padStart(2, "0")}`;
   }
 
-  const primeiroDiaSemana = new Date(anoCalendario, numeroMesCalendario, 1).getDay();
-  const quantidadeDiasMes = new Date(anoCalendario, numeroMesCalendario + 1, 0).getDate();
-  const quantidadeDiasMesAnterior = new Date(anoCalendario, numeroMesCalendario, 0).getDate();
+  const primeiroDia = new Date(ano, mes, 1).getDay();
+  const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+  const diasMesAnterior = new Date(ano, mes, 0).getDate();
 
   const diasCalendario = Array.from({ length: 42 }, (_, indice) => {
     let dia: number;
-    let mesRelativo = 0;
+    let deslocamento = 0;
     let muted = false;
 
-    if (indice < primeiroDiaSemana) {
-      dia = quantidadeDiasMesAnterior - primeiroDiaSemana + indice + 1;
-      mesRelativo = -1;
+    if (indice < primeiroDia) {
+      dia = diasMesAnterior - primeiroDia + indice + 1;
+      deslocamento = -1;
       muted = true;
-    } else if (indice >= primeiroDiaSemana + quantidadeDiasMes) {
-      dia = indice - primeiroDiaSemana - quantidadeDiasMes + 1;
-      mesRelativo = 1;
+    } else if (indice >= primeiroDia + diasNoMes) {
+      dia = indice - primeiroDia - diasNoMes + 1;
+      deslocamento = 1;
       muted = true;
     } else {
-      dia = indice - primeiroDiaSemana + 1;
+      dia = indice - primeiroDia + 1;
     }
 
-    return { dia, muted, dataISO: criarDataISO(anoCalendario, numeroMesCalendario + mesRelativo, dia) };
-  });
-
-  const datasComEventos = new Set(eventosSite.map((evento) => evento.data_evento));
-  const eventosDoMes = eventosSite.filter((evento) => {
-    const [ano, mes] = evento.data_evento.split("-").map(Number);
-    return ano === anoCalendario && mes === numeroMesCalendario + 1;
-  });
-
-  function formatarDataEvento(dataEvento: string) {
-    const data = new Date(`${dataEvento}T00:00:00`);
     return {
-      dia: String(data.getDate()).padStart(2, "0"),
-      mes: data.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "").toUpperCase(),
-      completa: data.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" }),
+      dia,
+      muted,
+      dataISO: criarISO(ano, mes + deslocamento, dia),
+    };
+  });
+
+  const datasComEventos = new Set(eventos.map((evento) => evento.data_evento));
+
+  const eventosDoMes = eventos.filter((evento) => {
+    const [anoEvento, mesEvento] = evento.data_evento.split("-").map(Number);
+    return anoEvento === ano && mesEvento === mes + 1;
+  });
+
+  function dataEvento(data: string) {
+    const d = new Date(`${data}T00:00:00`);
+    return {
+      dia: String(d.getDate()).padStart(2, "0"),
+      mes: d
+        .toLocaleDateString("pt-BR", { month: "short" })
+        .replace(".", "")
+        .toUpperCase(),
     };
   }
 
-  function formatarDataPublicacao(data?: string | null) {
+  function dataPublicacao(data: string | null) {
     if (!data) return "";
-    return new Date(`${data}T00:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+    return new Date(`${data}T00:00:00`).toLocaleDateString("pt-BR");
   }
 
   return (
-    <main id="topo" className="novaSite">
-      <header className="novaHeader">
-        <a href="#topo" className="novaMarca" onClick={() => setMenuAberto(false)}>
-          <Image src="/logo.png" alt="LASPOERJ" width={78} height={78} priority />
+    <main id="topo" className="laspoV2">
+      <header className="v2Header">
+        <a href="#topo" className="v2Marca" onClick={() => setMenuAberto(false)}>
+          <Image src="/logo.png" alt="LASPOERJ" width={62} height={62} priority />
           <div>
             <strong>LASPOERJ</strong>
-            <span>SAÚDE PÚBLICA ODONTOLÓGICA</span>
+            <span>LIGA ACADÊMICA • ESTÁCIO RJ</span>
           </div>
         </a>
 
-        <nav className={menuAberto ? "novaMenu novaMenuAberto" : "novaMenu"}>
-          <a href="#sobre" onClick={() => setMenuAberto(false)}>Sobre</a>
-          <a href="#diretoria" onClick={() => setMenuAberto(false)}>Diretoria</a>
-          <a href="#eventos" onClick={() => setMenuAberto(false)}>Eventos</a>
-          <a href="#agenda" onClick={() => setMenuAberto(false)}>Agenda</a>
-          <a href="#jornal" onClick={() => setMenuAberto(false)}>Jornal</a>
-          <a href="#contato" onClick={() => setMenuAberto(false)}>Contato</a>
-          <a href="/login" className="novaAreaInterna" onClick={() => setMenuAberto(false)}>Área interna</a>
+        <nav className={menuAberto ? "v2Menu v2MenuAberto" : "v2Menu"}>
+          <a className={secaoAtiva === "topo" ? "ativo" : ""} href="#topo" onClick={() => setMenuAberto(false)}>Início</a>
+          <a className={secaoAtiva === "sobre" ? "ativo" : ""} href="#sobre" onClick={() => setMenuAberto(false)}>Sobre</a>
+          <a href="/institucional" onClick={() => setMenuAberto(false)}>Institucional</a>
+          <a className={secaoAtiva === "projetos" ? "ativo" : ""} href="#projetos" onClick={() => setMenuAberto(false)}>Projetos</a>
+          <a className={secaoAtiva === "eventos" ? "ativo" : ""} href="#eventos" onClick={() => setMenuAberto(false)}>Eventos</a>
+          <a className={secaoAtiva === "agenda" ? "ativo" : ""} href="#agenda" onClick={() => setMenuAberto(false)}>Agenda</a>
+          <a className={secaoAtiva === "jornal" ? "ativo" : ""} href="#jornal" onClick={() => setMenuAberto(false)}>LASPOERJ em Ação</a>
+          <a className={secaoAtiva === "contato" ? "ativo" : ""} href="#contato" onClick={() => setMenuAberto(false)}>Contato</a>
+          <a href="/login" className="v2AreaInterna" onClick={() => setMenuAberto(false)}>Área interna</a>
         </nav>
 
-        <button type="button" className={menuAberto ? "novaMenuBotao novaMenuBotaoAtivo" : "novaMenuBotao"} aria-label={menuAberto ? "Fechar menu" : "Abrir menu"} aria-expanded={menuAberto} onClick={() => setMenuAberto((aberto) => !aberto)}>
-          <span /><span /><span />
+        <button
+          type="button"
+          className={menuAberto ? "v2MenuBotao v2MenuBotaoAtivo" : "v2MenuBotao"}
+          aria-label={menuAberto ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={menuAberto}
+          onClick={() => setMenuAberto((valor) => !valor)}
+        >
+          <span />
+          <span />
+          <span />
         </button>
       </header>
 
-      {menuAberto && <button type="button" aria-label="Fechar menu" className="novaMenuFundo" onClick={() => setMenuAberto(false)} />}
+      {menuAberto && (
+        <button className="v2MenuOverlay" aria-label="Fechar menu" onClick={() => setMenuAberto(false)} />
+      )}
 
-      <section className="novaHero">
-        <div className="novaHeroTexto">
-          <div className="novaEtiqueta">LIGA ACADÊMICA • ESTÁCIO RJ</div>
-          <h1>Saúde pública<span> odontológica</span> que começa na formação e alcança o território.</h1>
-          <p>Ensino, pesquisa e extensão conectados para fortalecer a saúde bucal coletiva, o SUS e o compromisso social da Odontologia.</p>
-          <div className="novaHeroAcoes">
-            <a href="#sobre" className="novaBotaoPrimario">Conheça a LASPOERJ</a>
-            <a href="#agenda" className="novaBotaoTexto">Ver agenda <span>↗</span></a>
+      <section className="v2Hero" data-reveal>
+        <div className="v2HeroTexto">
+          <p>SAÚDE COLETIVA TRANSFORMA REALIDADES</p>
+          <h1>
+            SAÚDE PÚBLICA.<br />
+            ODONTOLOGIA.<br />
+            <span>COLETIVIDADE.</span>
+          </h1>
+          <div className="v2HeroDescricao">
+            Formação, pesquisa e ações que aproximam a odontologia da comunidade.
+          </div>
+          <div className="v2HeroAcoes">
+            <a href="#sobre" className="v2BtnPrimario">Conheça a LASPOERJ →</a>
+            <a href="#eventos" className="v2BtnSecundario">▣ &nbsp; Ver próximos eventos</a>
           </div>
         </div>
 
-        <div className="novaHeroPainel">
-          <div className="novaHeroMarcaGrande"><Image src="/logo.png" alt="" width={230} height={230} aria-hidden="true" /></div>
-          <div className="novaHeroPainelTopo"><span>LASPOERJ</span><small>ESTÁCIO • RJ</small></div>
-          <div className="novaHeroPainelCentro"><p>Uma liga construída para aproximar universidade, território e comunidade.</p></div>
-          <div className="novaHeroPainelRodape">
-            <div><strong>{config("numero_ligantes", "+20")}</strong><span>Ligantes</span></div>
-            <div><strong>{String(diretoria.length || 5).padStart(2, "0")}</strong><span>Diretoria</span></div>
-            <div><strong>{String(orientadores.length || 2).padStart(2, "0")}</strong><span>Orientadores</span></div>
-          </div>
+        <div className="v2HeroArte" aria-hidden="true">
+          <div className="v2Arco v2Arco1" />
+          <div className="v2Arco v2Arco2" />
+          <div className="v2Bolha" />
+          <div className="v2FrasePrincipal">Conhecimento<br />que conecta<br />pessoas e<br />transforma<br />realidades.</div>
+          <div className="v2Palavras">SAÚDE<br />EDUCAÇÃO<br />COMUNIDADE<br />IMPACTO</div>
+          <div className="v2FraseLateral">Mais que<br />odontologia,<br />pessoas.</div>
         </div>
       </section>
 
-      <section id="sobre" className="novaSobre">
-        <div className="novaSecaoCabecalho novaSecaoCabecalhoLargo">
-          <span className="novaNumeroSecao">01</span>
-          <div><p className="novaKicker">QUEM SOMOS</p><h2>Uma liga que enxerga a Odontologia para além do consultório.</h2></div>
-        </div>
-
-        <div className="novaSobreGrade">
-          <article className="novaSobreTextoPrincipal"><p>{config("sobre_texto_1", "A LASPOERJ — Liga Acadêmica de Saúde Pública Odontológica da Estácio RJ — nasce com o compromisso de aproximar a formação acadêmica da realidade social da população.")}</p></article>
-          <div className="novaSobrePilares">
-            <article><span>01</span><h3>Formação</h3><p>{config("sobre_texto_2", "Fortalecemos o olhar crítico, científico e humano dos estudantes de Odontologia, valorizando os princípios do SUS e a integralidade do cuidado.")}</p></article>
-            <article><span>02</span><h3>Território</h3><p>{config("sobre_texto_3", "Por meio de ações de ensino, pesquisa e extensão, buscamos uma odontologia mais acessível, preventiva e comprometida com a transformação social.")}</p></article>
-            <article><span>03</span><h3>Compromisso</h3><p>{config("compromisso_texto", "Formar estudantes conscientes do papel social da Odontologia e preparados para atuar junto à comunidade.")}</p></article>
-          </div>
-        </div>
+      <section className="v2Numeros" aria-label="Números da LASPOERJ" data-reveal>
+        <div><div><strong>+10</strong><small>Ligantes</small></div></div>
+        <div><div><strong>{String(diretoria.length || 5).padStart(2, "0")}</strong><small>Membros da diretoria</small></div></div>
+        <div><div><strong>{String(orientadores.length || 2).padStart(2, "0")}</strong><small>Professores orientadores</small></div></div>
+        <div><div><strong>2026</strong><small>Ano de fundação</small></div></div>
       </section>
 
-      <section className="novaIndicadores" aria-label="Números da LASPOERJ">
-        <div><strong>{config("numero_ligantes", "+20")}</strong><span>Ligantes</span></div>
-        <div><strong>{String(diretoria.length || 5).padStart(2, "0")}</strong><span>Membros da diretoria</span></div>
-        <div><strong>{String(orientadores.length || 2).padStart(2, "0")}</strong><span>Professores orientadores</span></div>
-        <div><strong>2026</strong><span>Ano de fundação</span></div>
-      </section>
-
-      <section id="diretoria" className="novaDiretoria">
-        <div className="novaSecaoCabecalho"><span className="novaNumeroSecao">02</span><div><p className="novaKicker">QUEM FAZ ACONTECER</p><h2>Diretoria LASPOERJ</h2></div></div>
-        {diretoria.length === 0 ? <div className="novaEstadoVazio">A diretoria será exibida aqui assim que os membros estiverem cadastrados no painel.</div> : (
-          <div className="novaDiretoriaMosaico">
-            {membroDestaque && (
-              <article className="novaDiretorDestaque">
-                <div className="novaDiretorFoto"><img src={membroDestaque.foto_url || "/logo.png"} alt={membroDestaque.nome} /></div>
-                <div className="novaDiretorDestaqueTexto"><span>{membroDestaque.cargo}</span><h3>{membroDestaque.nome}</h3><p>{membroDestaque.bio || "Membro da diretoria da LASPOERJ."}</p></div>
-              </article>
+      <section id="sobre" className="v2Sobre" data-reveal>
+        <div className="v2SobreIntroducao">
+          <h2>Sobre a<br />LASPOERJ</h2>
+          <p>
+            {config(
+              "sobre_texto_1",
+              "Somos uma liga acadêmica da Estácio RJ que atua na promoção da saúde pública odontológica, integrando ensino, pesquisa e extensão para transformar realidades."
             )}
-            <div className="novaDiretoresMenores">
-              {outrosDiretores.map((membro) => (
-                <article className="novaDiretorCard" key={membro.id}>
-                  <div className="novaDiretorCardFoto"><img src={membro.foto_url || "/logo.png"} alt={membro.nome} /></div>
-                  <div><span>{membro.cargo}</span><h3>{membro.nome}</h3>{membro.bio && <p>{membro.bio}</p>}</div>
-                </article>
-              ))}
-            </div>
+          </p>
+          <a href="/institucional">Saiba mais sobre nós →</a>
+        </div>
+
+        <div className="v2Pilares">
+          <article><div className="v2PilarIcone">▤</div><h3>ENSINO</h3><p>Formação complementar e encontros acadêmicos.</p></article>
+          <article><div className="v2PilarIcone">⌕</div><h3>PESQUISA</h3><p>Produção científica e desenvolvimento acadêmico.</p></article>
+          <article><div className="v2PilarIcone">♙</div><h3>EXTENSÃO</h3><p>Ações junto à comunidade e promoção da saúde.</p></article>
+        </div>
+
+        <blockquote>“Saúde bucal também é saúde coletiva.”</blockquote>
+      </section>
+
+      <section id="diretoria" className="v2Diretoria" data-reveal>
+        <div className="v2TituloLinha">
+          <div><h2>Nossa Diretoria</h2><span /></div>
+          <a href="#orientadores">Conheça toda a equipe →</a>
+        </div>
+
+        {diretoria.length === 0 ? (
+          <div className="v2Vazio">A diretoria aparecerá aqui assim que os membros forem cadastrados.</div>
+        ) : (
+          <div className="v2DiretoriaGrade">
+            {diretoria.map((membro) => (
+              <article className="v2Diretor v2DiretorDestaque" key={membro.id}>
+                <div className="v2DiretorFoto"><img src={membro.foto_url || "/logo.png"} alt={membro.nome} /></div>
+                <div className="v2DiretorTexto">
+                  <h3>{membro.nome}</h3>
+                  <span>{membro.cargo}</span>
+                  <p>{membro.bio || "Compromisso, organização e trabalho coletivo."}</p>
+                </div>
+              </article>
+            ))}
           </div>
         )}
       </section>
 
-      <section className="novaOrientadores">
-        <div className="novaOrientadoresCabecalho"><span>03</span><div><p>ORIENTAÇÃO ACADÊMICA</p><h2>Professores Orientadores</h2><small>Ciência, experiência e compromisso social guiando a formação da Liga.</small></div></div>
-        <div className="novaOrientadoresLista">
-          {orientadores.length === 0 ? <div className="novaEstadoVazio novaEstadoVazioEscuro">Os professores orientadores aparecerão aqui quando forem cadastrados no painel.</div> : orientadores.map((orientador, indice) => (
-            <article className="novaOrientadorLinha" key={orientador.id}>
-              <div className="novaOrientadorNumero">{String(indice + 1).padStart(2, "0")}</div>
-              <div className="novaOrientadorFoto"><img src={orientador.foto_url || "/logo.png"} alt={orientador.nome} /></div>
-              <div className="novaOrientadorTexto"><span>{orientador.cargo}</span><h3>{orientador.nome}</h3><p>{orientador.bio || "Professor orientador da LASPOERJ."}</p></div>
-            </article>
-          ))}
+      <section id="orientadores" className="v2Orientadores" data-reveal>
+        <div className="v2TituloLinha v2TituloLinhaEscura">
+          <div><h2>Professores Orientadores</h2><span /></div>
+          <span className="v2LinkClaro">Orientação que inspira novos caminhos.</span>
+        </div>
+
+        <div className="v2OrientadoresGrade">
+          {orientadores.length === 0 ? (
+            <div className="v2Vazio v2VazioEscuro">Os professores orientadores aparecerão aqui quando forem cadastrados.</div>
+          ) : (
+            orientadores.map((orientador) => (
+              <article key={orientador.id}>
+                <div className="v2OrientadorFoto"><img src={orientador.foto_url || "/logo.png"} alt={orientador.nome} /></div>
+                <div>
+                  <h3>{orientador.nome}</h3>
+                  <span>{orientador.cargo}</span>
+                  <p>{orientador.bio || "Professor orientador da LASPOERJ."}</p>
+                </div>
+              </article>
+            ))
+          )}
         </div>
       </section>
 
-      <section id="eventos" className="novaEventos">
-        <div className="novaSecaoCabecalho"><span className="novaNumeroSecao">04</span><div><p className="novaKicker">PROGRAMAÇÃO</p><h2>Próximos eventos</h2></div></div>
-        {eventosSite.length === 0 ? <div className="novaEstadoVazio">Nenhum evento programado no momento.</div> : (
-          <div className="novaLinhaDoTempo">
-            {eventosSite.slice(0, 6).map((evento, indice) => {
-              const data = formatarDataEvento(evento.data_evento);
-              return (
-                <article className={evento.destaque ? "novaEventoLinha novaEventoLinhaDestaque" : "novaEventoLinha"} key={evento.id}>
-                  <div className="novaEventoIndice">{String(indice + 1).padStart(2, "0")}</div>
-                  <div className="novaEventoData"><strong>{data.dia}</strong><span>{data.mes}</span></div>
-                  <div className="novaEventoConteudo">
-                    <div className="novaEventoTopo"><span>{data.completa}</span>{evento.destaque && <small>EM DESTAQUE</small>}</div>
-                    <h3>{evento.titulo}</h3>
-                    <p>{evento.descricao || "Mais informações em breve."}</p>
-                    {(evento.horario || evento.local) && <div className="novaEventoDetalhes">{evento.horario && <span>{evento.horario.slice(0, 5)}</span>}{evento.local && <span>{evento.local}</span>}</div>}
-                  </div>
-                </article>
-              );
-            })}
+      <section id="projetos" className="v2Projetos" data-reveal>
+        <div className="v2ProjetosTopo">
+          <div>
+            <p>PROJETOS E AÇÕES</p>
+            <h2>Da universidade para a comunidade.</h2>
           </div>
-        )}
+          <a href="/jornal">Ver todas as ações →</a>
+        </div>
+
+        <div className="v2ProjetosGrade">
+          {projetosExibidos.length === 0 ? (
+            <div className="v2Vazio">As ações e projetos da Liga aparecerão aqui conforme forem publicados.</div>
+          ) : (
+            projetosExibidos.map((projeto, indice) => (
+              <article key={projeto.id} className={indice === 0 ? "v2ProjetoCard v2ProjetoCardPrincipal" : "v2ProjetoCard"}>
+                <a href={`/jornal/${projeto.slug}`} className="v2ProjetoImagem">
+                  {projeto.imagem_url ? <img src={projeto.imagem_url} alt={projeto.titulo} /> : <div>LASPOERJ</div>}
+                </a>
+                <div className="v2ProjetoTexto">
+                  <span>{projeto.categoria || "AÇÃO LASPOERJ"}</span>
+                  <h3>{projeto.titulo}</h3>
+                  <p>{projeto.resumo || projeto.conteudo?.slice(0, 135) || "Conheça esta iniciativa da LASPOERJ."}</p>
+                  <a href={`/jornal/${projeto.slug}`}>Conhecer ação →</a>
+                </div>
+              </article>
+            ))
+          )}
+        </div>
       </section>
 
-      <section id="agenda" className="novaAgenda">
-        <div className="novaSecaoCabecalho novaSecaoCabecalhoLargo"><span className="novaNumeroSecao">05</span><div><p className="novaKicker">ORGANIZE-SE COM A LIGA</p><h2>Agenda LASPOERJ</h2></div></div>
-        <div className="novaAgendaGrade">
-          <div className="novaCalendario">
-            <div className="novaCalendarioTopo"><button type="button" onClick={() => mudarMesCalendario(-1)} aria-label="Mês anterior">←</button><h3>{tituloCalendario}</h3><button type="button" onClick={() => mudarMesCalendario(1)} aria-label="Próximo mês">→</button></div>
-            <div className="novaCalendarioSemana"><span>DOM</span><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span></div>
-            <div className="novaCalendarioDias">
-              {diasCalendario.map((item, indice) => {
-                const temEvento = datasComEventos.has(item.dataISO);
-                return <span key={`${item.dataISO}-${indice}`} className={[item.muted ? "novaDiaMuted" : "", temEvento && !item.muted ? "novaDiaEvento" : ""].filter(Boolean).join(" ")}>{item.dia}</span>;
+      {proximoEvento && (() => {
+        const data = dataEvento(proximoEvento.data_evento);
+        return (
+          <section className="v2ProximoEvento" data-reveal>
+            <div className="v2ProximoEventoEtiqueta">PRÓXIMO EVENTO</div>
+            <div className="v2ProximoEventoData">
+              <strong>{data.dia}</strong>
+              <span>{data.mes}</span>
+            </div>
+            <div className="v2ProximoEventoConteudo">
+              <h2>{proximoEvento.titulo}</h2>
+              <p>{proximoEvento.descricao || "Mais informações em breve."}</p>
+              <div>
+                {proximoEvento.horario && <span>{proximoEvento.horario.slice(0, 5)}</span>}
+                {proximoEvento.local && <span>{proximoEvento.local}</span>}
+              </div>
+            </div>
+            <a href="#agenda">Ver na agenda →</a>
+          </section>
+        );
+      })()}
+
+      <section className="v2PainelInformacoes" data-reveal>
+        <div id="eventos" className="v2ColunaEventos">
+          <div className="v2MiniTitulo"><h2>Próximos Eventos</h2><a href="#agenda">Ver todos →</a></div>
+          <div className="v2Timeline">
+            {eventos.length === 0 ? (
+              <div className="v2Vazio">Nenhum evento programado no momento.</div>
+            ) : (
+              eventos.slice(0, 3).map((evento) => {
+                const data = dataEvento(evento.data_evento);
+                return (
+                  <article key={evento.id}>
+                    <div className="v2DataEvento"><strong>{data.dia}</strong><span>{data.mes}</span></div>
+                    <div className="v2LinhaEvento"><i /></div>
+                    <div><h3>{evento.titulo}</h3><p>{evento.descricao || "Mais informações em breve."}</p><strong>{evento.local || "Local a definir"}</strong></div>
+                  </article>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        <div id="agenda" className="v2ColunaAgenda">
+          <div className="v2MiniTitulo"><h2>Agenda</h2><span>Calendário da Liga</span></div>
+          <div className="v2AgendaCaixa">
+            <div className="v2Calendario">
+              <div className="v2CalendarioTopo"><button type="button" onClick={() => mudarMes(-1)}>‹</button><h3>{tituloCalendario}</h3><button type="button" onClick={() => mudarMes(1)}>›</button></div>
+              <div className="v2Semana"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
+              <div className="v2Dias">
+                {diasCalendario.map((item, indice) => (
+                  <span key={`${item.dataISO}-${indice}`} className={`${item.muted ? "v2DiaMuted" : ""} ${datasComEventos.has(item.dataISO) && !item.muted ? "v2DiaEvento" : ""}`}>{item.dia}</span>
+                ))}
+              </div>
+            </div>
+
+            <div className="v2Compromissos">
+              <h3>Próximos<br />compromissos</h3>
+              {eventosDoMes.length === 0 ? <p>Nenhum evento neste mês.</p> : eventosDoMes.slice(0, 3).map((evento) => {
+                const data = dataEvento(evento.data_evento);
+                return <article key={evento.id}><strong>{data.dia}/{String(mes + 1).padStart(2, "0")}</strong><div><h4>{evento.titulo}</h4><p>{evento.local || "Local a definir"}</p></div></article>;
               })}
             </div>
           </div>
+        </div>
 
-          <div className="novaAgendaLista">
-            <div className="novaAgendaListaTopo"><span>EVENTOS DO MÊS</span><strong>{String(eventosDoMes.length).padStart(2, "0")}</strong></div>
-            {eventosDoMes.length === 0 ? <div className="novaAgendaSemEvento"><strong>Nenhum evento neste mês.</strong><p>As próximas atividades aparecerão aqui automaticamente.</p></div> : eventosDoMes.map((evento) => {
-              const data = formatarDataEvento(evento.data_evento);
-              return <article className="novaAgendaItem" key={evento.id}><div><strong>{data.dia}</strong><span>{data.mes}</span></div><div><h4>{evento.titulo}</h4><p>{evento.horario && evento.horario.slice(0, 5)}{evento.horario && evento.local && " • "}{evento.local}</p></div></article>;
-            })}
-          </div>
+        <div id="avisos" className="v2ColunaAvisos">
+          <div className="v2MiniTitulo"><h2>Avisos</h2><span>Atualizações</span></div>
+          {avisos.length === 0 ? (
+            <div className="v2Vazio">Nenhum aviso publicado.</div>
+          ) : (
+            <>
+              {avisoPrincipal && (
+                <article className="v2AvisoDestaque">
+                  <span>AVISO EM DESTAQUE</span>
+                  <h3>{avisoPrincipal.titulo}</h3>
+                  <p>{avisoPrincipal.mensagem}</p>
+                </article>
+              )}
+              <div className="v2AvisosLista">
+                {avisosMenores.map((aviso) => <article key={aviso.id}><span>●</span><div><h4>{aviso.titulo}</h4><p>{aviso.mensagem}</p></div></article>)}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
-      <section id="avisos" className="novaAvisos">
-        <div className="novaSecaoCabecalho"><span className="novaNumeroSecao">06</span><div><p className="novaKicker">MURAL DA LIGA</p><h2>Avisos e comunicados</h2></div></div>
-        {avisosSite.length === 0 ? <div className="novaEstadoVazio">Nenhum aviso publicado no momento.</div> : (
-          <div className="novaAvisosGrade">
-            {avisoPrincipal && <article className="novaAvisoPrincipal"><div className="novaAvisoPrincipalTopo"><span>{avisoPrincipal.destaque ? "IMPORTANTE" : "COMUNICADO"}</span>{avisoPrincipal.data_expiracao && <small>Válido até {new Date(`${avisoPrincipal.data_expiracao}T00:00:00`).toLocaleDateString("pt-BR")}</small>}</div><h3>{avisoPrincipal.titulo}</h3><p>{avisoPrincipal.mensagem}</p></article>}
-            <div className="novaAvisosMenores">{outrosAvisos.map((aviso, indice) => <article key={aviso.id}><span>{String(indice + 1).padStart(2, "0")}</span><div><small>{aviso.destaque ? "IMPORTANTE" : "COMUNICADO"}</small><h3>{aviso.titulo}</h3><p>{aviso.mensagem}</p></div></article>)}</div>
-          </div>
-        )}
-      </section>
+      <section id="jornal" className="v2Acao" data-reveal>
+        <div className="v2MiniTitulo v2AcaoTitulo">
+          <h2>LASPOERJ em Ação</h2>
+          <a href="/jornal">Ver todas as publicações →</a>
+        </div>
 
-      <section id="jornal" className="novaJornal">
-        <div className="novaJornalTopo"><div><p className="novaKicker">EDITORIAL LASPOERJ</p><h2>Jornal LASPOERJ</h2></div><a href="/jornal">Todas as publicações <span>↗</span></a></div>
-        {publicacoesSite.length === 0 ? <div className="novaEstadoVazio">Nenhuma publicação disponível no momento.</div> : (
-          <div className="novaJornalGrade">
+        {publicacoes.length === 0 ? (
+          <div className="v2Vazio">Nenhuma publicação disponível no momento.</div>
+        ) : (
+          <div className="v2AcaoGrade">
             {publicacaoPrincipal && (
-              <article className="novaMateriaPrincipal">
-                <a href={`/jornal/${publicacaoPrincipal.slug}`} className="novaMateriaImagem">{publicacaoPrincipal.imagem_url ? <img src={publicacaoPrincipal.imagem_url} alt={publicacaoPrincipal.titulo} /> : <div className="novaMateriaSemImagem">LASPOERJ</div>}</a>
-                <div className="novaMateriaTexto"><div className="novaMateriaMeta"><span>{publicacaoPrincipal.categoria || "Jornal LASPOERJ"}</span><small>{formatarDataPublicacao(publicacaoPrincipal.data_publicacao)}</small></div><h3>{publicacaoPrincipal.titulo}</h3><p>{publicacaoPrincipal.resumo || publicacaoPrincipal.conteudo?.slice(0, 220) || "Leia esta publicação do Jornal LASPOERJ."}</p><a href={`/jornal/${publicacaoPrincipal.slug}`}>Ler matéria completa →</a></div>
+              <article className="v2MateriaPrincipal">
+                <a href={`/jornal/${publicacaoPrincipal.slug}`} className="v2MateriaImagem">
+                  {publicacaoPrincipal.imagem_url ? <img src={publicacaoPrincipal.imagem_url} alt={publicacaoPrincipal.titulo} /> : <div>LASPOERJ</div>}
+                </a>
+                <div className="v2MateriaPrincipalTexto">
+                  <span>DESTAQUE</span>
+                  <h3>{publicacaoPrincipal.titulo}</h3>
+                  <p>{publicacaoPrincipal.resumo || publicacaoPrincipal.conteudo?.slice(0, 170) || "Acompanhe as ações da LASPOERJ."}</p>
+                  <a href={`/jornal/${publicacaoPrincipal.slug}`}>Ler mais →</a>
+                </div>
               </article>
             )}
-            <div className="novaMateriasLaterais">{publicacoesSecundarias.map((publicacao) => <article key={publicacao.id}><div className="novaMateriaLateralImagem">{publicacao.imagem_url ? <img src={publicacao.imagem_url} alt={publicacao.titulo} /> : <div>LASPOERJ</div>}</div><div className="novaMateriaLateralTexto"><div><span>{publicacao.categoria || "Jornal"}</span><small>{formatarDataPublicacao(publicacao.data_publicacao)}</small></div><h3>{publicacao.titulo}</h3><a href={`/jornal/${publicacao.slug}`}>Ler publicação →</a></div></article>)}</div>
+
+            <div className="v2MateriasMenores">
+              {publicacoesLaterais.map((publicacao) => (
+                <article key={publicacao.id}>
+                  <div className="v2MateriaMenorImagem">{publicacao.imagem_url ? <img src={publicacao.imagem_url} alt={publicacao.titulo} /> : <div>LASPOERJ</div>}</div>
+                  <div><span>{publicacao.categoria || dataPublicacao(publicacao.data_publicacao)}</span><h3>{publicacao.titulo}</h3><a href={`/jornal/${publicacao.slug}`}>Ler mais →</a></div>
+                </article>
+              ))}
+            </div>
+
+            <blockquote>“Informação também transforma realidades.”</blockquote>
           </div>
         )}
       </section>
 
-      <section id="contato" className="novaFinal">
-        <div className="novaContato">
-          <p className="novaKicker">CANAIS DA LIGA</p><h2>Fale com a LASPOERJ</h2><p className="novaContatoIntroducao">Estudantes, professores, comunidade e parceiros: nossa comunicação está aberta.</p>
-          <div className="novaContatoLinks">
-            <a href={instagramUrl()} target="_blank" rel="noopener noreferrer"><span>Instagram</span><strong>{config("instagram", "@laspoerj")}</strong><b>↗</b></a>
-            <a href={`mailto:${config("email_contato", "ligacademicasp@gmail.com")}`}><span>E-mail</span><strong>{config("email_contato", "ligacademicasp@gmail.com")}</strong><b>↗</b></a>
-            <a href={enderecoMapsUrl()} target="_blank" rel="noopener noreferrer"><span>Localização</span><strong>{config("endereco", "Estácio • Recreio dos Bandeirantes • RJ")}</strong><b>↗</b></a>
+      {galeriaFotos.length >= 3 && (
+        <section className="v2Galeria" data-reveal>
+          <div className="v2GaleriaTopo">
+            <div>
+              <p>REGISTROS DA LIGA</p>
+              <h2>Galeria de ações</h2>
+            </div>
+            <a href="/jornal">Ver LASPOERJ em Ação →</a>
+          </div>
+
+          <div className="v2GaleriaGrade">
+            {galeriaFotos.map((foto, indice) => (
+              <a
+                href={`/jornal/${foto.slug}`}
+                className={indice === 0 ? "v2GaleriaItem v2GaleriaItemGrande" : "v2GaleriaItem"}
+                key={foto.id}
+              >
+                <img src={foto.imagem_url || ""} alt={foto.titulo} />
+                <div><span>{foto.categoria || "LASPOERJ"}</span><strong>{foto.titulo}</strong></div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section id="contato" className="v2ContatoSugestoes" data-reveal>
+        <div className="v2Contato">
+          <p>FALE CONOSCO</p>
+          <h2>Conecte-se com a LASPOERJ</h2>
+          <div className="v2ContatoLinks">
+            <a href={instagramUrl()} target="_blank" rel="noopener noreferrer"><span>Instagram</span><strong>{config("instagram", "@laspoerj")}</strong></a>
+            <a href={`mailto:${config("email_contato", "ligacademicasp@gmail.com")}`}><span>E-mail</span><strong>{config("email_contato", "ligacademicasp@gmail.com")}</strong></a>
+            <a href={enderecoMapsUrl()} target="_blank" rel="noopener noreferrer"><span>Localização</span><strong>{config("endereco", "Estácio • Recreio dos Bandeirantes • RJ")}</strong></a>
           </div>
         </div>
 
-        <div id="sugestoes" className="novaSugestoes">
-          <div className="novaSugestoesTopo"><p className="novaKicker">SUA VOZ NA LIGA</p><h2>Caixa de sugestões</h2><p>Envie ideias, propostas, dúvidas ou temas para futuras ações.</p></div>
+        <div id="sugestoes" className="v2Sugestoes">
+          <p>SUA VOZ NA LIGA</p>
+          <h2>Caixa de sugestões</h2>
           <form onSubmit={enviarSugestao}>
-            <div className="novaFormularioLinha"><label>Nome *<input type="text" placeholder="Seu nome" value={nome} onChange={(e) => setNome(e.target.value)} required /></label><label>Você é... *<select value={tipo} onChange={(e) => setTipo(e.target.value)} required><option value="Aluno">Aluno</option><option value="Professor">Professor</option><option value="Ligante LASPOERJ">Ligante LASPOERJ</option><option value="Patrocinador">Patrocinador</option></select></label></div>
-            <div className="novaFormularioLinha"><label>WhatsApp<input type="text" placeholder="(21) 99999-0000" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} /></label><label>E-mail *<input type="email" placeholder="seuemail@exemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} required /></label></div>
-            <label>Mensagem *<textarea placeholder="Conte sua ideia para nós..." value={mensagem} onChange={(e) => setMensagem(e.target.value)} required /></label>
-            <button type="submit" disabled={enviando}>{enviando ? "ENVIANDO..." : "ENVIAR PARA A LASPOERJ →"}</button>
-            <small>Suas informações serão usadas apenas para contato da Liga.</small>
+            <div className="v2FormLinha"><label>Nome *<input value={nome} onChange={(e) => setNome(e.target.value)} required /></label><label>Você é... *<select value={tipo} onChange={(e) => setTipo(e.target.value)}><option>Aluno</option><option>Professor</option><option>Ligante LASPOERJ</option><option>Patrocinador</option></select></label></div>
+            <div className="v2FormLinha"><label>WhatsApp<input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} /></label><label>E-mail *<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label></div>
+            <label>Mensagem *<textarea value={mensagem} onChange={(e) => setMensagem(e.target.value)} required /></label>
+            <button type="submit" disabled={enviando}>{enviando ? "ENVIANDO..." : "ENVIAR MENSAGEM →"}</button>
           </form>
         </div>
       </section>
 
-      <footer className="novaFooter">
-        <div className="novaFooterMarca"><Image src="/logo-footer.png" alt="LASPOERJ" width={78} height={78} /><div><strong>LASPOERJ</strong><span>Liga Acadêmica de Saúde Pública Odontológica • Estácio RJ</span></div></div>
-        <nav><a href="#sobre">Sobre</a><a href="#diretoria">Diretoria</a><a href="#eventos">Eventos</a><a href="#agenda">Agenda</a><a href="#jornal">Jornal</a><a href="#contato">Contato</a></nav>
-        <div className="novaFooterFinal"><span>© 2026 LASPOERJ</span><span>Saúde pública • Odontologia • Coletividade</span></div>
+      <footer className="v2Footer">
+        <div className="v2FooterMarca"><Image src="/logo-footer.png" alt="LASPOERJ" width={62} height={62} /><div><strong>LASPOERJ</strong><span>Liga Acadêmica de Saúde Pública Odontológica • Estácio RJ</span></div></div>
+        <nav><a href="#sobre">Sobre</a><a href="/institucional">Institucional</a><a href="#diretoria">Diretoria</a><a href="#projetos">Projetos</a><a href="#eventos">Eventos</a><a href="#agenda">Agenda</a><a href="/jornal">LASPOERJ em Ação</a><a href="#contato">Contato</a></nav>
+        <div className="v2FooterFinal"><small>© 2026 LASPOERJ. Todos os direitos reservados.</small><span>Ensino • Pesquisa • Extensão • Saúde Coletiva</span></div>
       </footer>
 
-      {mostrarBotaoTopo && <button type="button" className="novaVoltarTopo" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Voltar ao topo">↑</button>}
+      {mostrarTopo && <button type="button" className="v2VoltarTopo" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Voltar ao topo">↑</button>}
     </main>
   );
 }

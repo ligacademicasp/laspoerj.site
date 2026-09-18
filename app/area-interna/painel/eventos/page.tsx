@@ -14,7 +14,7 @@ type Evento = {
   publicado: boolean;
 };
 
-const formularioInicial = {
+const vazio = {
   titulo: "",
   descricao: "",
   data_evento: "",
@@ -26,13 +26,12 @@ const formularioInicial = {
 
 export default function EventosPage() {
   const [eventos, setEventos] = useState<Evento[]>([]);
-  const [formularioAberto, setFormularioAberto] = useState(false);
+  const [formulario, setFormulario] = useState(vazio);
+  const [editando, setEditando] = useState<number | null>(null);
+  const [aberto, setAberto] = useState(false);
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
-  const [eventoEditando, setEventoEditando] = useState<number | null>(null);
   const [mensagem, setMensagem] = useState("");
-
-  const [formulario, setFormulario] = useState(formularioInicial);
 
   useEffect(() => {
     carregarEventos();
@@ -40,49 +39,32 @@ export default function EventosPage() {
 
   async function carregarEventos() {
     setCarregando(true);
-    setMensagem("");
 
     const { data, error } = await supabase
       .from("eventos")
-      .select(
-        "id, titulo, descricao, data_evento, horario, local, destaque, publicado"
-      )
+      .select("id, titulo, descricao, data_evento, horario, local, destaque, publicado")
       .order("data_evento", { ascending: true });
 
     if (error) {
-  console.error("ERRO COMPLETO:", {
-    code: error.code,
-    message: error.message,
-    details: error.details,
-    hint: error.hint,
-  });
-
-  setMensagem(
-    `Erro ao carregar eventos: ${error.message}${
-      error.hint ? ` | Dica: ${error.hint}` : ""
-    }`
-  );
-
-  setEventos([]);
-  setCarregando(false);
-  return;
-} else {
+      console.error(error);
+      setMensagem(`Erro ao carregar eventos: ${error.message}`);
+      setEventos([]);
+    } else {
       setEventos(data ?? []);
     }
 
     setCarregando(false);
   }
 
-  function abrirNovoEvento() {
-    setEventoEditando(null);
-    setFormulario(formularioInicial);
+  function novo() {
+    setEditando(null);
+    setFormulario(vazio);
     setMensagem("");
-    setFormularioAberto(true);
+    setAberto(true);
   }
 
-  function abrirEdicao(evento: Evento) {
-    setEventoEditando(evento.id);
-
+  function editar(evento: Evento) {
+    setEditando(evento.id);
     setFormulario({
       titulo: evento.titulo,
       descricao: evento.descricao ?? "",
@@ -92,19 +74,18 @@ export default function EventosPage() {
       destaque: evento.destaque,
       publicado: evento.publicado,
     });
-
-    setMensagem("");
-    setFormularioAberto(true);
+    setAberto(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function fecharFormulario() {
-    setFormularioAberto(false);
-    setEventoEditando(null);
-    setFormulario(formularioInicial);
+  function fechar() {
+    setAberto(false);
+    setEditando(null);
+    setFormulario(vazio);
   }
 
-  async function salvarEvento(eventoFormulario: FormEvent<HTMLFormElement>) {
-    eventoFormulario.preventDefault();
+  async function salvar(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
     if (!formulario.titulo.trim() || !formulario.data_evento) {
       setMensagem("Preencha o título e a data do evento.");
@@ -114,7 +95,7 @@ export default function EventosPage() {
     setSalvando(true);
     setMensagem("");
 
-    const dadosEvento = {
+    const dados = {
       titulo: formulario.titulo.trim(),
       descricao: formulario.descricao.trim() || null,
       data_evento: formulario.data_evento,
@@ -125,54 +106,29 @@ export default function EventosPage() {
       updated_at: new Date().toISOString(),
     };
 
-    if (eventoEditando) {
-      const { error } = await supabase
-        .from("eventos")
-        .update(dadosEvento)
-        .eq("id", eventoEditando);
+    const resultado = editando
+      ? await supabase.from("eventos").update(dados).eq("id", editando)
+      : await supabase.from("eventos").insert(dados);
 
-      if (error) {
-        console.error(error);
-        setMensagem(`Erro ao editar evento: ${error.message}`);
-        setSalvando(false);
-        return;
-      }
-
-      setMensagem("Evento atualizado com sucesso.");
-    } else {
-      const { error } = await supabase.from("eventos").insert(dadosEvento);
-
-      if (error) {
-        console.error(error);
-        setMensagem(`Erro ao criar evento: ${error.message}`);
-        setSalvando(false);
-        return;
-      }
-
-      setMensagem("Evento criado com sucesso.");
+    if (resultado.error) {
+      console.error(resultado.error);
+      setMensagem(`Erro ao salvar evento: ${resultado.error.message}`);
+      setSalvando(false);
+      return;
     }
 
-    fecharFormulario();
+    setMensagem(editando ? "Evento atualizado com sucesso." : "Evento criado com sucesso.");
+    fechar();
     await carregarEventos();
     setSalvando(false);
   }
 
-  async function excluirEvento(id: number) {
-    const confirmou = window.confirm(
-      "Tem certeza de que deseja excluir este evento?"
-    );
+  async function excluir(id: number) {
+    if (!window.confirm("Tem certeza de que deseja excluir este evento?")) return;
 
-    if (!confirmou) return;
-
-    setMensagem("");
-
-    const { error } = await supabase
-      .from("eventos")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("eventos").delete().eq("id", id);
 
     if (error) {
-      console.error(error);
       setMensagem(`Erro ao excluir evento: ${error.message}`);
       return;
     }
@@ -181,141 +137,86 @@ export default function EventosPage() {
     await carregarEventos();
   }
 
-  function formatarData(data: string) {
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC",
-    }).format(new Date(`${data}T00:00:00Z`));
+  function dataBR(data: string) {
+    const [ano, mes, dia] = data.split("-").map(Number);
+    return new Date(ano, mes - 1, dia).toLocaleDateString("pt-BR");
   }
 
   return (
     <div className="painelDashboard">
       <div className="painelCabecalho">
         <div>
-          <p className="painelSubtitulo">CONTEÚDO DO SITE</p>
+          <p className="painelSubtitulo">PROGRAMAÇÃO</p>
           <h1>Eventos</h1>
-          <p>Crie e gerencie os eventos exibidos na página inicial.</p>
+          <p>Cadastre e organize os eventos exibidos no site da LASPOERJ.</p>
         </div>
 
-        <button
-          type="button"
-          className="painelBotaoPrincipal"
-          onClick={abrirNovoEvento}
-        >
+        <button type="button" className="painelBotaoPrincipal" onClick={novo}>
           + Novo evento
         </button>
       </div>
 
       {mensagem && <div className="painelMensagem">{mensagem}</div>}
 
-      {formularioAberto && (
+      {aberto && (
         <section className="eventoFormularioCard">
           <div className="eventoFormularioCabecalho">
             <div>
-              <p className="painelSubtitulo">
-                {eventoEditando ? "EDITAR CONTEÚDO" : "NOVO CONTEÚDO"}
-              </p>
-
-              <h2>
-                {eventoEditando ? "Editar evento" : "Cadastrar novo evento"}
-              </h2>
+              <p className="painelSubtitulo">{editando ? "EDITAR EVENTO" : "NOVO EVENTO"}</p>
+              <h2>{editando ? "Editar evento" : "Cadastrar evento"}</h2>
             </div>
 
-            <button
-              type="button"
-              className="eventoFechar"
-              onClick={fecharFormulario}
-              aria-label="Fechar formulário"
-            >
-              ×
-            </button>
+            <button type="button" className="eventoFechar" onClick={fechar}>×</button>
           </div>
 
-          <form className="eventoFormulario" onSubmit={salvarEvento}>
+          <form className="eventoFormulario" onSubmit={salvar}>
             <div className="eventoCampo eventoCampoGrande">
-              <label htmlFor="titulo">Título</label>
-
+              <label htmlFor="evento-titulo">Título</label>
               <input
-                id="titulo"
-                type="text"
+                id="evento-titulo"
                 value={formulario.titulo}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    titulo: e.target.value,
-                  })
-                }
-                placeholder="Ex.: Workshop de Saúde Coletiva"
+                onChange={(e) => setFormulario({ ...formulario, titulo: e.target.value })}
                 required
               />
             </div>
 
             <div className="eventoCampo eventoCampoGrande">
-              <label htmlFor="descricao">Descrição</label>
-
+              <label htmlFor="evento-descricao">Descrição</label>
               <textarea
-                id="descricao"
+                id="evento-descricao"
+                rows={4}
                 value={formulario.descricao}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    descricao: e.target.value,
-                  })
-                }
-                placeholder="Descreva brevemente o evento."
-                rows={5}
+                onChange={(e) => setFormulario({ ...formulario, descricao: e.target.value })}
               />
             </div>
 
             <div className="eventoCampo">
-              <label htmlFor="data_evento">Data</label>
-
+              <label htmlFor="evento-data">Data</label>
               <input
-                id="data_evento"
+                id="evento-data"
                 type="date"
                 value={formulario.data_evento}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    data_evento: e.target.value,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, data_evento: e.target.value })}
                 required
               />
             </div>
 
             <div className="eventoCampo">
-              <label htmlFor="horario">Horário</label>
-
+              <label htmlFor="evento-horario">Horário</label>
               <input
-                id="horario"
+                id="evento-horario"
                 type="time"
                 value={formulario.horario}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    horario: e.target.value,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, horario: e.target.value })}
               />
             </div>
 
             <div className="eventoCampo eventoCampoGrande">
-              <label htmlFor="local">Local</label>
-
+              <label htmlFor="evento-local">Local</label>
               <input
-                id="local"
-                type="text"
+                id="evento-local"
                 value={formulario.local}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    local: e.target.value,
-                  })
-                }
-                placeholder="Ex.: Estácio RJ — Biblioteca"
+                onChange={(e) => setFormulario({ ...formulario, local: e.target.value })}
               />
             </div>
 
@@ -323,51 +224,26 @@ export default function EventosPage() {
               <input
                 type="checkbox"
                 checked={formulario.destaque}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    destaque: e.target.checked,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, destaque: e.target.checked })}
               />
-
-              <span>Destacar evento na página inicial</span>
+              <span>Destacar evento</span>
             </label>
 
             <label className="eventoCheckbox">
               <input
                 type="checkbox"
                 checked={formulario.publicado}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    publicado: e.target.checked,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, publicado: e.target.checked })}
               />
-
-              <span>Publicar evento no site</span>
+              <span>Publicar no site</span>
             </label>
 
             <div className="eventoFormularioAcoes">
-              <button
-                type="button"
-                className="painelBotaoSecundario"
-                onClick={fecharFormulario}
-              >
+              <button type="button" className="painelBotaoSecundario" onClick={fechar}>
                 Cancelar
               </button>
-
-              <button
-                type="submit"
-                className="painelBotaoPrincipal"
-                disabled={salvando}
-              >
-                {salvando
-                  ? "Salvando..."
-                  : eventoEditando
-                    ? "Salvar alterações"
-                    : "Criar evento"}
+              <button type="submit" className="painelBotaoPrincipal" disabled={salvando}>
+                {salvando ? "Salvando..." : "Salvar evento"}
               </button>
             </div>
           </form>
@@ -378,18 +254,10 @@ export default function EventosPage() {
         <div className="eventosAdministracaoCabecalho">
           <div>
             <h2>Eventos cadastrados</h2>
-
-            <p>
-              {eventos.length}{" "}
-              {eventos.length === 1 ? "evento encontrado" : "eventos encontrados"}
-            </p>
+            <p>{eventos.length} {eventos.length === 1 ? "evento" : "eventos"}</p>
           </div>
 
-          <button
-            type="button"
-            className="painelBotaoSecundario"
-            onClick={carregarEventos}
-          >
+          <button type="button" className="painelBotaoSecundario" onClick={carregarEventos}>
             Atualizar lista
           </button>
         </div>
@@ -399,74 +267,33 @@ export default function EventosPage() {
         ) : eventos.length === 0 ? (
           <div className="painelEstadoVazio">
             <h3>Nenhum evento cadastrado</h3>
-            <p>Clique em “Novo evento” para adicionar o primeiro.</p>
+            <p>Clique em “Novo evento” para criar o primeiro.</p>
           </div>
         ) : (
           <div className="eventosTabela">
             {eventos.map((evento) => (
               <article className="eventoAdminCard" key={evento.id}>
-                <div className="eventoAdminData">
-                  <strong>
-                    {new Date(`${evento.data_evento}T00:00:00Z`).getUTCDate()}
-                  </strong>
-
-                  <span>
-                    {new Intl.DateTimeFormat("pt-BR", {
-                      month: "short",
-                      timeZone: "UTC",
-                    })
-                      .format(new Date(`${evento.data_evento}T00:00:00Z`))
-                      .replace(".", "")}
-                  </span>
-                </div>
-
                 <div className="eventoAdminConteudo">
                   <div className="eventoAdminStatus">
-                    <span
-                      className={
-                        evento.publicado
-                          ? "statusPublicado"
-                          : "statusRascunho"
-                      }
-                    >
-                      {evento.publicado ? "Publicado" : "Oculto"}
+                    <span className={evento.publicado ? "statusPublicado" : "statusRascunho"}>
+                      {evento.publicado ? "Publicado" : "Rascunho"}
                     </span>
-
-                    {evento.destaque && (
-                      <span className="statusDestaque">Destaque</span>
-                    )}
+                    {evento.destaque && <span className="statusDestaque">Destaque</span>}
                   </div>
 
                   <h3>{evento.titulo}</h3>
-
-                  <p className="eventoAdminDescricao">
-                    {evento.descricao || "Evento sem descrição."}
-                  </p>
+                  <p className="eventoAdminDescricao">{evento.descricao || "Sem descrição."}</p>
 
                   <div className="eventoAdminDetalhes">
-                    <span>{formatarData(evento.data_evento)}</span>
-
-                    {evento.horario && (
-                      <span>{evento.horario.slice(0, 5)}</span>
-                    )}
-
+                    <span>{dataBR(evento.data_evento)}</span>
+                    {evento.horario && <span>{evento.horario.slice(0, 5)}</span>}
                     {evento.local && <span>{evento.local}</span>}
                   </div>
                 </div>
 
                 <div className="eventoAdminAcoes">
-                  <button
-                    type="button"
-                    onClick={() => abrirEdicao(evento)}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    type="button"
-                    className="eventoExcluir"
-                    onClick={() => excluirEvento(evento.id)}
-                  >
+                  <button type="button" onClick={() => editar(evento)}>Editar</button>
+                  <button type="button" className="eventoExcluir" onClick={() => excluir(evento.id)}>
                     Excluir
                   </button>
                 </div>

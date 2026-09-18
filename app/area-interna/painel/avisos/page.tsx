@@ -13,7 +13,7 @@ type Aviso = {
   data_expiracao: string | null;
 };
 
-const formularioInicial = {
+const vazio = {
   titulo: "",
   mensagem: "",
   publico: "todos",
@@ -24,13 +24,12 @@ const formularioInicial = {
 
 export default function AvisosPage() {
   const [avisos, setAvisos] = useState<Aviso[]>([]);
-  const [formularioAberto, setFormularioAberto] = useState(false);
-  const [avisoEditando, setAvisoEditando] = useState<number | null>(null);
-  const [salvando, setSalvando] = useState(false);
+  const [formulario, setFormulario] = useState(vazio);
+  const [editando, setEditando] = useState<number | null>(null);
+  const [aberto, setAberto] = useState(false);
   const [carregando, setCarregando] = useState(true);
-  const [mensagemSistema, setMensagemSistema] = useState("");
-
-  const [formulario, setFormulario] = useState(formularioInicial);
+  const [salvando, setSalvando] = useState(false);
+  const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
     carregarAvisos();
@@ -41,14 +40,12 @@ export default function AvisosPage() {
 
     const { data, error } = await supabase
       .from("avisos")
-      .select(
-        "id, titulo, mensagem, publico, destaque, publicado, data_expiracao"
-      )
-      .order("created_at", { ascending: false });
+      .select("id, titulo, mensagem, publico, destaque, publicado, data_expiracao")
+      .order("id", { ascending: false });
 
     if (error) {
       console.error(error);
-      setMensagemSistema(`Erro ao carregar avisos: ${error.message}`);
+      setMensagem(`Erro ao carregar avisos: ${error.message}`);
       setAvisos([]);
     } else {
       setAvisos(data ?? []);
@@ -57,46 +54,45 @@ export default function AvisosPage() {
     setCarregando(false);
   }
 
-  function abrirNovoAviso() {
-    setAvisoEditando(null);
-    setFormulario(formularioInicial);
-    setMensagemSistema("");
-    setFormularioAberto(true);
+  function novo() {
+    setEditando(null);
+    setFormulario(vazio);
+    setMensagem("");
+    setAberto(true);
   }
 
-  function abrirEdicao(aviso: Aviso) {
-    setAvisoEditando(aviso.id);
-
+  function editar(aviso: Aviso) {
+    setEditando(aviso.id);
     setFormulario({
       titulo: aviso.titulo,
       mensagem: aviso.mensagem,
-      publico: aviso.publico,
+      publico: aviso.publico || "todos",
       destaque: aviso.destaque,
       publicado: aviso.publicado,
       data_expiracao: aviso.data_expiracao ?? "",
     });
-
-    setFormularioAberto(true);
+    setAberto(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function fecharFormulario() {
-    setFormularioAberto(false);
-    setAvisoEditando(null);
-    setFormulario(formularioInicial);
+  function fechar() {
+    setAberto(false);
+    setEditando(null);
+    setFormulario(vazio);
   }
 
-  async function salvarAviso(e: FormEvent<HTMLFormElement>) {
+  async function salvar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!formulario.titulo.trim() || !formulario.mensagem.trim()) {
-      setMensagemSistema("Preencha o título e a mensagem.");
+      setMensagem("Preencha o título e a mensagem do aviso.");
       return;
     }
 
     setSalvando(true);
-    setMensagemSistema("");
+    setMensagem("");
 
-    const dadosAviso = {
+    const dados = {
       titulo: formulario.titulo.trim(),
       mensagem: formulario.mensagem.trim(),
       publico: formulario.publico,
@@ -106,56 +102,34 @@ export default function AvisosPage() {
       updated_at: new Date().toISOString(),
     };
 
-    if (avisoEditando) {
-      const { error } = await supabase
-        .from("avisos")
-        .update(dadosAviso)
-        .eq("id", avisoEditando);
+    const resultado = editando
+      ? await supabase.from("avisos").update(dados).eq("id", editando)
+      : await supabase.from("avisos").insert(dados);
 
-      if (error) {
-        setMensagemSistema(`Erro ao editar aviso: ${error.message}`);
-        setSalvando(false);
-        return;
-      }
-
-      setMensagemSistema("Aviso atualizado com sucesso.");
-    } else {
-      const { error } = await supabase
-        .from("avisos")
-        .insert(dadosAviso);
-
-      if (error) {
-        setMensagemSistema(`Erro ao criar aviso: ${error.message}`);
-        setSalvando(false);
-        return;
-      }
-
-      setMensagemSistema("Aviso criado com sucesso.");
+    if (resultado.error) {
+      console.error(resultado.error);
+      setMensagem(`Erro ao salvar aviso: ${resultado.error.message}`);
+      setSalvando(false);
+      return;
     }
 
-    fecharFormulario();
+    setMensagem(editando ? "Aviso atualizado com sucesso." : "Aviso criado com sucesso.");
+    fechar();
     await carregarAvisos();
     setSalvando(false);
   }
 
-  async function excluirAviso(id: number) {
-    const confirmou = window.confirm(
-      "Tem certeza de que deseja excluir este aviso?"
-    );
+  async function excluir(id: number) {
+    if (!window.confirm("Tem certeza de que deseja excluir este aviso?")) return;
 
-    if (!confirmou) return;
-
-    const { error } = await supabase
-      .from("avisos")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("avisos").delete().eq("id", id);
 
     if (error) {
-      setMensagemSistema(`Erro ao excluir aviso: ${error.message}`);
+      setMensagem(`Erro ao excluir aviso: ${error.message}`);
       return;
     }
 
-    setMensagemSistema("Aviso excluído com sucesso.");
+    setMensagem("Aviso excluído com sucesso.");
     await carregarAvisos();
   }
 
@@ -165,111 +139,69 @@ export default function AvisosPage() {
         <div>
           <p className="painelSubtitulo">COMUNICAÇÃO</p>
           <h1>Avisos</h1>
-          <p>Crie comunicados e informações importantes da LASPOERJ.</p>
+          <p>Gerencie os comunicados que aparecem na página pública da LASPOERJ.</p>
         </div>
 
-        <button
-          type="button"
-          className="painelBotaoPrincipal"
-          onClick={abrirNovoAviso}
-        >
+        <button type="button" className="painelBotaoPrincipal" onClick={novo}>
           + Novo aviso
         </button>
       </div>
 
-      {mensagemSistema && (
-        <div className="painelMensagem">
-          {mensagemSistema}
-        </div>
-      )}
+      {mensagem && <div className="painelMensagem">{mensagem}</div>}
 
-      {formularioAberto && (
+      {aberto && (
         <section className="eventoFormularioCard">
           <div className="eventoFormularioCabecalho">
             <div>
-              <p className="painelSubtitulo">
-                {avisoEditando ? "EDITAR AVISO" : "NOVO AVISO"}
-              </p>
-
-              <h2>
-                {avisoEditando ? "Editar aviso" : "Criar aviso"}
-              </h2>
+              <p className="painelSubtitulo">{editando ? "EDITAR AVISO" : "NOVO AVISO"}</p>
+              <h2>{editando ? "Editar aviso" : "Criar aviso"}</h2>
             </div>
 
-            <button
-              type="button"
-              className="eventoFechar"
-              onClick={fecharFormulario}
-            >
-              ×
-            </button>
+            <button type="button" className="eventoFechar" onClick={fechar}>×</button>
           </div>
 
-          <form className="eventoFormulario" onSubmit={salvarAviso}>
+          <form className="eventoFormulario" onSubmit={salvar}>
             <div className="eventoCampo eventoCampoGrande">
-              <label>Título</label>
-
+              <label htmlFor="aviso-titulo">Título</label>
               <input
-                type="text"
+                id="aviso-titulo"
                 value={formulario.titulo}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    titulo: e.target.value,
-                  })
-                }
-                placeholder="Ex.: Reunião extraordinária"
+                onChange={(e) => setFormulario({ ...formulario, titulo: e.target.value })}
                 required
               />
             </div>
 
             <div className="eventoCampo eventoCampoGrande">
-              <label>Mensagem</label>
-
+              <label htmlFor="aviso-mensagem">Mensagem</label>
               <textarea
-                rows={5}
+                id="aviso-mensagem"
+                rows={6}
                 value={formulario.mensagem}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    mensagem: e.target.value,
-                  })
-                }
-                placeholder="Digite o comunicado."
+                onChange={(e) => setFormulario({ ...formulario, mensagem: e.target.value })}
                 required
               />
             </div>
 
             <div className="eventoCampo">
-              <label>Público</label>
-
+              <label htmlFor="aviso-publico">Público</label>
               <select
+                id="aviso-publico"
                 value={formulario.publico}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    publico: e.target.value,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, publico: e.target.value })}
               >
                 <option value="todos">Todos</option>
                 <option value="ligantes">Ligantes</option>
-                <option value="administradores">Administradores</option>
+                <option value="diretoria">Diretoria</option>
               </select>
             </div>
 
             <div className="eventoCampo">
-              <label>Data de expiração</label>
-
+              <label htmlFor="aviso-expira">Expira em</label>
               <input
+                id="aviso-expira"
                 type="date"
                 value={formulario.data_expiracao}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    data_expiracao: e.target.value,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, data_expiracao: e.target.value })}
               />
             </div>
 
@@ -277,14 +209,8 @@ export default function AvisosPage() {
               <input
                 type="checkbox"
                 checked={formulario.destaque}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    destaque: e.target.checked,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, destaque: e.target.checked })}
               />
-
               <span>Destacar aviso</span>
             </label>
 
@@ -292,36 +218,17 @@ export default function AvisosPage() {
               <input
                 type="checkbox"
                 checked={formulario.publicado}
-                onChange={(e) =>
-                  setFormulario({
-                    ...formulario,
-                    publicado: e.target.checked,
-                  })
-                }
+                onChange={(e) => setFormulario({ ...formulario, publicado: e.target.checked })}
               />
-
-              <span>Publicar aviso</span>
+              <span>Publicar no site</span>
             </label>
 
             <div className="eventoFormularioAcoes">
-              <button
-                type="button"
-                className="painelBotaoSecundario"
-                onClick={fecharFormulario}
-              >
+              <button type="button" className="painelBotaoSecundario" onClick={fechar}>
                 Cancelar
               </button>
-
-              <button
-                type="submit"
-                className="painelBotaoPrincipal"
-                disabled={salvando}
-              >
-                {salvando
-                  ? "Salvando..."
-                  : avisoEditando
-                  ? "Salvar alterações"
-                  : "Criar aviso"}
+              <button type="submit" className="painelBotaoPrincipal" disabled={salvando}>
+                {salvando ? "Salvando..." : "Salvar aviso"}
               </button>
             </div>
           </form>
@@ -332,18 +239,20 @@ export default function AvisosPage() {
         <div className="eventosAdministracaoCabecalho">
           <div>
             <h2>Avisos cadastrados</h2>
-            <p>{avisos.length} avisos encontrados</p>
+            <p>{avisos.length} {avisos.length === 1 ? "aviso" : "avisos"}</p>
           </div>
+
+          <button type="button" className="painelBotaoSecundario" onClick={carregarAvisos}>
+            Atualizar lista
+          </button>
         </div>
 
         {carregando ? (
-          <div className="painelEstadoVazio">
-            Carregando avisos...
-          </div>
+          <div className="painelEstadoVazio">Carregando avisos...</div>
         ) : avisos.length === 0 ? (
           <div className="painelEstadoVazio">
             <h3>Nenhum aviso cadastrado</h3>
-            <p>Clique em “Novo aviso” para começar.</p>
+            <p>Clique em “Novo aviso” para criar o primeiro.</p>
           </div>
         ) : (
           <div className="eventosTabela">
@@ -351,53 +260,28 @@ export default function AvisosPage() {
               <article className="eventoAdminCard" key={aviso.id}>
                 <div className="eventoAdminConteudo">
                   <div className="eventoAdminStatus">
-                    <span
-                      className={
-                        aviso.publicado
-                          ? "statusPublicado"
-                          : "statusRascunho"
-                      }
-                    >
-                      {aviso.publicado ? "Publicado" : "Oculto"}
+                    <span className={aviso.publicado ? "statusPublicado" : "statusRascunho"}>
+                      {aviso.publicado ? "Publicado" : "Rascunho"}
                     </span>
-
-                    {aviso.destaque && (
-                      <span className="statusDestaque">
-                        Destaque
-                      </span>
-                    )}
+                    {aviso.destaque && <span className="statusDestaque">Destaque</span>}
+                    <span className="statusDestaque">{aviso.publico}</span>
                   </div>
 
                   <h3>{aviso.titulo}</h3>
-
-                  <p className="eventoAdminDescricao">
-                    {aviso.mensagem}
-                  </p>
+                  <p className="eventoAdminDescricao">{aviso.mensagem}</p>
 
                   <div className="eventoAdminDetalhes">
-                    <span>Público: {aviso.publico}</span>
-
-                    {aviso.data_expiracao && (
-                      <span>
-                        Expira em {aviso.data_expiracao}
-                      </span>
-                    )}
+                    <span>
+                      {aviso.data_expiracao
+                        ? `Expira em ${new Date(`${aviso.data_expiracao}T00:00:00`).toLocaleDateString("pt-BR")}`
+                        : "Sem data de expiração"}
+                    </span>
                   </div>
                 </div>
 
                 <div className="eventoAdminAcoes">
-                  <button
-                    type="button"
-                    onClick={() => abrirEdicao(aviso)}
-                  >
-                    Editar
-                  </button>
-
-                  <button
-                    type="button"
-                    className="eventoExcluir"
-                    onClick={() => excluirAviso(aviso.id)}
-                  >
+                  <button type="button" onClick={() => editar(aviso)}>Editar</button>
+                  <button type="button" className="eventoExcluir" onClick={() => excluir(aviso.id)}>
                     Excluir
                   </button>
                 </div>

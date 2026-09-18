@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Publicacao = {
@@ -40,8 +40,6 @@ function transformarEmSlug(texto: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-const TAMANHO_MAXIMO_CAPA = 8 * 1024 * 1024;
-
 export default function JornalPage() {
   const [publicacoes, setPublicacoes] = useState<Publicacao[]>([]);
   const [formularioAberto, setFormularioAberto] = useState(false);
@@ -50,10 +48,7 @@ export default function JornalPage() {
 
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
-  const [enviandoImagem, setEnviandoImagem] = useState(false);
   const [mensagemSistema, setMensagemSistema] = useState("");
-  const [arquivoImagem, setArquivoImagem] = useState<File | null>(null);
-  const [previewImagem, setPreviewImagem] = useState("");
 
   const [formulario, setFormulario] =
     useState(formularioInicial);
@@ -61,14 +56,6 @@ export default function JornalPage() {
   useEffect(() => {
     carregarPublicacoes();
   }, []);
-
-  useEffect(() => {
-    return () => {
-      if (previewImagem.startsWith("blob:")) {
-        URL.revokeObjectURL(previewImagem);
-      }
-    };
-  }, [previewImagem]);
 
   async function carregarPublicacoes() {
     setCarregando(true);
@@ -110,18 +97,7 @@ export default function JornalPage() {
     setCarregando(false);
   }
 
-  function limparImagemSelecionada() {
-    if (previewImagem.startsWith("blob:")) {
-      URL.revokeObjectURL(previewImagem);
-    }
-
-    setArquivoImagem(null);
-    setPreviewImagem("");
-  }
-
   function abrirNovaPublicacao() {
-    limparImagemSelecionada();
-
     const hoje = new Date()
       .toISOString()
       .split("T")[0];
@@ -138,8 +114,6 @@ export default function JornalPage() {
   }
 
   function abrirEdicao(publicacao: Publicacao) {
-    limparImagemSelecionada();
-
     setPublicacaoEditando(publicacao.id);
 
     setFormulario({
@@ -155,8 +129,6 @@ export default function JornalPage() {
       data_publicacao: publicacao.data_publicacao ?? "",
     });
 
-    setPreviewImagem(publicacao.imagem_url ?? "");
-
     setMensagemSistema("");
     setFormularioAberto(true);
 
@@ -167,7 +139,6 @@ export default function JornalPage() {
   }
 
   function fecharFormulario() {
-    limparImagemSelecionada();
     setFormularioAberto(false);
     setPublicacaoEditando(null);
     setFormulario(formularioInicial);
@@ -210,94 +181,6 @@ export default function JornalPage() {
     }
   }
 
-  function selecionarImagem(
-    e: ChangeEvent<HTMLInputElement>
-  ) {
-    const arquivo = e.target.files?.[0];
-
-    if (!arquivo) return;
-
-    if (!arquivo.type.startsWith("image/")) {
-      setMensagemSistema(
-        "Selecione um arquivo de imagem."
-      );
-      e.target.value = "";
-      return;
-    }
-
-    if (arquivo.size > TAMANHO_MAXIMO_CAPA) {
-      setMensagemSistema(
-        "A imagem deve ter no máximo 8 MB."
-      );
-      e.target.value = "";
-      return;
-    }
-
-    if (previewImagem.startsWith("blob:")) {
-      URL.revokeObjectURL(previewImagem);
-    }
-
-    setArquivoImagem(arquivo);
-    setPreviewImagem(URL.createObjectURL(arquivo));
-    setMensagemSistema("");
-  }
-
-  function normalizarNomeArquivo(nome: string) {
-    return nome
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9._-]/g, "-")
-      .replace(/-+/g, "-");
-  }
-
-  async function enviarImagemStorage(
-    slugFinal: string
-  ) {
-    if (!arquivoImagem) {
-      return formulario.imagem_url.trim() || null;
-    }
-
-    setEnviandoImagem(true);
-
-    try {
-      const extensaoOriginal =
-        arquivoImagem.name.split(".").pop() || "jpg";
-
-      const extensao =
-        extensaoOriginal
-          .toLowerCase()
-          .replace(/[^a-z0-9]/g, "") || "jpg";
-
-      const nomeBase =
-        normalizarNomeArquivo(slugFinal) || "publicacao";
-
-      const caminho =
-        `capas/${Date.now()}-${nomeBase}.${extensao}`;
-
-      const { error: uploadError } =
-        await supabase.storage
-          .from("jornal")
-          .upload(caminho, arquivoImagem, {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: arquivoImagem.type,
-          });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data } = supabase.storage
-        .from("jornal")
-        .getPublicUrl(caminho);
-
-      return data.publicUrl;
-    } finally {
-      setEnviandoImagem(false);
-    }
-  }
-
   async function salvarPublicacao(
     e: FormEvent<HTMLFormElement>
   ) {
@@ -324,10 +207,6 @@ export default function JornalPage() {
         publicacaoEditando
       );
 
-      const imagemUrl = await enviarImagemStorage(
-        slugFinal
-      );
-
       const dadosPublicacao = {
         titulo: formulario.titulo.trim(),
         slug: slugFinal,
@@ -335,7 +214,7 @@ export default function JornalPage() {
         conteudo: formulario.conteudo.trim(),
         autor: formulario.autor.trim() || null,
         categoria: formulario.categoria || null,
-        imagem_url: imagemUrl,
+        imagem_url: formulario.imagem_url.trim() || null,
         destaque: formulario.destaque,
         publicado: formulario.publicado,
         data_publicacao:
@@ -367,7 +246,6 @@ export default function JornalPage() {
         );
       }
 
-      limparImagemSelecionada();
       setFormularioAberto(false);
       setPublicacaoEditando(null);
       setFormulario(formularioInicial);
@@ -383,7 +261,6 @@ export default function JornalPage() {
       );
     } finally {
       setSalvando(false);
-      setEnviandoImagem(false);
     }
   }
 
@@ -440,14 +317,13 @@ export default function JornalPage() {
       <div className="painelCabecalho">
         <div>
           <p className="painelSubtitulo">
-            JORNAL LASPOERJ
+            LASPOERJ EM AÇÃO
           </p>
 
           <h1>Publicações</h1>
 
           <p>
-            Crie notícias, entrevistas, relatos de experiência
-            e conteúdos científicos da Liga.
+            Crie notícias, projetos, ações, pesquisas e conteúdos científicos da Liga.
           </p>
         </div>
 
@@ -617,8 +493,14 @@ export default function JornalPage() {
                 }
               >
                 <option value="Notícia">Notícia</option>
-                <option value="Pesquisa">Pesquisa</option>
+                <option value="Projeto">Projeto</option>
+                <option value="Ação">Ação</option>
                 <option value="Extensão">Extensão</option>
+                <option value="Pesquisa">Pesquisa</option>
+                <option value="Produção Científica">Produção Científica</option>
+                <option value="Artigo">Artigo</option>
+                <option value="Trabalho">Trabalho</option>
+                <option value="Resumo">Resumo</option>
                 <option value="Entrevista">Entrevista</option>
                 <option value="Relato de experiência">
                   Relato de experiência
@@ -648,79 +530,23 @@ export default function JornalPage() {
               />
             </div>
 
-            <div className="eventoCampo eventoCampoGrande">
-              <label>
-                Imagem de capa
-              </label>
-
-              <div className="jornalUploadBox">
-                <div className="jornalUploadTexto">
-                  <strong>Enviar imagem</strong>
-                  <p>
-                    JPG, PNG ou outra imagem aceita pelo navegador.
-                    Tamanho máximo: 8 MB.
-                  </p>
-                </div>
-
-                {previewImagem && (
-                  <div className="jornalUploadPreview">
-                    <img
-                      src={previewImagem}
-                      alt="Prévia da capa"
-                    />
-                  </div>
-                )}
-
-                <label className="jornalUploadBotao">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={selecionarImagem}
-                  />
-
-                  <span>
-                    {arquivoImagem
-                      ? "Trocar imagem selecionada"
-                      : "Escolher imagem"}
-                  </span>
-                </label>
-
-                {arquivoImagem && (
-                  <small>
-                    Selecionada: {arquivoImagem.name}
-                  </small>
-                )}
-              </div>
-            </div>
-
-            <div className="eventoCampo eventoCampoGrande">
+            <div className="eventoCampo">
               <label htmlFor="imagem">
-                URL/caminho da imagem
+                URL da imagem
               </label>
 
               <input
                 id="imagem"
                 type="text"
                 value={formulario.imagem_url}
-                onChange={(e) => {
-                  const valor = e.target.value;
-
+                onChange={(e) =>
                   setFormulario({
                     ...formulario,
-                    imagem_url: valor,
-                  });
-
-                  if (!arquivoImagem) {
-                    setPreviewImagem(valor);
-                  }
-                }}
-                placeholder="Preenchido automaticamente após o upload"
+                    imagem_url: e.target.value,
+                  })
+                }
+                placeholder="https://..."
               />
-
-              <small>
-                Você ainda pode usar uma URL pública ou um caminho
-                manualmente, se preferir.
-              </small>
             </div>
 
             <label className="eventoCheckbox">
@@ -765,11 +591,9 @@ export default function JornalPage() {
               <button
                 type="submit"
                 className="painelBotaoPrincipal"
-                disabled={salvando || enviandoImagem}
+                disabled={salvando}
               >
-                {enviandoImagem
-                  ? "Enviando imagem..."
-                  : salvando
+                {salvando
                   ? "Salvando..."
                   : publicacaoEditando
                   ? "Salvar alterações"
@@ -812,7 +636,7 @@ export default function JornalPage() {
 
             <p>
               Clique em “Nova publicação” para criar
-              a primeira matéria do Jornal LASPOERJ.
+              a primeira publicação do LASPOERJ em Ação.
             </p>
           </div>
         ) : (
